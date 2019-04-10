@@ -49,12 +49,7 @@
     },
     "linux": {
       "icon": "build/icon"
-    },
-    "publish": [
-      {
-        "provider": "generic"
-      }
-    ]
+    }
   },
   "dependencies": {
     "axios": "^0.18.0",
