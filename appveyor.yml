@@ -19,3 +19,11 @@ build: off
 build_script: 
   - yarn build
   - npm run publish
+  
+on_success:
+  - git config --global credential.helper store
+  - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+  - git config --global user.email "609028727@qq.com"
+  - git config --global user.name "WuLittleRui"
+  - git commit ...
+  - git push ...
