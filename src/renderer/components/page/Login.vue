@@ -30,6 +30,8 @@
         </el-form>
       </div>
     </div>
+	<div>test2.0</div>
+
   </div>
 </template>
 
