@@ -1,0 +1,13 @@
+
+    [class*=" el-icon-lx"], [class^=el-icon-lx] {
+        font-family: lx-iconfont!important;
+    }
+
+    [class*=" el-icon-yq"], [class^=el-icon-yq] {
+        font-family: yq-iconfont!important;
+    }
+
+    [class*=" el-icon-kqmz"], [class^=el-icon-kqmz] {
+        font-family: wr-iconfont!important;
+    }
+    
