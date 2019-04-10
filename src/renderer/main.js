@@ -9,6 +9,7 @@ import '../../static/css/icon.css';
 import "babel-polyfill";
 import * as OauthApi from './api/OauthApi';
 import * as filters from './utils/formater';
+import { ipcRenderer } from "electron";
 
 Vue.use(ElementUI, { size: 'small', i18n: (key, value) => i18n.t(key, value) });
 
@@ -17,6 +18,17 @@ Vue.use(ElementUI, { size: 'small', i18n: (key, value) => i18n.t(key, value) });
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
 })
+
+ipcRenderer.on("message", (event, text)=> {
+    Vue.prototype.$alert(text, '系统更新', {
+        confirmButtonText: '确定',
+        callback: action => {
+            ipcRenderer.send("checkForUpdate");
+        }
+      });
+});
+
+ipcRenderer.send("checkForUpdate");
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach(async (to, from, next) => {
