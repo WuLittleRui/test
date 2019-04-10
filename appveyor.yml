@@ -8,7 +8,7 @@ cache:
 
 environment:
   access_token:
-    secure: 55d9df4e0ece6277477667c81e672e7703236bcc
+    secure: KEHM+BZr+Jp5MFlY6gzPAaLjtJU0Nfu+77DlcAWj526xtWrS5uePFv/UsiYn9eT8
 
 install:
   - ps: Install-Product node 10 x64
