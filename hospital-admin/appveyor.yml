@@ -7,7 +7,8 @@ cache:
   - '%LOCALAPPDATA%\electron-builder\cache'
 
 environment:
-  TEST_FILES: ExtraBuildTest,BuildTest,extraMetadataTest,filesTest,globTest,nsisUpdaterTest,oneClickInstallerTest,installerTest,appxTest,msiTest,protonTest
+  access_token:
+    secure: 665a146770bc19105fe9804257e1cd29b3911343
 
 install:
   - ps: Install-Product node 10 x64
@@ -15,5 +16,6 @@ install:
 
 build: off
 
-test_script:
-  - yarn test
+build_script: 
+  - yarn build
+  - npm run publish
