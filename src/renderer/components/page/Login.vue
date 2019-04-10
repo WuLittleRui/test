@@ -30,8 +30,7 @@
         </el-form>
       </div>
     </div>
-	<div>test2.0</div>
-
+    <div>测试3.0</div>
   </div>
 </template>
 
@@ -84,7 +83,6 @@ export default {
             this.$router.push("/index");
           });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

@@ -15,6 +15,5 @@ install:
 
 build: off
 
-script:
-  - yarn run build
-  - npm run publish
+test_script:
+  - yarn test

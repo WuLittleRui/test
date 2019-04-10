@@ -1,12 +1,12 @@
 {
   "name": "yq-hospital",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "口腔门诊管理系统",
   "author": "yvqin.com",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build": "node .electron-vue/build.js && electron-builder",
+    "build": "node .electron-vue/build.js && electron-builder --publish onTagOrDraft",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -14,8 +14,7 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "electron-builder install-app-deps",
-    "publish": "electron-builder --publish onTagOrDraft"
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "productName": "口腔门诊管理系统",
@@ -50,7 +49,12 @@
     },
     "linux": {
       "icon": "build/icon"
-    }
+    },
+    "publish": [
+      {
+        "provider": "generic"
+      }
+    ]
   },
   "dependencies": {
     "axios": "^0.18.0",
