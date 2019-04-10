@@ -23,6 +23,15 @@ ipcRenderer.on("message", (event, text)=> {
     Vue.prototype.$alert(text, '系统更新', {
         confirmButtonText: '确定',
         callback: action => {
+            
+        }
+      });
+});
+
+ipcRenderer.on("update", (event, text)=> {
+    Vue.prototype.$alert(text, '系统更新', {
+        confirmButtonText: '确定',
+        callback: action => {
             ipcRenderer.send("checkForUpdate");
         }
       });
