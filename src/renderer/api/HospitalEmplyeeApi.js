@@ -91,10 +91,10 @@ export async function getShopGroupList() {
 /**
  *修改信息 
  */
-export async function updateEmployee(username, password, mobile, group_id, face, employeeId, state) {
+export async function updateEmployee(username, password, mobile, group_id, face, employeeId, programs, state) {
     try {
 
-        return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospital_employee/update', { username: username, password: password, mobile: mobile, group_id: group_id, face: face, employeeId: employeeId, state: state });
+        return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospital_employee/update', { username: username, password: password, mobile: mobile, group_id: group_id, face: face, employeeId: employeeId, state: state, programs: programs });
     } catch (error) {
         return error
     }
@@ -103,9 +103,9 @@ export async function updateEmployee(username, password, mobile, group_id, face,
 /**
  * 添加
  */
-export async function addEmployee(username, password, mobile, groupId, face) {
+export async function addEmployee(username, password, mobile, groupId, face, programs) {
     try {
-        return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospital_employee/add', { username: username, password: password, mobile: mobile, groupId: groupId, face: face })
+        return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospital_employee/add', { username: username, password: password, mobile: mobile, groupId: groupId, face: face, programs: programs })
     } catch (error) {
         return error
     }

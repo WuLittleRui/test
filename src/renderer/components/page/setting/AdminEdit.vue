@@ -156,8 +156,8 @@ export default {
       this.form.mobile = "";
       this.form.programs = [];
          this.$nextTick(() => {
-                    if (this.$refs.form !== undefined) {
-                        this.$refs.form.resetFields();
+     if (this.$refs.form !== undefined) {
+     this.$refs.form.resetFields();
                     }
                 });
 

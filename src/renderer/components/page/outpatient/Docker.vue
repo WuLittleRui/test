@@ -33,8 +33,19 @@
                 <el-table-column prop="mobile" label="手机号" header-align="center"  align="center" sortable min-width="120"></el-table-column>
                 <el-table-column prop="state" label="性别" header-align="center"  align="center" sortable min-width="80"  >
                   <template slot-scope='scope'>
-                  <el-tag    v-if='scope.row.sex === 1'>女</el-tag>
-                  <el-tag     v-if='scope.row.sex === 0'>男</el-tag>
+                  <el-tag v-if='scope.row.sex === 1'>女</el-tag>
+                  <el-tag v-if='scope.row.sex === 0'>男</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="qrcode" label="二维码" header-align="center"  align="center" sortable min-width="80"  >
+                  <template slot-scope='scope'>
+                    <el-popover v-if="scope.row.qrcode != '' && scope.row.qrcode != undefined"
+                      width="200"
+                      placement="bottom"
+                      trigger="hover">
+                      <img style="width:200px" :src="scope.row.qrcode" />
+                      <el-button icon="el-icon-picture" slot="reference"></el-button>
+                    </el-popover>
                   </template>
                 </el-table-column>
                 <el-table-column label="操作"  header-align="center" align="center"  min-width="160"  v-if="auth.SHOP_ADMIN_DELETE &&  auth.SHOP_ADMIN_EDIT">

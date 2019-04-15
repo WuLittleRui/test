@@ -15,7 +15,17 @@
             <el-form-item label="手机号" prop="mobile">
                 <el-input v-model="form.mobile"></el-input>
             </el-form-item>
-            
+               <el-form-item label="权限">
+                <el-tree class="tree"
+                  :data="treeData"
+                  show-checkbox
+                  default-expand-all
+                  node-key="id"
+                  ref="tree"
+                  highlight-current                                      
+                  :props="defaultProps">
+                </el-tree>                    
+            </el-form-item>
             <el-form-item label='部门'>
                 <el-select v-model='form.group_id'  class='filter-item' >
                   <el-option v-for="item in groupTypes" :key="item.group_id" :label="item.group_name" :value="item.group_id">
@@ -60,6 +70,7 @@ export default {
   },
   data() {
     return {
+       treeData: [],
       editVisible: false,
       title: "编辑",
       form: {
@@ -72,25 +83,42 @@ export default {
         face: "",
         state:"",
         id:'',
+            programs: []
       },
       groupTypes: [],
       rules: {
         groupName: [
           { required: true, message: "请输入登录名", trigger: "blur" }
         ],
+      
         username: [
           { required: true, message: "请输入员工名", trigger: "blur" }
         ],
         mobile: [
           { required: true, message: "请输入员工手机号", trigger: "blur" }
         ]
+      },
+        defaultProps: {
+        children: "children",
+        label: "label"
       }
     };
   },
   mounted() {
     this.getGroupTypes();
+    this.getProgramList();
   },
   methods: {
+     getProgramList() {
+      ProgramApi.getProgramList().then(data => {
+        if (data.error === "success") {
+          //console.log(data.data);
+          this.treeData = data.data;
+        } else {
+          this.$message.error(this.$t(data.error));
+        }
+      });
+    },
     //查询所有岗位
     getGroupTypes() {
       HospitalEmplyeeApi.getShopGroupList().then(data => {
@@ -125,6 +153,11 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+             //获取tree Checked 和半选的 keys
+          let checked = this.$refs.tree
+            .getCheckedKeys(false)
+            .concat(this.$refs.tree.getHalfCheckedKeys());
+          this.form.programs = checked;
           //修改
           if (this.form.employeeId) {
             HospitalEmplyeeApi.updateEmployee(
@@ -133,7 +166,8 @@ export default {
               this.form.mobile,
               this.form.group_id,
               this.form.face,
-              this.form.employeeId
+              this.form.employeeId,
+                this.form.programs
             ).then(res => {
               if (res.error === "success") {
                 this.$message({
@@ -163,7 +197,8 @@ export default {
               this.form.password,
               this.form.mobile,
               this.form.group_id,
-              this.form.face
+              this.form.face,
+              this.form.programs
             ).then(res => {
               if (res.error === "success") {
                 this.$message({
@@ -200,18 +235,30 @@ export default {
       this.form.group_id = "";
       this.form.face = "";
       this.form.id="";
+        this.form.programs = [];
+             this.$nextTick(() => {
+     if (this.$refs.form !== undefined) {
+     this.$refs.form.resetFields();
+                    }
+                });
     },
 
     getShopGroupInfo(employeeId) {
       HospitalEmplyeeApi.getEmployee(employeeId).then(res => {
         if (res.error === "success") {
-          this.form.employeeId = res.data.employee_id;
-          this.form.username = res.data.username;
-          this.form.mobile = res.data.mobile;
-          this.form.group_name = res.data.group_name;
-          this.form.group_id = res.data.group_id;
+          this.form.employeeId = res.data.list.employee_id;
+          this.form.username = res.data.list.username;
+          this.form.mobile = res.data.list.mobile;
+          this.form.group_name = res.data.list.group_name;
+          this.form.group_id = res.data.list.group_id;
           
-          this.form.face = res.data.face;
+          this.form.face = res.data.list.face;
+             let checked = res.data.programs.programs.split(",");
+          this.form.programs = checked;
+          this.$refs.tree.setCheckedKeys([]);
+          checked.forEach(element => {
+            this.$refs.tree.setChecked(element, true, false);
+          });
         } else if (
         res.error === "invaild_token" ||
         res.error === "not_login"
@@ -275,6 +322,10 @@ export default {
 }
 .el-upload--text {
   width: 180px;
+}
+.tree {
+  overflow: auto;
+  height: 200px;
 }
 </style>
         

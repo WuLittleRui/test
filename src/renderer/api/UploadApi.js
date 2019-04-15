@@ -44,3 +44,30 @@ export async function upload(formData) {
             })
     })
 }
+
+export async function uploadNoToken(formData) {
+    let isOk
+    return new Promise((resolve, reject) => {
+        fetch(config.BASE_URL + '/api/v1/file/upload', {
+                method: 'POST',
+                body: formData
+            }).then((response) => {
+                if (response.ok) {
+                    isOk = true
+                } else {
+                    isOk = false
+                }
+                return response.json()
+            })
+            .then((responseData) => {
+                if (isOk) {
+                    resolve(responseData)
+                } else {
+                    reject(responseData)
+                }
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}

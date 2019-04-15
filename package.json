@@ -1,6 +1,6 @@
 {
   "name": "yq-hospital",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "口腔门诊管理系统",
   "author": "yvqin.com",
   "license": null,
@@ -116,5 +116,6 @@
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.7.1",
     "webpack-hot-middleware": "^2.18.2"
-  }
+  },
+  "__npminstall_done": false
 }

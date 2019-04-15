@@ -53,9 +53,9 @@
             </el-row>
         </el-form>
         <span slot="footer" class="dialog-footer">
-                              <el-button @click="editVisible = false">取 消</el-button>
-                              <el-button type="primary" @click="submitForm('form')">确 定</el-button>
-                            </span>
+            <el-button @click="editVisible = false">取 消</el-button>
+            <el-button type="primary" :loading="buttonLoading" @click="submitForm('form')">确 定</el-button>
+        </span>
     </el-dialog>
 </template>
 
@@ -77,6 +77,7 @@
         },
         data() {
             return {
+                buttonLoading: false,
                 typelist: [],
                 editVisible: false,
                 title: "编辑",
@@ -88,7 +89,7 @@
                     description: "",
                     id:2,
                     recommend: true,
-                    score: ""
+                    score: 0
                 },
                 rules: {
                     name: [{
@@ -135,7 +136,6 @@
                 this.editVisible = true;
             },
             async showEdit(employee_id) {
-                
                 this.title = "编辑";
                 this.resetForm();
                 this.editVisible = true;
@@ -194,6 +194,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate(valid => {
                     if (valid) {
+                        this.buttonLoading = true;
                         //修改
                         if (this.form.id==1) {
                             HospitalDockerApi.updatePayType(
@@ -205,6 +206,7 @@
                                 this.form.recommend,
                                 this.form.score
                             ).then(res => {
+                                this.buttonLoading = false;
                                 if (res.error === "success") {
                                     this.$message({
                                         type: "success",
@@ -237,6 +239,7 @@
                                 this.form.recommend,
                                 this.form.score
                             ).then(res => {
+                                this.buttonLoading = false;
                                 if (res.error === "success") {
                                     this.$message({
                                         type: "success",
@@ -272,7 +275,7 @@
                 this.form.description = "";
                 this.form.id = 2;
                 this.form.recommend = true;
-                this.form.score = "";
+                this.form.score = 0;
             }
         }
     };

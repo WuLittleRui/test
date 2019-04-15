@@ -177,9 +177,7 @@ export default {
           remark: element.remarks 
         });
       });
-            console.log("this.arr",arr);
       this.productsList=arr;
-      console.log("this.productsList",this.productsList);
         } else if (
           data.error === "invaild_token" ||
           data.error === "not_login"

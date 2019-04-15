@@ -264,6 +264,11 @@ export default new Router({
             ]
         },
         {
+            path: '/register',
+            component: resolve => require(['../components/page/Register.vue'], resolve),
+            meta: { title: '注册' }
+        },
+        {
             path: '/404',
             component: resolve => require(['../components/page/404.vue'], resolve),
             meta: { title: '404' }

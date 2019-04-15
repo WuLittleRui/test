@@ -2,7 +2,7 @@
   <div class="login-wrap">
     <div class="ms-login">
       <div class="ms-left">
-        <h2>LOGO</h2>
+        <!-- <h2><img class='img' src="../../../static/img/favicon.png"></h2> -->
         <img src="static/img/login_bg.png">
       </div>
       <div class="ms-right">
@@ -26,7 +26,7 @@
           <div class="login-btn">
             <el-button type="primary" @click="submitForm('ruleForm')" :loading="LoginButtonLoading">登录</el-button>
           </div>
-          <!-- <p class="login-tips">Tips : 用户名和密码随便填。</p> -->
+          <el-button @click="registerClick()" type="text" style="color: white; float: right; font-size: 14px;">立即注册</el-button>
         </el-form>
       </div>
     </div>
@@ -54,6 +54,9 @@ export default {
     };
   },
   methods: {
+    registerClick() {
+      this.$router.push("/register");
+    },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -78,7 +81,6 @@ export default {
 
               return;
             }
-            ipcRenderer.removeAll(["message", "downloadProgress", "isUpdateNow"]);//remove只能移除单个事件，单独封装removeAll移除所有事件
             this.$router.push("/index");
           });
         } else {
@@ -95,7 +97,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, rgba(0, 0, 0, 0.9));
+  background-color: #c4cdda;
   background-size: 100%;
   margin: auto;
 }
@@ -106,11 +108,16 @@ export default {
 }
 h2 {
   color: #fff;
+  width:100px;
   height: 90px;
   line-height: 90px;
   font-size: 40px;
-  margin-left: 90px;
-  padding-top: 20px;
+  margin-left: 5%;
+  padding-top: 30px;
+}
+h2 .img {
+  width:150%;
+  margin-left: 5%;
 }
 .ms-right {
   width: 25%;

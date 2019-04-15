@@ -41,7 +41,9 @@ ipcRenderer.send("checkForUpdate");
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach(async (to, from, next) => {
-    if (to.path !== '/login' && await OauthApi.checkLogin() === false) {
+    if(to.path === "/register") {
+        next();
+    } else if (to.path !== '/login' && await OauthApi.checkLogin() === false) {
         next('/login');
     }
     else if (to.meta.role && await OauthApi.checkAuthorities(to.meta.role) === false) {
