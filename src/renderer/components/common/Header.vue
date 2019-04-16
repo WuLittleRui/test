@@ -4,7 +4,7 @@
     <div class="collapse-btn" @click="collapseChage">
       <i class="el-icon-menu"></i>
     </div>
-    <div class="logo">店铺管理系统</div>
+    <div class="logo">口腔门诊系统</div>
     <div class="header-right">
       <div class="header-user-con">
         <!-- 全屏显示 -->

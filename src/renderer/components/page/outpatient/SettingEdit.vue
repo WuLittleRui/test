@@ -12,8 +12,8 @@
           </el-col>
            <el-col :span="24"  align="left">
             <div class="grid-content bg-purple-light">
-              <el-form-item label='客服电话' prop="link_tel">
-                <el-input v-model="form.link_tel" ></el-input>
+              <el-form-item label='客服电话' prop="customer_service">
+                <el-input v-model="form.customer_service" ></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -35,7 +35,7 @@
       </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @click="editVisible = false">取 消</el-button>
-            <el-button type="primary" @click="submitForm('form')" >提交</el-button>
+            <el-button type="primary" :loading="buttonLoading" @click="submitForm('form')" >提交</el-button>
         </span>
     </el-dialog>
 </template>
@@ -48,12 +48,13 @@ import { validPhone } from "../../../utils/validate";
 export default {
   data() {
     return {
+      buttonLoading: false,
       editVisible: false,
       title: "营业设置",
       csTel: "", //电话
       form: {
         remark: "",
-        link_tel: "",
+        customer_service: "",
         lng: "",
         lat: ""
       },
@@ -61,8 +62,8 @@ export default {
         title: [{ required: true, message: "请输入员工名", trigger: "blur" }],
         lng: [{ required: true, message: "请输入经度", trigger: "blur" }],
         lat: [{ required: true, message: "请输入纬度", trigger: "blur" }],
-        link_tel: [
-          { required: true, message: "请输入手机号", trigger: "blur" }
+        customer_service: [
+          { required: true, message: "请输入客服电话", trigger: "blur" }
         ],
         businessStarted: [
           { required: true, message: "请输入开始时间", trigger: "blur" }
@@ -93,7 +94,7 @@ export default {
       SettingApi.getShopInfo().then(data => {
         if (data.error === "success") {
           this.form.remark = data.data.remark;
-          this.form.link_tel = data.data.link_tel;
+          this.form.customer_service = data.data.customer_service;
           this.form.lng = data.data.lng;
           this.form.lat = data.data.lat;
         } else if (
@@ -111,14 +112,16 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.buttonLoading = true;
           //修改
           SettingApi.updateShop(
             null,
             this.form.remark,
-            this.form.link_tel,
+            this.form.customer_service,
             this.form.lng,
             this.form.lat
           ).then(res => {
+            this.buttonLoading = false;
             if (res.error === "success") {
               this.$message({
                 type: "success",
@@ -147,7 +150,7 @@ export default {
     },
     resetForm() {
       this.form.remark = ""; //客服电话
-      this.form.link_tel = "";
+      this.form.customer_service = "";
       this.form.lng = "";
       this.form.lat = "";
     }
