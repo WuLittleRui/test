@@ -127,6 +127,11 @@ export default new Router({
                     meta: { title: '入库记录' }
                 },
                 {
+                    path: '/outpatient/typesetting',
+                    component: resolve => require(['../components/page/outpatient/Typesetting.vue'], resolve),
+                    meta: { title: '排班计划' }
+                },
+                {
                     path: '/stock/project',
                     component: resolve => require(['../components/page/stock/Project.vue'], resolve),
                     meta: { title: '库存项目' }
