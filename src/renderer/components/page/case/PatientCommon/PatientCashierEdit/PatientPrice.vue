@@ -128,7 +128,7 @@
                     </p>
                     <p style="font-size: 18px; line-height: 60px;">合计应收
                         <span>{{form.old_sum}}</span>
-                    </p>
+                    </p> 
                     <p style="font-size: 22px; line-height: 60px;">优惠后金额:
                         <el-input-number style="width: 70px;" :controls="false" :precision="2" v-model="form.all_price" controls-position="right" :min="0"></el-input-number>
                     </p>
@@ -147,13 +147,14 @@
       </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button size="medium" type="success" @click="submitForm('form')">收费</el-button>
-            <el-button size="medium" type="primary" @click="submitForm('form')">收费并打印</el-button>
+            <el-button size="medium" type="primary" @click="submitFormAndPrint('form')">收费并打印</el-button>
         </span>
     </el-dialog> 
     <!--处方完-->
 </template>
 
 <script>
+const {ipcRenderer} = require('electron');
 import PatientTeethPosition from "../PatientTeethPosition";
 import * as HospitalHandleApi from "../../../../../api/HospitalHandleApi";
 import * as PayTypeApi from "../../../../../api/PayTypeApi";
@@ -216,6 +217,45 @@ export default {
                     message: "划价成功!"
                   });
                   this.centerDialogVisible = false;
+                  this.$emit('refresh', true);
+              } else if (
+                data.error === "invaild_token" ||
+                data.error === "not_login"
+            ) {
+                //判断是否认证过期
+                this.$router.push("/login");
+            } else if (data.error_description) {
+                this.$message.error(data.error_description);
+            } else {
+                this.$message.error(data.error);
+            }
+          })
+        }
+      })
+    },
+    submitFormAndPrint(formName) {
+       this.$refs[formName].validate(valid => {
+        if (valid) {
+          if(this.form.docter_id == null) {
+            this.$message.error("请选择医生!");
+            return;
+          }
+          var sum = 0;
+          this.payType.forEach(item => {
+              sum = sum + item.amount;
+          })
+          if(sum == 0) {
+              this.$message.error("实收金额不能为0!");
+              return;
+          }
+          HospitalHandleApi.payCashierAndPrint(this.form.case_number, 2, JSON.stringify(this.tableData4), this.form.nurse_id, 4, this.form.remark, JSON.stringify(this.payType), this.form.all_cost_per, this.form.docter_id).then(data => {
+              if(data.error == 'success') {
+                  this.$message({
+                    type: "success",
+                    message: "划价成功!"
+                  });
+                  this.centerDialogVisible = false;
+                  ipcRenderer.send('print', data.data);
                   this.$emit('refresh', true);
               } else if (
                 data.error === "invaild_token" ||

@@ -7,7 +7,7 @@
                 <p style="width: 50%; line-height: 50px; font-size: 16px;">{{form.username}}
                     <span style="margin-left: 40px;">{{form.case_number}}</span>
                 </p>
-            </el-header>
+            </el-header> 
             <el-container>
                 <el-container>
                     <el-aside width="800px" >
@@ -91,14 +91,15 @@
         </el-container>
       </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button size="medium" @click="centerDialogVisible = false">取 消</el-button>
             <el-button size="medium" type="primary" @click="submitForm('form')">确 定</el-button>
+            <el-button size="medium" type="primary" @click="submitFormAndPrint('form')">确定并打印</el-button>
         </span>
     </el-dialog>
     <!--处方完-->
 </template>
 
 <script>
+const {ipcRenderer} = require('electron');
 import PatientTeethPosition from "./PatientTeethPosition";
 import * as HospitalHandleApi from "../../../../api/HospitalHandleApi";
 import * as PatientApi from "../../../../api/PatientApi";
@@ -148,6 +149,29 @@ export default {
                   type: "success",
                   message: "划价成功!"
                 });
+              this.centerDialogVisible = false;
+              this.$emit("refresh", true);
+            } else {
+              this.$message.error(this.$t(data.error));
+            }
+          })
+        }
+      })
+    },
+    submitFormAndPrint(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          if(this.form.docter_id == null) {
+            this.$message.error("请选择医生!");
+            return;
+          }
+          HospitalHandleApi.payBillAndPrint(this.detail_id, JSON.stringify(this.tableData4), this.form.remark, this.form.docter_id, this.form.all_cost_per).then(data => {
+            if (data.error === "success") {
+              this.$message({
+                type: "success",
+                message: "划价成功!"
+              });
+              ipcRenderer.send('print', data.data);
               this.centerDialogVisible = false;
               this.$emit("refresh", true);
             } else {

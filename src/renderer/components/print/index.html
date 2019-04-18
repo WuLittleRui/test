@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<script src="jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<!--条形码-->
+		<script src="JsBarcode.all.min.js" type="text/javascript" charset="utf-8"></script>
+		<title>Document</title>
+		<style type="text/css">
+			* {
+				margin: 0px;
+				padding: 0px;
+			}
+			
+			body {
+				width:100%;
+			}
+			
+			.section {
+				width:650px;
+				height:489px;
+				margin: 10px auto;
+				border: 1px solid #f4f4f4;
+				page-break-before: auto;        
+    			page-break-after: always;
+    			position: relative;
+			}
+			
+			.section h1 {
+				text-align: center;
+				margin: 10px 0 0;
+				font-size: 28px;
+			}
+			
+			.section p {
+				margin: 10px 0 10px;
+				padding: 6px 0;
+				border-bottom: 2px solid #000;
+			}
+			.section p .name {
+				width: 20%;
+				display: inline-block;
+				font-size: 16px;
+				text-indent: 12px;
+			}
+			.section p .names {
+				width: 39%;
+				font-size: 16px;
+				display: inline-block;
+			}
+			.section p .case {
+				width: 40%;
+				display: inline-block;
+				font-size: 16px;
+			}
+			#barcode,#barcode1{
+				position: absolute;
+				width: 100px;
+				height: 40px;
+				padding-left: 10px;
+				top: 48px;
+			}
+			
+			.table {
+				display: inline-block;
+				width: 98%;
+				padding: 0 5px;
+				
+			}
+			
+			table {
+				width: 100%;
+				padding: 0 10px;
+				border-bottom: 0.2px solid #000;
+			}
+			
+			.table tr th {
+				width: 14%;
+				padding-bottom: 10px;
+				text-align: left;
+			}
+			
+			.table .top {
+				border-bottom: 2px solid #000;
+			}
+			
+			.table tr td {
+				height: 45px;
+				font-size: 12px;
+			}
+			
+			.table .left_right {
+				width: 20%;
+				padding: 0 20px 0 5px;
+			}
+			
+			.table .top_left {
+				width: 49%;
+				border-bottom: 0.2px solid #000;
+				border-right: 0.2px solid #000;
+				float: left;
+				text-align: right;
+			}
+			
+			.table .top_left span,
+			.table .bottom_left span {
+				padding-right: 5px;
+			}
+			
+			.table .top_right span,
+			.table .bottom_right span {
+				padding-left: 2px;
+			}
+			
+			.table .top_right {
+				width: 49%;
+				border-bottom: 0.2px solid #000;
+				float: left;
+			}
+			
+			.table .bottom_left {
+				width: 49%;
+				border-right: 0.2px solid #000;
+				float: left;
+				text-align: right;
+			}
+			
+			.table .bottom_right {
+				width: 49%;
+				float: left;
+			}
+			
+			.footer {
+				width: 100%;
+				border-bottom: 2px solid #000;
+			}
+			
+			.footer p {
+				width: 100%;
+				text-align: right;
+				border: 0;
+				margin: 0px;
+			}
+			
+			.footer p span {
+				padding-right: 20px;
+			}
+			
+			h2 {
+				font-size: 16px;
+				text-align: center;
+			}
+			
+			
+		</style>
+	</head>
+
+	<body>
+		<div class="section">
+			<h1 id="title">晶晶口腔</h1>
+			<p><span class="name">姓名:李宝珠</span><span class="names">单号:201904046736270245888 </span><span class="case">病历号:190417001<img id="barcode"/></span></p>
+			<div class="table">
+				<table border="0" style="border-collapse:collapse;">
+					<tr class="top">
+						<th style="text-indent: 12px;">牙位</th>
+						<th>处置名称</th>
+						<th>数量</th>
+						<th>单位</th>
+						<th>单价（元）</th>
+						<th>折扣</th>
+						<th>总价</th>
+					</tr>
+					<tr>
+						<td class="left_right">
+							<div class="top_left"><span>1212</span></div>
+							<div class="top_right"><span>1212</span></div>
+							<div class="bottom_left"><span>1212</span></div>
+							<div class="bottom_right"><span>1212</span></div>
+						</td>
+						<td>芬必得</td>
+						<td>1</td>
+						<td>项</td>
+						<td>25.00</td>
+						<td>0</td>
+						<td>25.00</td>
+					</tr>
+				</table>
+				<div class="footer">
+					<!--<p><span>合计应收：100:00元</span></p>-->
+				</div>
+				<div style="display: inline-block; width: 100%; margin-top: 5px;">
+					<h2 style="display: inline-block; width: 23%; text-align: left; font-weight: 400; text-indent:12px;">收银员:王生</h2>
+					<h2 style="display: inline-block; width: 24%; text-align: left; font-weight: 400;">主治医生:王生</h2>
+					<h2 style="display: inline-block; width: 24%; text-align: left; font-weight: 400;">电话:13145235424</h2>
+					<span style="display: inline-block;  width: 24%; text-align: left;">顾客签字:</span>
+				</div>
+				<div style="display: inline-block; width: 100%; margin-top: 5px; font-weight: 400;">
+					<h2 style="display: inline-block; width: 48%; text-align: left; font-weight: 400; text-indent:12px;">地址:圆山街道花生u谷圆山街道花生u谷</h2>
+					<span class="time" style="display: inline-block;  width: 48%;font-weight: bold; text-align: left; font-weight: 400;">2019-04-01</span>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script>
+		var barcode = document.getElementById('barcode'),
+			str = "131313",
+			options = {
+				format: "CODE128",
+				displayValue: false,
+				fontSize: 18,
+				height: 100
+			};
+		JsBarcode(barcode, str, options); //原生
+		
+		var barcode = document.getElementById('barcode1'),
+			str = "131313",
+			options = {
+				format: "CODE128",
+				displayValue: false,
+				fontSize: 18,
+				height: 100
+			};
+		JsBarcode(barcode, str, options); //原生
+		
+		$(function(){
+			var now = new Date();
+			var year = now.getFullYear(); //获取年份
+			var month = ("0" + (now.getMonth() + 1)).slice(-2); //获取月份
+			var date = now.getDate(); //获取日期	
+			var hours = ("0" + (now.getHours())).slice(-2) //获取时间	
+			var minutes = ("0" + (now.getMinutes())).slice(-2) //获取分钟myDate.getSeconds();    
+			var getSeconds = ("0" + (now.getSeconds())).slice(-2); //获取当前秒数(0-59)
+			var start_time = year + '-' + month + '-' + date + '  ' + hours + ':' + minutes + ':' + getSeconds
+			$('.time').html('收费日期 :'+start_time)
+		})
+	</script>
+
+</html>

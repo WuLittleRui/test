@@ -59,6 +59,22 @@ export async function payBill(handle_id, detail, remark, employee_id, cost_price
     }
 }
 
+export async function payBillAndPrint(handle_id, detail, remark, employee_id, cost_price) {
+    try {
+
+        return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/money/update/pricing/print', {
+            handle_id: handle_id,
+            detail: detail,
+            remark: remark,
+            employee_id: employee_id,
+            cost_price: cost_price
+        });
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
 export async function cashierDetail(case_number) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/money/pay/detail', {
@@ -88,6 +104,26 @@ export async function payCashier(case_number, type, detail, nurse, cashier, rema
         return error
     }
 }
+
+export async function payCashierAndPrint(case_number, type, detail, nurse, cashier, remark, pay_amount, cost_price, employee_id) {
+    try {
+        return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/money/pay/bill/print', {
+            case_number: case_number,
+            type: type,
+            detail: detail,
+            nurse: nurse,
+            cashier: cashier,
+            remark: remark,
+            pay_amount: pay_amount,
+            cost_price: cost_price,
+            employee_id: employee_id
+        });
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
 
 export async function revisitList(page, pageSize, case_number) {
     try {

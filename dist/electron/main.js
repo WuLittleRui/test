@@ -2556,6 +2556,8 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 var mainWindow = void 0;
+var printWindow = void 0;
+
 var winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080' : 'file://' + __dirname + '/index.html';
 
 function createWindow() {
@@ -2576,6 +2578,49 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+function openPrintWindow(args) {
+  var windowOptions = {
+    width: 1000,
+    height: 563,
+    title: '打印页',
+    show: false
+  };
+  printWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"](windowOptions);
+  printWindow.loadURL('file://E:/work/yq-hospital/yq-hospital-admin/hospital-admin/src/renderer/components/print/print.html');
+  printWindow.webContents.on('did-finish-load', function () {
+
+    var list = args.date;
+    var html1 = "";
+    for (var z = 0; z < list.length; z++) {
+      var html = "";
+      for (var i = 0; i < list[z].length; i++) {
+        var p = new Object();
+        if (list[z][i].position != undefined && list[z][i].position != null) {
+          var p = JSON.parse(list[z][i].position);
+        } else {
+          p.left = "";
+          p.right = "";
+          p.bottom = "";
+          p.lebottom = "";
+        }
+        html += '<tr><td class="left_right">' + '<div class="top_left"><span>' + p.left + '</span></div>' + '<div class="top_right"><span>' + p.lebottom + '</span></div>' + '<div class="bottom_left"><span>' + p.bottom + '</span></div>' + '<div class="bottom_right"><span>' + p.right + '</span></div>' + '</td><td>' + list[z][i].name + '</td> <td>' + list[z][i].quantity + '</td> <td>项</td> <td>' + list[z][i].unit_price + '</td>' + '<td>0</td> <td>' + list[z][i].unit_price * list[z][i].quantity + '</td></tr></td>';
+      }
+      html1 += '<div class="section">' + '<h1>' + args.hospital_name + '</h1><p><span class="name">姓名:' + args.username + '</span><span class="case">病历号:' + args.case_number + '<span class="time" style="display: inline-block; padding-left: 50px; font-weight: bold; text-align: left; font-weight: 400;" id="time">' + args.time + '</span>' + '<img class="img" id="barcode' + z + '" /></span></p>' + '<div class="table"><table border="0" style="border-collapse:collapse;" class="list"><tr class="top"><th style="text-indent: 12px;">牙位</th>' + '<th>处置名称</th><th>数量</th><th>单位</th><th>单价（元）</th><th>折扣</th><th>总价</th></tr>' + html + '</table><div class="footer">' + '<p>合计应收：<span class="total">9662.4元</span></p></div><div style="display: inline-block; width: 100%; margin-top: 5px;">' + '<h2 style="display: inline-block; width: 23%; text-align: left; font-weight: 400; text-indent:12px;">收银员:' + args.cashier_name + '</h2>' + '<h2 style="display: inline-block; width: 24%; text-align: left; font-weight: 400;">主治医生:' + args.docter_name + '</h2>' + '<h2 style="display: inline-block; width: 24%; text-align: left; font-weight: 400;">电话:' + args.docter_mobile + '</h2>' + '<span style="display: inline-block;  width: 24%; text-align: left;">顾客签字:</span></div>' + '<div style="display: inline-block; width: 100%; margin-top: 5px; font-weight: 400;">' + '<h2 style="display: inline-block; width: 100%; text-align: left; font-weight: 400; text-indent:12px;">地址:' + args.address + '</h2>' + '</div></div></div>';
+    }
+
+    printWindow.webContents.executeJavaScript("$('.sectionClass').append('" + html1 + "')");
+    for (var z = 0; z < list.length; z++) {
+      printWindow.webContents.executeJavaScript("JsBarcode(document.getElementById('barcode" + z + "'), " + args.case_number + ", {'format': 'CODE128','displayValue': false,'fontSize': 18,'height': 100})");
+    }
+    printWindow.show();
+  });
+}
+
+__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('print', function (event, args) {
+  console.log(args);
+  openPrintWindow(args);
+});
 
 __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('ready', function () {
   createWindow();
