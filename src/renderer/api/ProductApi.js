@@ -16,12 +16,20 @@ export async function list(pid) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/product/list', {
             pid: pid
-
         });
     } catch (error) {
         return error
     }
 }
+
+export async function prescriptionList() {
+    try {
+        return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/prescription/all');
+    } catch (error) {
+        return error
+    }
+}
+
 // 获取商品列表
 export async function getGoodList(listquery) {
     try {
@@ -38,9 +46,6 @@ export async function getGoodList(listquery) {
         return error
     }
 }
-
-
-
 
 /**
  * 获取所有的商品分类  不分页

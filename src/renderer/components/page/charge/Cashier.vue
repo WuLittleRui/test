@@ -9,10 +9,10 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="listQuery.case_number" class="handle-input mr10" clearable placeholder="请输入病历号" />
+                <el-input  @keyup.enter.native="doSomething" v-model="listQuery.case_number" class="handle-input mr10" clearable placeholder="请输入病历号" />
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
             </div>
-            <CashierEdit ref="CashierEdit" @refresh="getData" />
+            <CashierEdit ref="CashierEdit" />
         </div> 
     </div>
 </template>
@@ -21,6 +21,7 @@
 import CashierEdit from "./CashierEdit";
 import * as CashierApi from "@/api/CashierApi";
 import { parseTime } from "@/utils/formater";
+
 export default {
     components: { CashierEdit },
     data() {
@@ -43,6 +44,10 @@ export default {
         this.handleCashier();
     },
     methods: {
+        doSomething(e) {
+            this.listQuery.page  = 1;
+            this.handleCashier();
+        },
         handleCashier() {
             this.$refs["CashierEdit"].showAdd(this.listQuery.case_number);
         },

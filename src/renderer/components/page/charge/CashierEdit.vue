@@ -79,9 +79,9 @@
                             </el-select>&nbsp;&nbsp;备注：
                             <el-input v-model="form.remark" placeholder="请输入内容" style="width: 60%;"></el-input>
                         </div>
-                        <el-container style="margin-top: 20px;">
+                        <el-container style="margin-top: 20px;" v-show="show">
                           <el-button type="primary" @click="submitForm('form')">收费</el-button>
-                          <el-button type="success" @click="submitForm('form')">收费并打印</el-button>
+                          <!-- <el-button type="success" @click="submitForm('form')">收费并打印</el-button> -->
                         </el-container> 
                     </el-footer>
                 </el-container>
@@ -135,6 +135,7 @@ export default {
       payType: [],
       detail_list: [],
       value: "",
+      show: false,
       input: "",
       rules: {
         docter_id: [
@@ -180,7 +181,7 @@ export default {
                     type: "success",
                     message: "收费成功!"
                   });
-                  this.centerDialogVisible = false;
+                  this.show = false;
                   this.$emit('refresh', true);
               } else if (
                 data.error === "invaild_token" ||
@@ -197,6 +198,19 @@ export default {
         }
       })
     },
+    resetForm() {
+      this.form.docter_id = null;
+      this.form.nurse_id = null;
+      this.form.mid = null;
+      this.form.now_price = 0;
+      this.form.all_cost_per = 0;
+      this.form.remark = "";
+      this.form.all_price = 0;
+      this.form.old_sum = 0;
+      this.form.arrear_amount = 0;
+      this.form.odd_change = 0;
+      this.form.arrear = 0;
+    },
     payTypeValueChange() {
         var sum = 0;
         this.payType.forEach(item => {
@@ -211,8 +225,8 @@ export default {
         }
     },
     //处置打开事件
-	openChange(item) {
-	},
+    openChange(item) {
+    },
 		//处置关闭事件
     closeChange(item, oindex) {
     },
@@ -235,7 +249,7 @@ export default {
         this.centerDialogVisible = true;
     },
     getDocter() {
-		PatientApi.getEmployee(1).then(res => {
+		  PatientApi.getEmployee(1).then(res => {
             if (res.error === "success") {
                 this.options = res.data;
             }  else if (
@@ -336,6 +350,10 @@ export default {
                 })
             })
             this.detail_list = data.data.detail_list;
+
+            if(this.detail_list.length > 0) {
+              this.show = true;
+            }
 
             this.form.arrear_amount = data.data.arrear_amount; // 上期欠款
             this.form.now_price = data.data.now_pay; //本次费用

@@ -140,7 +140,7 @@ export default {
 <style scoped>
 .basic_information {
     background-color: white;
-    height: 650px;
+    height: 660px;
 }
 .basic_information2{
     height: 150px;

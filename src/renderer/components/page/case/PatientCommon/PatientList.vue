@@ -77,7 +77,6 @@ export default {
                     one.active = false;
                 })
             })
-            console.log(this.dlist[index].data[oindex])
         	this.dlist[index].data[oindex].active = true;
         },
         getActiveIndex(index, flag) {
@@ -160,7 +159,6 @@ export default {
                         } else if(data.data.revisit_list.length > 0) {
                             sn = data.data.revisit_list[0].case_number;
                         }
-                        console.log(this.dlist);
                         this.$emit("refresh", sn, this.index);
                     } else if (
                         data.error === "invaild_token" ||

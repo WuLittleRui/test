@@ -96,7 +96,7 @@ export default {
       this.patientNavSelect("1");
     },
     patientNavSelect(key) {
-      this.patientActive = key;
+      this.patientActiveIndex = key;
       if(key == "1") {
         this.$refs["PatientDetail"].showORnoshow(true, this.case_number, false);
         this.$refs["PatientTeeth"].showORnoshow(false, this.case_number, false);

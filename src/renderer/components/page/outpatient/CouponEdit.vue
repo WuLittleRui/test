@@ -94,7 +94,7 @@
             </el-row>
             <el-form-item label='类型' prop='TypeProduct'>
                 <el-radio v-model="form.TypeProduct" :label="1" border size="medium" @change="TypeList">收费项目</el-radio>
-                <el-radio v-model="form.TypeProduct" :label="2" border size="medium" @change="TypeList">商品</el-radio>
+                <el-radio v-model="form.TypeProduct" :label="2" border size="medium" @change="TypeList">处方</el-radio>
             </el-form-item>
             <el-form-item v-if="this.form.TypeProduct== 1 " label='项目' label-width='60px'>
                 <el-table ref="multipleTable" :data="ChargeList" tooltip-effect="dark" border style="width: 100%" @selection-change="changeFun" height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
@@ -102,28 +102,28 @@
                     </el-table-column>
                     <el-table-column label='项目名称'>
                         <template slot-scope="scope">{{ scope.row.name }}
-</template>
-          </el-table-column>
-          <el-table-column label='价格'>
-<template slot-scope="scope">
-     {{ scope.row.unit_price }}/{{ scope.row.unit_price }}
-</template>
+                    </template>
+                            </el-table-column>
+                            <el-table-column label='价格'>
+                    <template slot-scope="scope">
+                        {{ scope.row.unit_price }}/{{ scope.row.unit }}
+                    </template>
           </el-table-column>
         </el-table>
       </el-form-item>
-        <el-form-item v-if="this.form.TypeProduct== 2 "   label='商品' label-width='60px'>
+        <el-form-item v-if="this.form.TypeProduct== 2 "   label='处方' label-width='60px'>
                 <el-table ref="multipleTable" :data="productsList" tooltip-effect="dark" border style="width: 100%" @selection-change="changeFuns" height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
                     <el-table-column type="selection" @selection-change="changeFuns">
                     </el-table-column>
-                    <el-table-column label='商品名称'>
-<template slot-scope="scope">
-     {{ scope.row.name }}
-</template>
-          </el-table-column>
-          <el-table-column label='价格'>
-<template slot-scope="scope">
-     {{ scope.row.unit_price }}/{{ scope.row.unit_price }}
-</template>
+                    <el-table-column label='处方名称'>
+                        <template slot-scope="scope">
+                            {{ scope.row.name }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label='价格'>
+                        <template slot-scope="scope">
+                            {{ scope.row.unit_price }}/{{ scope.row.unit }}
+                        </template>
           </el-table-column>
         </el-table>
       </el-form-item>
@@ -262,41 +262,41 @@
                         });
                         this.ChargeList = arr;
                     } else if (
-          data.error === "invaild_token" ||
-          data.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        }  else {
+                    data.error === "invaild_token" ||
+                    data.error === "not_login"
+                    ) {
+                    //判断是否认证过期
+                    OauthApi.logOut();
+                    this.$router.push("/login");
+                    }  else {
                         this.$message.error(this.$t(response.error));
                     }
                     this.productlistLoading = false;
                 });
             },
             //按商品序号获取商品
-            getProductLidt(pid) {
+            getProductLidt() {
                 this.productlistLoading = true;
-                ProductApi.list(pid).then(response => {
+                ProductApi.prescriptionList().then(response => {
                     if (response.error === "success") {
                         var arr = [];
-                        response.data.list.forEach(function(element) {
+                        response.data.forEach(function(element) {
                             arr.push({
-                                pid: element.pid,
-                                name: element.product_name,
+                                pid: element.prescription_id,
+                                name: element.title,
                                 unit_price: element.unit_price,
-                                unit: element.weight
+                                unit: element.unit
                             });
                         });
                         this.productsList = arr;
                     } else if (
-          data.error === "invaild_token" ||
-          data.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        }  else {
+                        data.error === "invaild_token" ||
+                        data.error === "not_login"
+                    ) {
+                        //判断是否认证过期
+                        OauthApi.logOut();
+                        this.$router.push("/login");
+                    }  else {
                         this.$message.error(this.$t(response.error));
                     }
                     this.productlistLoading = false;
@@ -392,13 +392,13 @@
                                     this.$emit("refresh");
                                     this.editVisible = false;
                                 } else if (
-          res.error === "invaild_token" ||
-          res.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        }  else {
+                                res.error === "invaild_token" ||
+                                res.error === "not_login"
+                                ) {
+                                //判断是否认证过期
+                                OauthApi.logOut();
+                                this.$router.push("/login");
+                                }  else {
                                     this.$message({
                                         type: "error",
                                         message: this.$t(res.error)
@@ -431,13 +431,13 @@
                                     this.$emit("refresh");
                                     this.editVisible = false;
                                 } else if (
-          res.error === "invaild_token" ||
-          res.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        }  else {
+                                res.error === "invaild_token" ||
+                                res.error === "not_login"
+                                ) {
+                                //判断是否认证过期
+                                OauthApi.logOut();
+                                this.$router.push("/login");
+                                }  else {
                                     this.$message({
                                         type: "error",
                                         message: this.$t(res.error)
@@ -475,8 +475,6 @@
             },
             getCouponInfo(coupon_id) {
                 HospitalCouponApi.byId(coupon_id).then(res => {
-                    console.log("this.form.time", this.form.time[0]);
-                    console.log("this.form.time", this.form.time[1]);
                     if (res.error === "success") {
                         if (res.data.detail.length > 0) {
                             this.form.discount = res.data.detail[0].discount;
@@ -505,97 +503,57 @@
                         if (this.form.TypeProduct == 1) {
                             this.getCharge(res.data.list.charge_id);
                         } else {
-                            this.getProduct(res.data.list.pid);
+                            this.getProduct(this.pids);
                         }
-                        console.log("this.form.time", this.form.time[0]);
-                        console.log("this.form.time", this.form.time[1]);
                     } else if (
-          res.error === "invaild_token" ||
-          res.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        }  else {
+                        res.error === "invaild_token" ||
+                        res.error === "not_login"
+                    ) {
+                    //判断是否认证过期
+                        OauthApi.logOut();
+                        this.$router.push("/login");
+                    }  else {
                         this.$message.error(this.$t(res.error));
                     }
                 });
             },
             getCharge(charge_id) {
-                this.$refs.multipleTable.clearSelection(); //取消所有勾选
-                HospitalChargeApi.list(charge_id).then(response => {
-                    if (response.error === "success") {
-                        var arr2 = [];
-                        response.data.list.forEach(function(element) {
-                            arr2.push({
-                                charge_id: element.charge_id,
-                                name: element.name,
-                                unit: element.unit,
-                                unit_price: element.unit_price
-                            });
-                        });
-                        this.productList = arr2;
-                        for (var i = 0; i < this.productList.length; i++) {
-                            var tempA = this.productList[i];
-                            for (var j = 0; j < this.ChargeList.length; j++) {
-                                var tempB = this.ChargeList[j];
-                                if (tempA.charge_id == tempB.charge_id) {
-                                    this.multipleSelection.push({
-                                        charge_id: tempB.charge_id
-                                    });
-                                    this.$refs.multipleTable.toggleRowSelection(tempB);
-                                }
+                this.$nextTick(function () {
+                    var a = charge_id.split(",");
+                    this.$refs.multipleTable.clearSelection(); //取消所有勾选
+                    for (var i = 0; i < a.length; i++) {
+                        var tempA = a[i];
+                        for (var j = 0; j < this.ChargeList.length; j++) {
+                            var tempB = this.ChargeList[j];
+                            if (tempA == (tempB.charge_id+ "")) {
+                                this.multipleSelection.push({
+                                    charge_id: tempB.charge_id
+                                });
+                                this.$refs.multipleTable.toggleRowSelection(tempB);
                             }
                         }
-                    } else if (
-          response.error === "invaild_token" ||
-          response.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        }  else {
-                        this.$message.error(this.$t(response.error));
                     }
-                });
+                })
             },
             getProduct(pid) {
-                this.$refs.multipleTable.clearSelection(); //取消所有勾选
-                ProductApi.list(pid).then(response => {
-                    if (response.error === "success") {
-                        var arr2 = [];
-                        response.data.list.forEach(function(element) {
-                            arr2.push({
-                                pid: element.pid, 
-                                name: element.product_name,
-                                unit_price: element.unit_price,
-                                unit: element.weight
-                            });
-                        });
-                        this.productList = arr2;
-                        for (var i = 0; i < this.productList.length; i++) {
-                            var tempA = this.productList[i];
-                            for (var j = 0; j < this.productsList.length; j++) {
-                                var tempB = this.productsList[j];
-                                if (tempA.pid == tempB.pid) {
-                                    this.multipleSelections.push({
-                                        pid: tempB.pid
-                                    });
-                                    this.$refs.multipleTable.toggleRowSelection(tempB);
-                                }
+                
+                this.$nextTick(function () {
+                    var a = pid.split(",");
+                    this.$refs.multipleTable.clearSelection(); //取消所有勾选
+                    for (var i = 0; i < a.length; i++) {
+                        var tempA = a[i];
+                        for (var j = 0; j < this.productsList.length; j++) {
+                            var tempB = this.productsList[j];
+                            if (tempA == (tempB.pid + "")) {
+                                this.multipleSelections.push({
+                                    pid: tempB.pid
+                                });
+                                this.$refs.multipleTable.toggleRowSelection(tempB);
+                                
                             }
                         }
-                    } else if (
-          response.error === "invaild_token" ||
-          response.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        }   else {
-                        this.$message.error(this.$t(response.error));
                     }
-                });
+                })
             }
         }
     };

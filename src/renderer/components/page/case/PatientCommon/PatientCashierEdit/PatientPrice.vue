@@ -62,33 +62,6 @@
                                     
                                 </table>
                             </el-tab-pane>
-                            <!-- <el-tab-pane label="配置管理" name="second">
-                            	
-                                <table>
-                                    <tr>
-                                        <th>收费项目</th>
-                                        <th>费用</th>
-                                        <th>收费项目</th>
-                                        <th>费用</th>
-                                        <th>收费项目</th>
-                                        <th>费用</th>
-                                    </tr>
-                                    <tr>
-                                        <td>西药费</td>
-                                        <td>
-                                            <input type="text">
-                                        </td>
-                                        <td>西药费</td>
-                                        <td>
-                                            <input type="text">
-                                        </td>
-                                        <td>西药费</td>
-                                        <td>
-                                            <input type="text">
-                                        </td>
-                                    </tr>
-                                </table>
-                            </el-tab-pane> -->
                         </el-tabs>
                     </el-aside>
                     <el-footer>
@@ -130,13 +103,13 @@
                         <span>{{form.old_sum}}</span>
                     </p> 
                     <p style="font-size: 22px; line-height: 60px;">优惠后金额:
-                        <el-input-number style="width: 70px;" :controls="false" :precision="2" v-model="form.all_price" controls-position="right" :min="0"></el-input-number>
+                        <el-input-number style="width: 70px;" :controls="false" :precision="2" v-model="form.all_price" controls-position="right" :min="0" :disabled="true"></el-input-number>
                     </p>
                     <p style="font-size: 18px; line-height: 60px;">欠款:
-                        <el-input-number style="width: 70px;" :readonly="true" :controls="false" :precision="2" v-model="form.arrear" controls-position="right" :min="0"></el-input-number>
+                        <el-input-number style="width: 70px;" :readonly="true" :controls="false" :precision="2" v-model="form.arrear" controls-position="right" :min="0" :disabled="true"></el-input-number>
                     </p>
                     <p style="font-size: 18px; line-height: 60px;">找零:
-                        <el-input-number style="width: 70px;" :readonly="true" :controls="false" :precision="2" v-model="form.odd_change" controls-position="right" :min="0"></el-input-number>
+                        <el-input-number style="width: 70px;" :readonly="true" :controls="false" :precision="2" v-model="form.odd_change" controls-position="right" :min="0" :disabled="true"></el-input-number>
                     </p>
                     <p style="font-size: 18px; line-height: 60px;" v-for="item in payType">{{item.pay_type_name}}
                         <el-input-number style="width: 70px;" :precision="2" :controls="false" @change="payTypeValueChange" v-model="item.amount" controls-position="right" :min="0"></el-input-number>

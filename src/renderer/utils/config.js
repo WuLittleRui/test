@@ -15,8 +15,8 @@ const IS_DEV = process.env.NODE_ENV !== 'production'
 // export const BASE_URL = 'http://mz.gzkny.com'
 
 
-// export const BASE_URL = 'http://mz.gzkny.com'
-export const BASE_URL = 'http://192.168.109.189:9003'
+export const BASE_URL = 'http://mz.gzkny.com'
+// export const BASE_URL = 'http://192.168.109.189:9003'
 export const IMAGES_URL = 'https://res.yvqin.cn/hospital_teeth'
 
 export const UPLOADURL = 'http://www.gzkny.com/h5/'
