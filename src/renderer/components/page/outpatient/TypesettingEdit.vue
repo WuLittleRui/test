@@ -6,7 +6,7 @@
                     <el-form-item :label="item.start_time + ' - ' + item.end_time">
                         <el-input-number v-model="item.people_number" :min="0"></el-input-number>
                     </el-form-item>
-                </el-col>
+                </el-col> 
             </el-row>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -22,7 +22,7 @@ import * as OauthApi from "@/api/OauthApi";
 export default {
     data() {
         return {
-            title: "排班",
+            title: "排班 - ",
             editVisible: false,
             list: [],
             buttongLoading: false,
@@ -37,6 +37,8 @@ export default {
     },
     methods: {
         showEdit(date, employee_id) {
+            this.title = "排班 - ";
+            this.title += date;
             this.getTime(employee_id, date);
             this.editVisible = true;
         },

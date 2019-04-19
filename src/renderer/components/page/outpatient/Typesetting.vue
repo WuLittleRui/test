@@ -67,7 +67,9 @@ export default {
         this.getList();
     },
     cellClick(row, column, cell, event) {
+      if("username" != column.property) {
         this.$refs["TypesettingEdit"].showEdit(column.property, row.employee_id);
+      }
     },
     //分页所用方法
     handleCurrentChange(val) {
