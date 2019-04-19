@@ -325,7 +325,6 @@ export default {
 						--_this.time;
 						if(_this.time < 0) {
 							_this.button = "重新发送";
-							_this.time = 10;
 							_this.isDisabled = false;
 							window.clearInterval(interval);
 						}
