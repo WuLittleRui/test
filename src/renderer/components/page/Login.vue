@@ -40,8 +40,8 @@ export default {
   data: function() {
     return {
       ruleForm: {
-        hospital_name: process.env.NODE_ENV === "production" ? "" : "宠物中心",
-        username: process.env.NODE_ENV === "production" ? "" : "admin",
+        hospital_name: process.env.NODE_ENV === "production" ? "" : "乐莎莎口腔",
+        username: process.env.NODE_ENV === "production" ? "" : "leshasha",
         password: process.env.NODE_ENV === "production" ? "" : "123456"
       },
       rules: {

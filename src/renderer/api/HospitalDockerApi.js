@@ -51,7 +51,7 @@ export async function getOnePay(employee_id) {
 /**
  * 编辑提交事件方法
  */
-export async function updatePayType(employee_id, face, mobile, sex, description, recommend, score) {
+export async function updatePayType(employee_id, face, mobile, sex, description, recommend, score, certified) {
     try {
 
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospitaldocker/update', {
@@ -61,8 +61,8 @@ export async function updatePayType(employee_id, face, mobile, sex, description,
             sex: sex,
             description: description,
             recommend: recommend,
-            score: score
-
+            score: score,
+            certified: certified
         });
 
     } catch (error) {
@@ -87,7 +87,7 @@ export async function deletePayType(employee_id) {
 /**
  * 新增的提交事件方法
  */
-export async function addPayType(employee_id, face, mobile, sex, description, recommend, score) {
+export async function addPayType(employee_id, face, mobile, sex, description, recommend, score, certified) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospitaldocker/add', {
             employee_id: employee_id,
@@ -96,7 +96,8 @@ export async function addPayType(employee_id, face, mobile, sex, description, re
             sex: sex,
             description: description,
             recommend: recommend,
-            score: score
+            score: score,
+            certified: certified
         });
     } catch (error) {
         return error

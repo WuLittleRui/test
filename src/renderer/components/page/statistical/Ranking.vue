@@ -7,6 +7,17 @@
               <el-breadcrumb-item>项目销售排行榜</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+        <div class="handle-box">        
+            <el-date-picker
+                v-model="listQuery.time"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
+            <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
+        </div>
         <div class="container">
             <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort"
@@ -42,7 +53,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        sort: null
+        sort: null,
+        time: []
       }
     };
   },
@@ -50,6 +62,10 @@ export default {
     this.getData();
   },
   methods: {
+    search() {
+        this.listQuery.page = 1;
+        this.getData();
+    },
     // 分页导航
     handleCurrentChange(val) {
       this.listQuery.page = val;
@@ -59,8 +75,14 @@ export default {
       this.$refs["ServiceEdit"].showNew(row);
     },
     getData() {
+      var start = "";
+      var end = "";
+      if(this.listQuery.time.length > 0) {
+          start = this.listQuery.time[0];
+          end = this.listQuery.time[1];
+      }
       this.listLoading = true;
-      RecordApi.getShopSaleSort(this.listQuery.page, this.listQuery.limit, this.listQuery.sort).then(data => {
+      RecordApi.getShopSaleSort(this.listQuery.page, this.listQuery.limit, this.listQuery.sort, start, end).then(data => {
         this.listLoading = false;
         if (data.error === "success") {
           this.total = data.data.total;

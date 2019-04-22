@@ -16,15 +16,14 @@ export async function getShopInfo() {
  * 
  * 营销设置的提交按钮
  */
-export async function updateShop(images, remark, customer_service, lng, lat) {
+export async function updateShop(images, remark, customer_service, address) {
   try {
 
     return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/setting/edit', {
       images: images,
       remark: remark,
       customer_service: customer_service,
-      lng: lng,
-      lat: lat
+      address: address
     });
 
   } catch (error) {

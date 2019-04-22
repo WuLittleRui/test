@@ -12,22 +12,15 @@
           </el-col>
            <el-col :span="24"  align="left">
             <div class="grid-content bg-purple-light">
+              <el-form-item label='医院地址' prop="address">
+                <el-input v-model="form.address" ></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="24"  align="left">
+            <div class="grid-content bg-purple-light">
               <el-form-item label='客服电话' prop="customer_service">
                 <el-input v-model="form.customer_service" ></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-           <el-col :span="24"  align="lng">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label='医院经度' prop="lng">
-                <el-input v-model="form.lng" ></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-           <el-col :span="24"  align="left">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label='医院纬度' prop="lat">
-                <el-input v-model="form.lat" ></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -55,13 +48,11 @@ export default {
       form: {
         remark: "",
         customer_service: "",
-        lng: "",
-        lat: ""
+        address: ""
       },
       rules: {
         title: [{ required: true, message: "请输入员工名", trigger: "blur" }],
-        lng: [{ required: true, message: "请输入经度", trigger: "blur" }],
-        lat: [{ required: true, message: "请输入纬度", trigger: "blur" }],
+        address: [{ required: true, message: "请输入医院地址", trigger: "blur" }],
         customer_service: [
           { required: true, message: "请输入客服电话", trigger: "blur" }
         ],
@@ -95,8 +86,7 @@ export default {
         if (data.error === "success") {
           this.form.remark = data.data.remark;
           this.form.customer_service = data.data.customer_service;
-          this.form.lng = data.data.lng;
-          this.form.lat = data.data.lat;
+          this.form.address = data.data.address;
         } else if (
         data.error === "invaild_token" ||
         data.error === "not_login"
@@ -118,8 +108,7 @@ export default {
             null,
             this.form.remark,
             this.form.customer_service,
-            this.form.lng,
-            this.form.lat
+            this.form.address
           ).then(res => {
             this.buttonLoading = false;
             if (res.error === "success") {
@@ -151,8 +140,7 @@ export default {
     resetForm() {
       this.form.remark = ""; //客服电话
       this.form.customer_service = "";
-      this.form.lng = "";
-      this.form.lat = "";
+      this.form.address = "";
     }
   }
 };

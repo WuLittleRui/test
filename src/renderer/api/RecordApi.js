@@ -46,12 +46,14 @@ export async function getShopSaleGrowth() {
 /**
  * 项目排行
  */
-export async function getShopSaleSort(page, pageSize, sort) {
+export async function getShopSaleSort(page, pageSize, sort, start, end) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/record/sale/rank', {
             page: page,
             pageSize: pageSize,
-            sort: sort
+            sort: sort,
+            start_time: start,
+            end_time: end
         });
     } catch (error) {
         return error

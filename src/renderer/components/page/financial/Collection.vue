@@ -17,19 +17,25 @@
                     start-placeholder="开始日期"
                     end-placeholder="结束日期">
                 </el-date-picker>
-                <el-input v-model="listQuery.case_number" clearable placeholder="病历号" class="handle-input mr10"></el-input>
-                <el-input v-model="listQuery.mobile" clearable placeholder="手机号" class="handle-input mr10"></el-input>
+                <el-input v-model="listQuery.case_number" clearable placeholder="病患病历号" class="handle-input mr10"></el-input>
+                <el-input v-model="listQuery.mobile" clearable placeholder="病患手机号" class="handle-input mr10"></el-input>
+                <el-input v-model="listQuery.username" clearable placeholder="病患姓名" class="handle-input mr10"></el-input>
+                <el-input v-model="listQuery.docter_mobile" clearable placeholder="医生手机号" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
             </div>
             <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
-                v-loading='listLoading' ref="multipleTable" highlight-current-row @current-change="handleTableChange">
+                v-loading='listLoading' ref="multipleTable" highlight-current-row>
                 <el-table-column prop="sn" label="单据号" header-align="center"  align="center" min-width="170">
                 </el-table-column>
                 <el-table-column prop="case_number" label="患者病历号" align="center" header-align="center" min-width="120">
                 </el-table-column>
+                <el-table-column prop="name" label="患者姓名" align="center" header-align="center" min-width="120">
+                </el-table-column>
                 <el-table-column prop="mobile" label="患者手机号" align="center" header-align="center" min-width="120">
                 </el-table-column>
                 <el-table-column prop="docter_name" label="医生" align="center" header-align="center" min-width="70">
+                </el-table-column>
+                <el-table-column prop="docter_mobile" label="医生手机号" align="center" header-align="center" min-width="120">
                 </el-table-column>
                 <el-table-column prop="cashier_name" label="收款员" align="center" header-align="center" min-width="70">
                 </el-table-column>
@@ -44,6 +50,14 @@
                 <el-table-column prop="arrear_amount" label="欠费" align="center" header-align="center" min-width="80">
                 </el-table-column>
                 <el-table-column :prop="item.pay_type_name" :label="item.pay_type_name" header-align="center"  align="center" min-width="100" v-for="item in paylist">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row[item.pay_type_name] != undefined">
+                            {{scope.row[item.pay_type_name]}}
+                        </span>
+                        <span v-else>
+                            0
+                        </span>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="remark" label="备注" align="center" header-align="center" min-width="160">
                 </el-table-column>
@@ -76,7 +90,9 @@ export default {
                 sort: null,
                 time: "",
                 mobile: "",
-                case_number: ""
+                case_number: "",
+                username: "",
+                docter_mobile: ""
             }
         }
     },
@@ -108,7 +124,9 @@ export default {
                 start,
                 end,
                 this.listQuery.mobile,
-                this.listQuery.case_number
+                this.listQuery.case_number,
+                this.listQuery.username,
+                this.listQuery.docter_mobile
             ).then(data => {
                 this.listLoading = false;
                 if (data.error === "success") {

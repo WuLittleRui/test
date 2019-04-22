@@ -98,13 +98,14 @@
                     </el-form-item>
                     <!-- 医院资质 -->
                 </el-form>
+                
+                <div class="login-btn">
+                    <el-button type="danger" @click="returnLogin" v-if="active == 1">返回登录</el-button>
+                    <el-button type="danger" @click="previousStep" v-if="active != 1">上一步</el-button>
+                    <el-button type="primary" @click="nextStep('form')" v-if="active != 3">下一步</el-button>
+                    <el-button type="primary" @click="submitForm('form')" v-if="active == 3" :loading="LoginButtonLoading">确定</el-button>
+                </div>
             </el-scrollbar>
-            <div class="login-btn">
-                <el-button type="danger" @click="returnLogin" v-if="active == 1">返回登录</el-button>
-                <el-button type="danger" @click="previousStep" v-if="active != 1">上一步</el-button>
-                <el-button type="primary" @click="nextStep('form')" v-if="active != 3">下一步</el-button>
-                <el-button type="primary" @click="submitForm('form')" v-if="active == 3" :loading="LoginButtonLoading">确定</el-button>
-            </div>
         </div>
     </div>
 </template>

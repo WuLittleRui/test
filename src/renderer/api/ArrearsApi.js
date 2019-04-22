@@ -17,7 +17,7 @@ export async function list(page, pageSize, sort, mobile, case_number) {
     }
 }
 
-export async function receive(page, pageSize, start_time, end_time, mobile, case_number) {
+export async function receive(page, pageSize, start_time, end_time, mobile, case_number, username, docter_mobile) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/arrear/receive', {
             page: page,
@@ -25,7 +25,9 @@ export async function receive(page, pageSize, start_time, end_time, mobile, case
             start_time: start_time,
             end_time: end_time,
             mobile: mobile,
-            case_number: case_number
+            case_number: case_number, 
+            username: username, 
+            docter_mobile: docter_mobile
         });
     } catch (error) {
         return error;

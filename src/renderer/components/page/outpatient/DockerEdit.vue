@@ -23,14 +23,20 @@
             <el-form-item label="手机号:" prop="mobile">
                 <el-input v-model="form.mobile"></el-input>
             </el-form-item>
-            <el-form-item label='头像'>
+            <el-form-item label='头像' prop="face">
                 <el-upload class="avatar-uploader" :action="uploadAction" :http-request="handleUploadImg" :on-preview="handlePictureCardPreview" :show-file-list="false" :on-success="uploadSuccess">
                     <img v-if="form.face" :src="form.face" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </el-form-item>
+            <el-form-item label='资格证' prop="certified">
+                <el-upload class="avatar-uploader" :action="uploadAction" :http-request="handleUploadCertifiedImg" :on-preview="handlePictureCardPreview" :show-file-list="false" :on-success="uploadSuccess">
+                    <img v-if="form.face" :src="form.certified" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+            </el-form-item>
             <el-form-item label='个人简介' prop='description'>
-                <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.description">
+                <el-input autosize type="textarea" :rows="2" placeholder="请输入内容" v-model="form.description">
                 </el-input>
             </el-form-item>
             <el-row :gutter="20">
@@ -81,6 +87,7 @@
                 typelist: [],
                 editVisible: false,
                 title: "编辑",
+                certified: [],
                 form: {
                     face: "",
                     employee_id: "",
@@ -89,9 +96,20 @@
                     description: "",
                     id:2,
                     recommend: true,
-                    score: 0
+                    score: 0,
+                    certified: ""
                 },
                 rules: {
+                    certified: [{
+                        required: true,
+                        message: "请上传医生资格证",
+                        trigger: "blur"
+                    }],
+                    face: [{
+                        required: true,
+                        message: "请上传医生相片",
+                        trigger: "blur"
+                    }],
                     name: [{
                         required: true,
                         message: "请输入收费项目名称",
@@ -147,6 +165,7 @@
                     this.form.description = data.data.list.description;
                     this.form.recommend = data.data.list.recommend;
                     this.form.score = data.data.list.score;
+                    this.form.certified = data.data.list.certified;
                 });
                 this.form.id=1;
             },
@@ -178,13 +197,32 @@
                     if (res.error === "success") {
                         this.form.face = res.data.url;
                     } else if (
-          res.error === "invaild_token" ||
-          res.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        } else {
+                    res.error === "invaild_token" ||
+                    res.error === "not_login"
+                    ) {
+                    //判断是否认证过期
+                    OauthApi.logOut();
+                    this.$router.push("/login");
+                    } else {
+                        this.$message.error(this.$t(res.error));
+                    }
+                });
+            },
+            handleUploadCertifiedImg(e) {
+                const formData = new FormData();
+                formData.append("upfile", e.file);
+                formData.append("type", 1);
+                HospitalEmplyeeApi.upload(formData).then(res => {
+                    if (res.error === "success") {
+                        this.form.certified = res.data.url;
+                    } else if (
+                    res.error === "invaild_token" ||
+                    res.error === "not_login"
+                    ) {
+                    //判断是否认证过期
+                    OauthApi.logOut();
+                    this.$router.push("/login");
+                    } else {
                         this.$message.error(this.$t(res.error));
                     }
                 });
@@ -204,7 +242,8 @@
                                 this.form.sex,
                                 this.form.description,
                                 this.form.recommend,
-                                this.form.score
+                                this.form.score,
+                                this.form.certified
                             ).then(res => {
                                 this.buttonLoading = false;
                                 if (res.error === "success") {
@@ -215,13 +254,13 @@
                                     this.$emit("refresh");
                                     this.editVisible = false;
                                 } else if (
-          res.error === "invaild_token" ||
-          res.error === "not_login"
-        ) {
-          //判断是否认证过期
-          OauthApi.logOut();
-          this.$router.push("/login");
-        } else {
+                                res.error === "invaild_token" ||
+                                res.error === "not_login"
+                                ) {
+                                //判断是否认证过期
+                                OauthApi.logOut();
+                                this.$router.push("/login");
+                                } else {
                                     this.$message({
                                         type: "error",
                                         message: this.$t(res.error)
@@ -237,7 +276,8 @@
                                 this.form.sex,
                                 this.form.description,
                                 this.form.recommend,
-                                this.form.score
+                                this.form.score,
+                                this.form.certified
                             ).then(res => {
                                 this.buttonLoading = false;
                                 if (res.error === "success") {
@@ -276,6 +316,7 @@
                 this.form.id = 2;
                 this.form.recommend = true;
                 this.form.score = 0;
+                this.form.certified = "";
             }
         }
     };

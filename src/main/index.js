@@ -129,23 +129,23 @@ app.on('activate', () => {
  */
 
 
-// import { autoUpdater } from 'electron-updater'
+import { autoUpdater } from 'electron-updater'
 
-// autoUpdater.on('update-downloaded', () => {
-//   mainWindow.webContents.send('update', "新版本下载完成，开始更新!")
-// })
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update', "新版本下载完成，开始更新!")
+})
 
-// ipcMain.on("checkForUpdate",()=>{
-//   //执行自动更新检查
-//   autoUpdater.quitAndInstall();
-// })
+ipcMain.on("checkForUpdate",()=>{
+  //执行自动更新检查
+  autoUpdater.quitAndInstall();
+})
 
-// autoUpdater.on('update-available', function (info) {
-//   mainWindow.webContents.send('message', "检测到新版本，正在下载...!")
-// });
+autoUpdater.on('update-available', function (info) {
+  mainWindow.webContents.send('message', "检测到新版本，正在下载...!")
+});
 
-// app.on('ready', () => {
-//   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-// })
+app.on('ready', () => {
+  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
+})
 
  
