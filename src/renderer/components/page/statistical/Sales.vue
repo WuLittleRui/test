@@ -36,7 +36,18 @@
                 <el-button type="primary" icon="el-icon-lx-search" @click="handleFilter">查询</el-button>
             </div>
 
-            <div :class="className" :id="id" style="height:500px;width:100%;margin-top:10px;" />
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <div :class="className" :id="id" style="height:500px;width:100%;margin-top:10px;" />
+                    </el-card>
+                </el-col>
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <div :class="className1" :id="id1" style="height:500px;width:100%;margin-top:10px;" />
+                    </el-card>
+                </el-col>
+            </el-row>
         </div>
     </div>
 </template>
@@ -58,10 +69,13 @@ export default {
       total: null,
       listLoading: true,
       className: "className",
+      className1: "className1",
       data: [],
+      data1: [],
       name: [],
       options: [{value: 1, label: '按天查'},{value: 2, label: '按月查'}],
       id: "id",
+      id1: "id1",
       listQuery: {
         type: 1,
         time: []
@@ -101,6 +115,14 @@ export default {
               obj.value = item.sell_quantity;
               this.data.push(obj);
           })
+
+          this.data1 = [];
+          data.data.pre_list.forEach(item => {
+              var obj = new Object();
+              obj.name = item.product_name;
+              obj.value = item.sell_quantity;
+              this.data1.push(obj);
+          })
           this.initChart();
         } else if (
           data.error === "invaild_token" ||
@@ -120,7 +142,7 @@ export default {
       this.chart = echarts.init(document.getElementById(this.id));
       this.chart.setOption({
         title: {
-          text: "销售统计",
+          text: "收费项目统计",
           x: "center"
         },
         tooltip: {
@@ -128,11 +150,40 @@ export default {
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         series: {
-          name: "销售统计",
+          name: "收费项目统计",
           type: "pie",
           roseType: "angle",
           radius: "55%",
           data: this.data,
+          itemStyle: {
+            // 阴影的大小
+            shadowBlur: 200,
+            // 阴影水平方向上的偏移
+            shadowOffsetX: 0,
+            // 阴影垂直方向上的偏移
+            shadowOffsetY: 0,
+            // 阴影颜色
+            shadowColor: "rgba(0, 0, 0, 0.5)"
+          }
+        }
+      });
+
+      this.chart = echarts.init(document.getElementById(this.id1));
+      this.chart.setOption({
+        title: {
+          text: "处方统计",
+          x: "center"
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        series: {
+          name: "处方统计",
+          type: "pie",
+          roseType: "angle",
+          radius: "55%",
+          data: this.data1,
           itemStyle: {
             // 阴影的大小
             shadowBlur: 200,
