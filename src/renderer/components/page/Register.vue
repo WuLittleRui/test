@@ -98,7 +98,6 @@
                     </el-form-item>
                     <!-- 医院资质 -->
                 </el-form>
-                
                 <div class="login-btn">
                     <el-button type="danger" @click="returnLogin" v-if="active == 1">返回登录</el-button>
                     <el-button type="danger" @click="previousStep" v-if="active != 1">上一步</el-button>
@@ -420,7 +419,7 @@ export default {
     margin-top: 30px; 
     box-shadow:2px 2px 2px #ddd,2px -2px 2px #ddd,-2px 2px 2px #ddd,-2px -2px 2px #ddd; 
     padding: 50px; 
-    height: 450px;
+    height: 350px;
 }
 .container2 {
     width: 30%; 

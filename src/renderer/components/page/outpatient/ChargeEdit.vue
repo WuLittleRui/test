@@ -24,6 +24,12 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+
+            <el-form-item label='是否折扣' prop='is_discount'>
+                <el-radio v-model="form.is_discount" :label="false" border >否</el-radio>
+                <el-radio v-model="form.is_discount" :label="true" border>是</el-radio>
+            </el-form-item>
+
             <el-form-item label="备注" prop="remark">
                 <el-input v-model="form.remark"></el-input>
             </el-form-item>
@@ -79,8 +85,14 @@
                     type_id: "",
                     unit_price: "",
                     remark: "",
+                    is_discount: false
                 },
                 rules: {
+                    is_discount: [{
+                        required: true,
+                        message: "请选择是否打折",
+                        trigger: "blur"
+                    }],
                     name: [{
                         required: true,
                         message: "请输入收费项目名称",
@@ -122,12 +134,11 @@
                 HospitalChargeApi.getOnePay(charge_id).then(data => {
                     this.form.name = data.data.list.name;
                     this.form.charge_id = data.data.list.charge_id;
-                       this.form.remark = data.data.list.remark;
-                          this.form.unit = data.data.list.unit;
-                             this.form.unit_price = data.data.list.unit_price;
-                               this.form.type_id = data.data.list.type_id;
-
-
+                    this.form.remark = data.data.list.remark;
+                    this.form.unit = data.data.list.unit;
+                    this.form.unit_price = data.data.list.unit_price;
+                    this.form.type_id = data.data.list.type_id;
+                    this.form.is_discount = data.data.list.is_discount;
                 });
             },
             gettype() {
@@ -136,13 +147,13 @@
                     if (res.error === "success") {
                         this.typelist = res.data.list;
                     } else if (
-                data.error === "invaild_token" ||
-                data.error === "not_login"
-                ) {
-                //判断是否认证过期
-                OauthApi.logOut();
-                this.$router.push("/login");
-                }  else {
+                    data.error === "invaild_token" ||
+                    data.error === "not_login"
+                    ) {
+                    //判断是否认证过期
+                    OauthApi.logOut();
+                    this.$router.push("/login");
+                    }  else {
                         this.$message({
                             type: "error",
                             message: this.$t(res.error)
@@ -156,12 +167,13 @@
                         //修改
                         if (this.form.charge_id) {
                             HospitalChargeApi.updatePayType(
-                             this.form.charge_id,
-                              this.form.name,
-                                 this.form.unit,
-                                  this.form.unit_price,
-                                   this.form.type_id,
-                                    this.form.remark,
+                            this.form.charge_id,
+                            this.form.name,
+                            this.form.unit,
+                            this.form.unit_price,
+                            this.form.type_id,
+                            this.form.remark,
+                            this.form.is_discount
                             ).then(res => {
                                 if (res.error === "success") {
                                     this.$message({
@@ -171,13 +183,13 @@
                                     this.$emit("refresh");
                                     this.editVisible = false;
                                 }  else if (
-                res.error === "invaild_token" ||
-                res.error === "not_login"
-                ) {
-                //判断是否认证过期
-                OauthApi.logOut();
-                this.$router.push("/login");
-                } else {
+                                res.error === "invaild_token" ||
+                                res.error === "not_login"
+                                ) {
+                                //判断是否认证过期
+                                OauthApi.logOut();
+                                this.$router.push("/login");
+                                } else {
                                     this.$message({
                                         type: "error",
                                         message: this.$t(res.error)
@@ -188,11 +200,11 @@
                             //添加
                             HospitalChargeApi.addPayType(
                                 this.form.name,
-                                 this.form.unit,
-                                  this.form.unit_price,
-                                   this.form.type_id,
-                                    this.form.remark,
-
+                                this.form.unit,
+                                this.form.unit_price,
+                                this.form.type_id,
+                                this.form.remark,
+                                this.form.is_discount
                                 ).then(res => {
                                 if (res.error === "success") {
                                     this.$message({
@@ -202,13 +214,13 @@
                                     this.$emit("refresh");
                                     this.editVisible = false;
                                 } else if (
-                res.error === "invaild_token" ||
-                res.error === "not_login"
-                ) {
-                //判断是否认证过期
-                OauthApi.logOut();
-                this.$router.push("/login");
-                }  else {
+                                res.error === "invaild_token" ||
+                                res.error === "not_login"
+                                ) {
+                                //判断是否认证过期
+                                OauthApi.logOut();
+                                this.$router.push("/login");
+                                }  else {
                                     this.$message({
                                         type: "error",
                                         message: this.$t(res.error)
@@ -228,6 +240,7 @@
                 this.form.unit = "";
                 this.form.unit_price = "";
                 this.form.remark = "";
+                this.form.is_discount = false;
             }
         }
     };

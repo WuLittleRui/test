@@ -1,6 +1,6 @@
 {
   "name": "yq-hospital",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "口腔门诊管理系统",
   "author": "yvqin.com",
   "license": null,
@@ -15,7 +15,8 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "electron-builder install-app-deps",
-    "publish": "electron-builder --publish onTagOrDraft"
+    "publish": "electron-builder --publish onTagOrDraft",
+    "publish-32": "electron-builder --ia32 --publish onTagOrDraft"
   },
   "build": {
     "productName": "口腔门诊管理系统",

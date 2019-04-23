@@ -7,24 +7,15 @@
               <el-breadcrumb-item>短信余额</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+
         <div class="container">
+            <div class="handle-box">
+                <el-button type="primary" icon="el-icon-lx-add" @click="handleAdd">购买</el-button>
+            </div>
             <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
-                <el-table-column prop="package_id" label="套餐包序号" header-align="center"  align="center" min-width="120">
-                </el-table-column>
-                <el-table-column prop="amount" label="短信总量(条)" header-align="center"  align="center" min-width="120">
-                </el-table-column>
-                <el-table-column prop="mobile" label="剩余量(条)" header-align="center"  align="center" min-width="120">
-                    <template slot-scope="scope">
-                        {{ scope.row.amount - scope.row.used }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="type" label="套餐名称" header-align="center"  align="center" min-width="120" :formatter="formatterPackage">
-                </el-table-column>
-                <el-table-column prop="to_time" label="有效截止时间" header-align="center"  align="center" min-width="120">
-                </el-table-column>
-                <el-table-column prop="to_time" label="状态" header-align="center"  align="center" min-width="120" :formatter="formatterState">
+                <el-table-column prop="quantity" label="剩余数量" header-align="center"  align="center" min-width="120">
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -32,15 +23,17 @@
                 </el-pagination>
             </div>
         </div> 
+        <BalanceEdit ref="Balance" @refresh="getData"/>
     </div>
 </template>
 
 <script>
+import BalanceEdit from "./BalanceEdit";
 import * as SMSApi from "@/api/SMSApi";
 import * as OauthApi from "@/api/OauthApi";
 export default {
   name: "sms",
-  components: {  },
+  components: { BalanceEdit },
   data() {
     return {
       /**搜索数据 */
@@ -60,6 +53,9 @@ export default {
       this.getData();
   },
   methods: {
+    handleAdd() {
+      this.$refs["Balance"].show();
+    },
     formatterPackage(row, column, value) {
         if(row.type == "0") {
             return "赠送套餐包";

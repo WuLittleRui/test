@@ -28,7 +28,13 @@
                     <span>{{scope.row.unit_price}}/{{scope.row.unit}}</span>
                   </template>
                 </el-table-column>
-                 <el-table-column  label="类型" header-align="center"  align="center" sortable min-width="80">
+                <el-table-column :prop="is_discount" label="是否折扣" header-align="center"  align="center" sortable min-width="80" :formatter="formatterDiscount">
+                  <template slot-scope="scope">
+                    <el-tag type="success" v-if="scope.row.is_discount">是</el-tag>
+                    <el-tag type="warning" v-else>否</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column  label="类型" header-align="center"  align="center" sortable min-width="80">
                     <template slot-scope="scope">
                       {{ scope.row.type_id | formatterState(typelist,{"name":"name","value":"type_id"})}}
                     </template>
@@ -103,6 +109,13 @@ export default {
   },
 
   methods: {
+    formatterDiscount(row, column, value) {
+      if(row.is_discount) {
+        return '是';
+      } else {
+        return '否';
+      }
+    },
     //分页所用方法
     handleCurrentChange(val) {
       this.listQuery.page = val;

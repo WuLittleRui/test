@@ -69,7 +69,7 @@ export async function getOnePay(charge_id) {
 /**
  * 编辑提交事件方法
  */
-export async function updatePayType(charge_id, name, unit, unit_price, type_id, remark) {
+export async function updatePayType(charge_id, name, unit, unit_price, type_id, remark, is_discount) {
     try {
 
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospitalcharge/update', {
@@ -79,7 +79,7 @@ export async function updatePayType(charge_id, name, unit, unit_price, type_id, 
             unit_price: unit_price,
             type_id: type_id,
             remark: remark,
-
+            is_discount: is_discount
         });
 
     } catch (error) {
@@ -104,7 +104,7 @@ export async function deletePayType(charge_id) {
 /**
  * 新增的提交事件方法
  */
-export async function addPayType(name, unit, unit_price, type_id, remark) {
+export async function addPayType(name, unit, unit_price, type_id, remark, is_discount) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/hospitalcharge/add', {
             name: name,
@@ -112,6 +112,7 @@ export async function addPayType(name, unit, unit_price, type_id, remark) {
             unit_price: unit_price,
             type_id: type_id,
             remark: remark,
+            is_discount: is_discount
         });
     } catch (error) {
         return error
