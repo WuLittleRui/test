@@ -187,6 +187,11 @@ export default new Router({
                     meta: { title: '欠款统计', }
                 },
                 {
+                    path: '/financial/docter',
+                    component: resolve => require(['../components/page/financial/Docter.vue'], resolve),
+                    meta: { title: '医生收款统计' }
+                },
+                {
                     path: '/statistical/customer',
                     component: resolve => require(['../components/page/statistical/Customer.vue'], resolve),
                     meta: { title: '客户统计' }
