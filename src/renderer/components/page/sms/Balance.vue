@@ -11,11 +11,29 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-lx-add" @click="handleAdd">购买</el-button>
+                <span>剩余数量: {{balance}}</span>
             </div>
             <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
-                <el-table-column prop="quantity" label="剩余数量" header-align="center"  align="center" min-width="120">
+                <el-table-column prop="package_name" label="套餐名" header-align="center"  align="center" min-width="120">
+                </el-table-column>
+                <el-table-column  label="价格" header-align="center"  align="center" min-width="120">
+                  <template slot-scope="scope">
+                    {{scope.row.price}}元/{{scope.row.quantity}}条
+                  </template>
+                </el-table-column>
+                <el-table-column prop="status" label="状态" header-align="center"  align="center" min-width="120">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.status == 0">待付款</span>
+                    <span v-if="scope.row.status == 2">付款成功</span>
+                    <span v-if="scope.row.status == -1">取消付款</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="create_time" label="创建时间" header-align="center"  align="center" min-width="120">
+                  <template slot-scope="scope">
+                    {{scope.row.create_time | parseTime('{y}-{m}-{d} {h}:{i}')}}
+                  </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -38,6 +56,7 @@ export default {
     return {
       /**搜索数据 */
       list: [],
+      balance: 0,
       total: null,
       listLoading: true,
       listQuery: {
@@ -86,6 +105,7 @@ export default {
         if (data.error === "success") {
           this.total = data.data.total;
           this.list = data.data.list;
+          this.balance = data.data.quantity;
         } else if (
           data.error === "invaild_token" ||
           data.error === "not_login"

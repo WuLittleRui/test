@@ -43,7 +43,6 @@ export function WxPayment(appid, timeStamp, nonceStr, _package, signType, paySig
             package: _package,
             signType: signType,
             paySign: paySign,
-
             success: res => {
                 let data = {
                     error: 'success',
@@ -53,6 +52,7 @@ export function WxPayment(appid, timeStamp, nonceStr, _package, signType, paySig
                 resolve(data)
             },
             fail: function (error) { // fail调用接口失败
+                console.log("error", error)
                 reject({
                     error: 'network_error',
                     error_description: '网络异常',
@@ -60,7 +60,7 @@ export function WxPayment(appid, timeStamp, nonceStr, _package, signType, paySig
                 })
             },
             complete: function (res) { // complete
-
+                console.log("complete", res)
             }
         })
     })
