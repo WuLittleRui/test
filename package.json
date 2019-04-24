@@ -43,13 +43,32 @@
         }
       ]
     },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icons/google.ico",
+      "uninstallerIcon": "build/icons/google.ico",
+      "installerHeaderIcon": "build/icons/google.ico", 
+      "createDesktopShortcut": true, 
+      "createStartMenuShortcut": true,
+      "shortcutName": "teeth"
+    },
     "mac": {
       "icon": "build/icons/google.icns",
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "win": {
       "icon": "build/icons/google.ico",
-      "artifactName": "${productName}-${version}-${arch}.${ext}"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64", 
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "icon": "build/icon",
