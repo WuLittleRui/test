@@ -19,5 +19,4 @@ build: off
 build_script: 
   - yarn build
   - npm run publish
-  - npm run publish-32
   
