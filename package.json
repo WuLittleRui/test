@@ -15,7 +15,7 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "electron-builder install-app-deps",
-    "publish": "electron-builder -mwl --publish onTagOrDraft"
+    "publish": "electron-builder --publish onTagOrDraft"
   },
   "build": {
     "productName": "口腔门诊管理系统",
@@ -43,16 +43,18 @@
       ]
     },
     "nsis": {
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "build/icons/google.ico",
-      "uninstallerIcon": "build/icons/google.ico",
-      "installerHeaderIcon": "build/icons/google.ico", 
+      "installerIcon": "./build/icons/google.ico",
+      "uninstallerIcon": "./build/icons/google.ico",
+      "installerHeaderIcon": "./build/icons/google.ico", 
       "createDesktopShortcut": true, 
       "createStartMenuShortcut": true,
       "shortcutName": "teeth"
     },
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
     "mac": {
       "icon": "build/icons/google.icns",
       "artifactName": "${productName}-${version}-${arch}.${ext}"
