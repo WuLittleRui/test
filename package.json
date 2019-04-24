@@ -21,10 +21,6 @@
   "build": {
     "productName": "口腔门诊管理系统",
     "appId": "com.yvqin.hospital",
-	"artifactName": "${productName}-${version}-${arch}.${ext}",
-    "nsis": {
-      "artifactName": "${productName}-${version}-${arch}.${ext}"
-    },
     "copyright": "YVQIN",
     "directories": {
       "output": "build"
@@ -32,7 +28,7 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "dmg": {
+    "dmg": { 
       "contents": [
         {
           "x": 410,
@@ -48,13 +44,16 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/google.icns"
+      "icon": "build/icons/google.icns",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "win": {
-      "icon": "build/icons/google.ico"
+      "icon": "build/icons/google.ico",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "linux": {
-      "icon": "build/icon"
+      "icon": "build/icon",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     }
   },
   "dependencies": {
