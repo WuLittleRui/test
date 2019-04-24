@@ -52,7 +52,7 @@
       "installerHeaderIcon": "./build/icons/google.ico", 
       "createDesktopShortcut": true, 
       "createStartMenuShortcut": true,
-      "shortcutName": "teeth"
+      "shortcutName": "${productName}"
     },
     "artifactName": "${productName}-${version}-${arch}.${ext}",
     "mac": {
