@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item><i class="el-icon-lx-calendar"></i>店铺管理</el-breadcrumb-item>
-              <el-breadcrumb-item>部门管理</el-breadcrumb-item>
+              <el-breadcrumb-item>会员卡类型</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">

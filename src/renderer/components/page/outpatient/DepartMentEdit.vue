@@ -1,6 +1,6 @@
 <template>
     <!-- 编辑弹出框 -->
-    <el-dialog :title="title" :visible.sync="editVisible" width="50%">
+    <el-dialog :title="title" :visible.sync="editVisible" width="650px">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="岗位名称" prop="groupName">
                 <el-input v-model="form.groupName"></el-input>
@@ -8,7 +8,8 @@
               <el-form-item label='类型' prop='type'>
             <el-radio v-model="form.type" :label="1" border size="medium">医生</el-radio>
             <el-radio v-model="form.type" :label="2" border size="medium">护士</el-radio>
-              <el-radio v-model="form.type" :label="3" border size="medium">前台</el-radio>
+            <el-radio v-model="form.type" :label="3" border size="medium">前台</el-radio>
+            <el-radio v-model="form.type" :label="4" border size="medium">咨询师</el-radio>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">

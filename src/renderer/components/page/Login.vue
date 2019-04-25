@@ -35,6 +35,7 @@
 
 <script>
 import * as OauthApi from "../../api/OauthApi";
+import storage from '@/utils/storage';
 
 export default {
   data: function() {
@@ -52,6 +53,16 @@ export default {
       },
       LoginButtonLoading: false //登陆中
     };
+  },
+  mounted() {
+    let user = storage.get("username");
+    let hospital_name = storage.get("hospital_name");
+    if (user != null) {
+      this.ruleForm.username = user;
+    }
+    if(hospital_name != null) {
+      this.ruleForm.hospital_name = hospital_name;
+    }
   },
   methods: {
     registerClick() {
@@ -81,6 +92,8 @@ export default {
 
               return;
             }
+            storage.save('username', this.ruleForm.username);
+            storage.save('hospital_name', this.ruleForm.hospital_name);
             this.$router.push("/index");
           });
         } else {

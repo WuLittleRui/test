@@ -8,7 +8,15 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="handle-box">            
+            <div class="handle-box">        
+                <el-select v-model="listQuery.level_id" placeholder="病患级别" clearable>
+                  <el-option v-for="item in options" :key="item.level_id" :label="item.level_name" :value="item.level_id">
+                  </el-option>
+                </el-select>
+                <el-input-number :controls="false" v-model="listQuery.start_amount" controls-position="right" placeholder="开始金额"></el-input-number>
+                <el-input-number :controls="false" v-model="listQuery.end_amount" controls-position="right" placeholder="结束金额"></el-input-number>
+                <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
+                   
                 <el-button type="primary" icon="el-icon-lx-search" @click="allSend">全选发送</el-button>
                 <el-button type="success" icon="el-icon-lx-search" @click="selectSend">选择发送</el-button>
             </div>
@@ -18,7 +26,13 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="case_number" label="病历号" header-align="center"  align="center" sortable min-width="120">
                 </el-table-column>
+                <el-table-column prop="name" label="病患姓名" header-align="center"  align="center" sortable min-width="120">
+                </el-table-column>
+                <el-table-column prop="level_name" label="级别" header-align="center"  align="center" sortable min-width="120">
+                </el-table-column>
                 <el-table-column prop="mobile" label="手机" header-align="center"  align="center" sortable min-width="120">
+                </el-table-column>
+                <el-table-column prop="amount" label="总消费金额" header-align="center"  align="center" sortable min-width="120">
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -42,11 +56,15 @@ export default {
       multipleSelection: [],
       /**搜索数据 */
       list: [],
+      options: [],
       total: null,
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20
+        limit: 20,
+        level_id: "",
+        start_amount: "",
+        end_amount: ""
       },
       auth: {
         SHOP_ADMIN_ADD: false,
@@ -67,8 +85,31 @@ export default {
       "SHORT_MESSAGE"
     );
     this.getData();
+    this.getLevel();
   },
   methods: {
+    search() {
+      this.listQuery.page = 1;
+      this.getData();
+    },
+    getLevel() {
+      ShortApi.level().then(data => {
+        this.listLoading = false;
+        if (data.error === "success") {
+          this.options = data.data;
+        } else if (
+          data.error === "invaild_token" ||
+          data.error === "not_login"
+        ) {
+          //判断是否认证过期
+          this.$router.push("/login");
+        } else if (data.error_description) {
+          this.$message.error(data.error_description);
+        } else {
+          this.$message.error(data.error);
+        }
+      });
+    },
     allSend() {
         this.$refs["ShortEdit"].showEdit([], true);
     },
@@ -88,7 +129,10 @@ export default {
       this.listLoading = true;
       ShortApi.list(
         this.listQuery.page,
-        this.listQuery.limit
+        this.listQuery.limit,
+        this.listQuery.level_id,
+        this.listQuery.start_amount,
+        this.listQuery.end_amount
       ).then(data => {
         this.listLoading = false;
         if (data.error === "success") {

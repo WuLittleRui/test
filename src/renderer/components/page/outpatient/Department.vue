@@ -53,7 +53,7 @@ export default {
       },
       listLoading: true, //给我点时间
       tableKey: 0,
-       stateList: [{ name: "医生", value: 1 }, { name: "护士", value: 2 },{ name: "前台", value: 3 }],
+       stateList: [{ name: "医生", value: 1 }, { name: "护士", value: 2 },{ name: "前台", value: 3 },{ name: "咨询师", value: 4 }],
       listQuery: {
         page: 1,
         limit: 20,
