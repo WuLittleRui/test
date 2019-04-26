@@ -32,3 +32,11 @@ export async function level() {
         return error
     }
 }
+
+export async function status(orderSn) {
+    try {
+        return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/short/status', { buy_id: orderSn});
+    } catch (error) {
+        return error
+    }
+}

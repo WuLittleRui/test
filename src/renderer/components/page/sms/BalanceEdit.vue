@@ -31,7 +31,7 @@
             </el-pagination>
         </div>
 
-        <BalanceImage ref="BalanceImage" />
+        <BalanceImage ref="BalanceImage" @refresh="success"/>
     </el-dialog>
 </template>
 
@@ -85,12 +85,16 @@ export default {
                 }
             })
         },
+        success() {
+            this.editVisible = false;
+            this.$emit("refresh");
+        },
         handleDetail(index, row) {
             SMSApi.buyer(row.package_id).then(data => {
                 if(data.error == "success") {
                     SMSApi.wxUniformOrders(data.data.orderSn).then(res => {
                         if(res.error == "success") {
-                            this.$refs["BalanceImage"].showImage(res.data.url, res.data.total_fee);
+                            this.$refs["BalanceImage"].showImage(res.data.url, res.data.total_fee, res.data.orderSn);
                         } else {
                             this.$message.error(res.error);
                         }
