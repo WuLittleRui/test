@@ -37,7 +37,8 @@ export default {
         getStatus(orderSn) {
             ShortApi.status(orderSn).then(data => {
                 if (data.error === "success") {
-                    if(data.status == 2) {
+                    console.log(data.data.status)
+                    if(data.data.status == 2) {
                         window.clearInterval(this.inter);
                         this.$notify({
                             title: "成功",
