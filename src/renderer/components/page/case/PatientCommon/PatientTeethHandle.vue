@@ -146,6 +146,7 @@ export default {
                 item.bottom = this.item.bottom;
 
                 item.quantity = 1;
+                item.is_discount = item.is_discount;
                 item.all_price = item.quantity * item.unit_price;
                 item.remark = "";
             })

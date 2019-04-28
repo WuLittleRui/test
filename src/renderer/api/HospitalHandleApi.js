@@ -12,7 +12,7 @@ export async function edit(handle_id, case_number, title, create_time, docter_id
             case_number: case_number,
             title: title,
             create_time: create_time,
-            docter_id: docter_id,
+            docter_id: docter_id, 
             handle_detail: handle_detail,
             prescription_detail: prescription_detail
         });

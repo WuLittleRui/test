@@ -39,12 +39,6 @@
 							<li>
 								<el-button type="text" v-if="show.state == 0 && !onlyShow" @click="PatientPriceEdit(oindex)">划价</el-button>
 							</li>
-							<!-- <li>
-								<img src="../../../../../../static/img/u495.png">
-							</li>
-							<li>
-								<img src="../../../../../../static/img/u495.png">
-							</li> -->
 						</ul>
 						<div style="clear: both;"></div>
 					</header>
@@ -76,22 +70,21 @@
 						<div class="chufang_left">处方：</div>
 						<div class="chufang_right">
 							<table>
-                                    <tr>
-                                        <th>药品名</th>
-                                        <th>用法用量</th>
-                                        <th>单价</th>
-                                        <th>数量</th>
-                                        <th>费用</th>
-                                        
-                                    </tr>
-                                    <tr v-for="(item, index) in show.pre">
-                                        <td>{{item.title}}</td>
-                                        <td>{{item.remark}}</td>
-                                        <td>{{item.unit_price}}</td>
-                                        <td>{{item.quantity}}</td>
-                                        <td>{{item.all_price}}</td>
-                                    </tr>
-                                </table>
+									<tr>
+											<th>药品名</th>
+											<th>用法用量</th>
+											<th>单价</th>
+											<th>数量</th>
+											<th>费用</th>
+									</tr>
+									<tr v-for="(item, index) in show.pre">
+											<td>{{item.title}}</td>
+											<td>{{item.remark}}</td>
+											<td>{{item.unit_price}}</td>
+											<td>{{item.quantity}}</td>
+											<td>{{item.all_price}}</td>
+									</tr>
+							</table>
 						</div>
 					</div>
 					
@@ -311,6 +304,7 @@ export default {
 			this.list[this.oindex].all_price = sum;
 
 			//添加
+			// console.log(this.list);
 			this.postData(this.list[this.oindex])
 		},
 		//post请求
@@ -333,7 +327,8 @@ export default {
 					'unit_price': item.unit_price,
 					'quantity': item.quantity,
 					'all_price': item.all_price,
-					'charge_id': item.charge_id
+					'charge_id': item.charge_id,
+					'is_discount': item.is_discount
 				}
 				postData.push(p);
 			})

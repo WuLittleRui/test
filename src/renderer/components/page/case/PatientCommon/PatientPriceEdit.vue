@@ -11,7 +11,7 @@
             <el-container>
                 <el-container>
                     <el-aside width="800px" >
-                        <el-tabs v-model="activeName" @tab-click="handleClick">
+                        <el-tabs v-model="activeName">
                             <el-tab-pane label="明细收费" name="first" style='min-height: 450px; overflow: scroll;'>
                             	
                             	<table class="table">
@@ -34,13 +34,13 @@
                                           {{item.title}}
                                         </td>
                                         <td>
-                                          <el-input-number style="width: 50px;" :controls="false" v-model="item.unit_price" controls-position="right" :min="0" @change="reCalculation(index)"></el-input-number>
+                                          <el-input-number style="width: 80px;" :controls="false" v-model="item.unit_price" controls-position="right" :min="0" @change="reCalculation(index)"></el-input-number>
                                         </td>
                                         <td>
-                                          <el-input-number style="width: 50px;" :controls="false" v-model="item.quantity" controls-position="right" :min="0" @change="reCalculation(index)"></el-input-number>
+                                          <el-input-number style="width: 80px;" :controls="false" v-model="item.quantity" controls-position="right" :min="0" @change="reCalculation(index)"></el-input-number>
                                         </td>
                                         <td>
-                                          <el-input-number style="width: 50px;" :controls="false" v-model="item.cost_price" controls-position="right" :min="0" @change="reCalculationCost(index)"></el-input-number>
+                                          <el-input-number style="width: 80px;" :controls="false" v-model="item.cost_price" controls-position="right" :min="0" @change="reCalculationCost(index)"></el-input-number>
                                         </td>
                                         <td>
                                           <el-input-number style="width: 80px;" :controls="false" v-model="item.all_price" controls-position="right" :min="0" @change="reSum(index)"></el-input-number>
@@ -185,10 +185,27 @@ export default {
       if(value == 0) {
         value = 1;
       }
-      this.form.all_price = accMultiply(this.form.all_price, value);
+      var discount = 0;
+      var no_discount = 0;
+      this.tableData4.forEach(item => {
+        var cost_price = 1;
+        if(item.cost_price != 0) {
+          cost_price = item.cost_price;
+        }
+        var cac = accMultiply((accMultiply(item.quantity, item.unit_price)), (cost_price / 1));
+        item.all_price = cac;
+        if(item.is_discount) {
+          discount = accAdd(discount, cac);
+        } else {
+          no_discount = accAdd(no_discount, cac);
+        }
+      })
+      this.form.all_price = accAdd(no_discount, accMultiply(discount, value));
+      // this.form.all_price = accMultiply(this.form.all_price, value);
     },
     reCalculationCost(index) {
-      var sum = 0;
+      var discount = 0;
+      var no_discount = 0;
       this.tableData4.forEach(item => {
         var cost_price = 1;
         if(item.cost_price != 0) {
@@ -196,12 +213,18 @@ export default {
         }
         var cac = accMultiply((accMultiply(item.quantity, item.unit_price)), (cost_price / 1));
         item.all_price = cac;
-        sum = sum + cac;
+        if(item.is_discount) {
+          discount = accAdd(discount, cac);
+        } else {
+          no_discount = accAdd(no_discount, cac);
+        }
       })
-      this.form.all_price = sum;
+      this.form.all_price = accAdd(no_discount, accMultiply(discount, this.form.all_cost_per));
+      // this.form.all_price = sum;
     },
     reCalculation(index) {
-      var sum = 0;
+      var discount = 0;
+      var no_discount = 0;
       this.tableData4.forEach(item => {
         var cost_price = 1;
         if(item.cost_price != 0) {
@@ -209,10 +232,14 @@ export default {
         }
         var cac = accMultiply((accMultiply(item.quantity, item.unit_price)), (cost_price / 1));
         item.all_price = cac;
-        sum = sum + cac;
+        if(item.is_discount) {
+          discount = accAdd(discount, cac);
+        } else {
+          no_discount = accAdd(no_discount, cac);
+        }
       })
-      this.form.all_price = sum;
-      this.form.old_sum = sum;
+      this.form.all_price = accAdd(no_discount, accMultiply(discount, this.form.all_cost_per));
+      this.old_sum = accAdd(no_discount, accMultiply(discount, this.form.all_cost_per));
     },
     reSum(index) {
       var sum = 0;
@@ -250,9 +277,6 @@ export default {
         }
       })
 		},
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     deleteRow(index, rows) {
       rows.splice(index, 1);
     },
@@ -287,6 +311,8 @@ export default {
         this.tableData4 = [];
         if (data.error === "success") {
           var sum = 0;
+          var discount = 0;
+          var no_discount = 0;
           data.data.prescription_detail.forEach(item => {
             var i = 1;
             if(item.cost_price != 0) {
@@ -310,7 +336,7 @@ export default {
             this.$nextTick(() => {
               this.$refs[("PatientTeethPosition" + item.name)][0].editItem(item);
             })
-            sum = sum + item.all_price;
+           discount = accAdd(discount, item.all_price);
           });
           data.data.tream_detail.forEach(item => {
             var i = 1;
@@ -341,8 +367,16 @@ export default {
             this.$nextTick(() => {
               this.$refs[("PatientTeethPosition" + item.name)][0].editItem(item);
             })
-            sum = sum + item.all_price;
+            //如果是折扣记录
+            if(item.is_discount) {
+              discount = accAdd(discount, item.all_price);
+            } else {
+              no_discount = accAdd(no_discount, item.all_price);
+            }
+            //非折扣
+            // sum = sum + item.all_price;
           });
+
           this.form.employee_id = data.data.employee_id;
           this.form.old_sum = sum;
           this.form.all_cost_per = data.data.cost_price;
@@ -352,7 +386,10 @@ export default {
           if(this.form.all_cost_per != null && this.form.all_cost_per != undefined && this.form.all_cost_per != "") {
             i = this.form.all_cost_per;
           }
-          this.form.all_price = accMultiply(sum, i);
+
+          discount = accMultiply(discount, this.form.all_cost_per);
+          sum = accAdd(discount, no_discount);
+          this.form.all_price = sum;
 
           data.data.prescription_detail.forEach(item => {
             this.oldData.push(item);
@@ -450,7 +487,7 @@ table tr th {
 table tr td {
   border: 1px solid #f4f4f5;
   text-align: center;
-  width: 60px;
+  width: 300px;
   /*line-height: 30px;*/
 }
 table tr td > input {

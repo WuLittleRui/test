@@ -40,22 +40,13 @@
                                         <td>
                                           {{item.quantity}}
                                         </td>
-                                        <td v-if="!item.pay">
-                                          <el-input-number style="width: 50px;" :controls="false" :precision="2" v-model="item.all_cost_price" controls-position="right" :min="0" @change="reCalculationAllCost(index)"></el-input-number>
-                                        </td>
-                                        <td v-if="item.pay">
+                                        <td>
                                           {{item.all_cost_price}}
                                         </td>
-                                        <td v-if="!item.pay">
-                                          <el-input-number style="width: 50px;" :controls="false" :precision="2" v-model="item.cost_price" controls-position="right" :min="0" @change="reCalculationCost(index)"></el-input-number>
-                                        </td>
-                                        <td v-if="item.pay">
+                                        <td>
                                           {{item.cost_price}}
                                         </td>
-                                        <td v-if="!item.pay">
-                                          <el-input-number style="width: 80px;" :controls="false" :precision="2" v-model="item.all_price" controls-position="right" :min="0" @change="reSum(index)"></el-input-number>
-                                        </td>
-                                        <td v-if="item.pay">
+                                        <td>
                                           {{item.all_price}}
                                         </td>
                                     </tr>
@@ -74,9 +65,6 @@
                                     :value="item.employee_id"
                                 ></el-option>
                             </el-select>
-                            <div style="float: right; width: 40%;">折扣：
-                                <el-input-number :controls="false" v-model="form.all_cost_per" :precision="2" controls-position="right" :min="0" @change="allCostPriceChange"></el-input-number>
-                            </div>
                         </div>
                         <div>护士：
                             <el-select v-model="form.nurse_id" placeholder="请选择" style="width: 20%;">

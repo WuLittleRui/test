@@ -64,9 +64,6 @@
                                     :value="item.employee_id"
                                 ></el-option>
                             </el-select>
-                            <div style="float: right; width: 40%;">折扣：
-                                <el-input-number :controls="false" v-model="form.all_cost_per" :precision="2" controls-position="right" :min="0" :disabled="true"></el-input-number>
-                            </div>
                         </div>
                         <div>护士：
                             <el-select v-model="form.nurse_id" placeholder="请选择" style="width: 20%;">
