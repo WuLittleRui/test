@@ -197,6 +197,11 @@ export default new Router({
                     meta: { title: '客户统计' }
                 },
                 {
+                    path: '/person/files',
+                    component: resolve => require(['../components/page/person/Files.vue'], resolve),
+                    meta: { title: '个人档案' }
+                },
+                {
                     path: '/case/registration/:id',
                     component: resolve => require(['../components/page/case/registrationEdit.vue'], resolve),
                     meta: { title: '病历详情', }

@@ -270,7 +270,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
 /*表格数据*/
 .center {
@@ -280,7 +279,6 @@ export default {
   width: 100px;
   height: 30px;
   cursor: pointer;
-  
 }
 .center div {
   width: 26px;
@@ -290,9 +288,6 @@ export default {
   font-size: 12px;
   padding: 1px 2px;
 }
-
-
-
 .center div:nth-child(1) {
   border-right: 1px solid #000;
   text-align: right !important;
@@ -310,48 +305,42 @@ export default {
   direction: rtl;
   unicode-bidi: bidi-override;
 }
+.li{
+	width: 720px;
+}
+.li span{
+	display: block;
+	float: left;
+	margin: 5px;
+	line-height: 24px;
+	color: #969696;
+	width: 80px;
+	text-indent: 10px;
 	
-	
-	.li{
-		width: 720px;
-	}
-	.li span{
-		display: block;
-		float: left;
-		margin: 5px;
-		line-height: 24px;
-		color: #969696;
-		width: 80px;
-		text-indent: 10px;
-		
-	}
-	.center_right{
-		margin-left: -8px;
-		float: left;
-		display: flex;
-	}
-	.center_right .span{
-		margin-left: -15px;
-		color: #000000 !important;
-	}
-	.center_right span{
-		color: #000000 !important;
-		width: 100%
-	}
-	
-	
+}
+.center_right{
+	margin-left: -8px;
+	float: left;
+	display: flex;
+}
+.center_right .span{
+	margin-left: -15px;
+	color: #000000 !important;
+}
+.center_right span{
+	color: #000000 !important;
+	width: 100%
+}
 .basic_information {
     height: 650px;
 }
 .basic_information2{
     height: 150px;
 }
-	
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
- 
 input[type="number"] {
     -moz-appearance: textfield;
 }
