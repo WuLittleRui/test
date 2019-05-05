@@ -1,16 +1,16 @@
 <template>
     <div>
-        <div class="basic_information">
+        <div class="basic_information" id="handleContent">
 			<el-scrollbar style="height: 100%;">
                 <div style="margin-bottom: 10px;">
                     <el-date-picker style="width: 100%;" value-format="yyyy-MM-dd" @change="doSomething" v-model="time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                     
                 </div>
-                <div class="container" style="min-width: 1580px;margin-bottom: 20px; text-align: center" v-if="list.length == 0">
+                <div class="container" style="margin-bottom: 20px; text-align: center" v-if="list.length == 0">
                     没有任何记录
                 </div>
                 <span v-for="item in list" v-if="list.length > 0">
-                    <div class="container" style="min-width: 1580px;margin-bottom: 20px;">
+                    <div class="container" style="margin-bottom: 20px;">
                         <div class="title_style">
                             <span style="color: #B7DAFF; margin-left: 20px;">
                                 2019-03-28 10:35:02
@@ -33,7 +33,7 @@
                                     </el-table-column>
                                     <el-table-column prop="unit_price" label="单价" header-align="center"  align="center" min-width="80">
                                     </el-table-column>
-                                    <el-table-column label="牙位" align="center" header-align="center" min-width="60">
+                                    <el-table-column label="牙位" align="center" header-align="center" width="200">
                                         <template slot-scope="scope">
                                             <span style="margin: 0 auto;">
                                                 <PatientTeethPosition :ref="'PatientTeethPosition' + scope.row.prescription_id"/>
@@ -64,7 +64,7 @@
                                 </el-table-column>
                             </el-table>
                         </div>
-                        <div style="font-size: 30px; margin-top: 10px; text-align: right;">
+                        <div style="font-size: 26px; margin-top: 10px; text-align: right;">
                             合计: {{item.sub_amount}}
                         </div>
                     </div>
@@ -88,6 +88,9 @@ export default {
             time: [],
             code: ""
         }
+    },
+    mounted() {
+        document.getElementById("handleContent").style.height = (document.body.clientHeight - 300) + "px";
     },
     methods: {
         doSomething() {
@@ -149,9 +152,6 @@ export default {
 </script>
 
 <style scoped>
-.basic_information {
-    height: 650px;
-}
 .title_style {
     background-color: #409EFF;
     height: 40px;

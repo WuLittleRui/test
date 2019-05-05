@@ -14,16 +14,17 @@
             <el-input v-model="listQuery.searchKey" placeholder="请输入搜索内容" class="handle-input mr10 input"></el-input>
             <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
             
-            <el-menu background-color="#F0F0F0" :default-active="activity" class="el-menu-demo" mode="horizontal" @select="patientNavSelect" style="min-width: 645px; max-width: 645px;">
-                <el-menu-item index="Case" style="width: 20%; text-align: center;">病例信息</el-menu-item>
-                <el-menu-item index="Handle" style="width: 20%; text-align: center;">处置记录</el-menu-item>
-                <el-menu-item index="Cashier" style="width: 20%; text-align: center;">收费信息</el-menu-item>
-            </el-menu>
-            <div class="grid-content bg-purple content">
-                <Case ref="Case" v-show="activity == 'Case'" @login="returnLogin"/>
-                <Handle ref="Handle" v-show="activity == 'Handle'" />
-                <Cashier ref="Cashier" v-show="activity == 'Cashier'" />
-            </div>
+            <el-tabs v-model="tabValue" type="border-card" @tab-click="patientNavSelectTab" style="margin-top: 10px;">
+                <el-tab-pane label="病例信息">
+                    <Case ref="Case" v-show="activity == 'Case'" @login="returnLogin"/>
+                </el-tab-pane>
+                <el-tab-pane label="处置记录">
+                    <Handle ref="Handle" v-show="activity == 'Handle'" />
+                </el-tab-pane>
+                <el-tab-pane label="收费信息">
+                    <Cashier ref="Cashier" v-show="activity == 'Cashier'" />
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 </template>
@@ -41,6 +42,7 @@ export default {
             activity: "Case",
             code: null,
             title: '登录',
+            tabValue: "",
             listQuery: {
                 searchKey: ""
             }
@@ -58,8 +60,23 @@ export default {
         LoginSuccess(callback) {
             this.code = callback;
             this.activity = "Case";
-            console.log(callback)
             this.$refs["Case"].show(callback);
+        },
+        patientNavSelectTab() {
+            var key = "";
+            if(this.tabValue == 0) {    
+                this.activity = "Case";
+                key = "Case";
+            }
+            if(this.tabValue == 1) {
+                this.activity = "Handle";
+                key = "Handle";
+            }
+            if(this.tabValue == 2) {
+                this.activity = "Cashier";
+                key = "Cashier";
+            }
+            this.$refs[key].show(this.code);
         },
         patientNavSelect(key) {
             this.activity = key;

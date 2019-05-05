@@ -2,7 +2,7 @@
   <div class="login-wrap">
     <div class="ms-login">
       <div class="ms-left">
-        <!-- <h2><img class='img' src="../../../static/img/favicon.png"></h2> -->
+        <h2><img class='img' src="../common/img/favicon.png"></h2>
         <img src="static/img/login_bg.png">
       </div>
       <div class="ms-right">
@@ -113,6 +113,10 @@ export default {
   background-color: #c4cdda;
   background-size: 100%;
   margin: auto;
+}
+h2 .img {
+  width:150%;
+  margin-left: 5%;
 }
 .ms-left img {
   width: 50%;

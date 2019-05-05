@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div class="container" style="min-width: 1580px;">
-            <div class="ms-right">
+        <div>
+            <div class="ms-right" id="msContent">
+                <div class="ms-title">个人档案</div>
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="ms-content">
                     <el-form-item prop="mobile">
                         <el-input v-model="ruleForm.mobile" placeholder="手机号">
@@ -58,8 +59,8 @@ export default {
             time: 60,
             code: null,
             ruleForm: {
-                mobile: "17688723510",
-                code: "1"
+                mobile: "",
+                code: ""
             },
             rules: {
                 mobile: [{ 
@@ -70,6 +71,8 @@ export default {
                 }]
             }
         }
+    },
+    mounted() {
     },
     methods: {
         getVerfityCode() {
@@ -139,6 +142,14 @@ export default {
   width: 100%;
   height: 40px;
   margin-bottom: 10px;
+}
+.ms-title {
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  font-size: 20px;
+  color: black;
 }
 </style>
 
