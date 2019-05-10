@@ -7,7 +7,7 @@
               <el-breadcrumb-item>优惠卡管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
+        <div class="container"> 
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-lx-delete" class="handle-del mr10" v-if="auth.COUPON_DELETE" @click="delAll">批量删除</el-button>
                     

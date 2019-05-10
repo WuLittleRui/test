@@ -17,7 +17,7 @@ const db = {
     return JSON.parse(json)
   },
   save(name, value) {
-    if (value == null) {
+    if (value == null) { 
       db.remove(name)
       return
     }

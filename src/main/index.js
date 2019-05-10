@@ -51,7 +51,19 @@ function openPrintWindow(args) {
   printWindow.webContents.on('did-finish-load', () => {
 
     var list = args.date;
+    var payType = args.payType;
     var html1 = "";
+
+    var pay = "";
+    if(payType != undefined) {
+      payType.forEach(item => {
+        if(item.amount != 0 && item.amount != undefined) {
+          pay += "<span>" + item.pay_type_name + ':</span><span class="moneyclass">' + item.amount + "元</span>";
+        }
+      })
+      pay += '<span>本次收费:</span><span class="moneyclass">' + args.pay + '元</span><span>本次欠款:</span><span class="moneyclass">' + args.arrears + "元</span>";
+    }
+
     for(var z = 0; z < list.length; z++) {
       var html = "";
       for(var i = 0;i < list[z].length; i++) {
@@ -61,7 +73,7 @@ function openPrintWindow(args) {
         } else {
           p.left = "";
           p.right = "";
-          p.bottom = "";
+          p.bottom = ""; 
           p.lebottom = "";
         }
         html += '<tr><td class="left_right">'+
@@ -78,8 +90,10 @@ function openPrintWindow(args) {
               '<img class="img" id="barcode' + z + '" /></span></p>'+
 							'<div class="table"><table border="0" style="border-collapse:collapse;" class="list"><tr class="top"><th style="text-indent: 12px;">牙位</th>'+
 								'<th>处置名称</th><th>数量</th><th>单位</th><th>单价（元）</th><th>折扣</th><th>总价</th></tr>'+ 
-								html +'</table><div class="footer">'+
-                  '<p>合计应收：<span class="total">9662.4元</span></p></div><div style="display: inline-block; width: 100%; margin-top: 5px;">'+
+                html +'</table><div class="footer">'+
+                pay
+                    +
+                  '<p>合计应收:<span class="total">' + args.all_price + '元</span></p></div><div style="display: inline-block; width: 100%; margin-top: 5px;">'+
                   '<h2 style="display: inline-block; width: 23%; text-align: left; font-weight: 400; text-indent:12px;">收银员:' + args.cashier_name + '</h2>'+
                   '<h2 style="display: inline-block; width: 24%; text-align: left; font-weight: 400;">主治医生:' + args.docter_name + '</h2>'+
                   '<h2 style="display: inline-block; width: 24%; text-align: left; font-weight: 400;">电话:' + args.docter_mobile + '</h2>'+
@@ -94,13 +108,12 @@ function openPrintWindow(args) {
     for(var z = 0; z < list.length; z++) {
       printWindow.webContents.executeJavaScript("JsBarcode(document.getElementById('barcode" + z + "'), " + args.case_number + ", {'format': 'CODE128','displayValue': false,'fontSize': 18,'height': 100})");
     }
-    printWindow.show();
-    // printWindow.webContents.executeJavaScript("window.print()");
+    // printWindow.show();
+    printWindow.webContents.executeJavaScript("window.print()");
   })
 }
 
 ipcMain.on('print', (event, args) => {
-  console.log(args);
   openPrintWindow(args);
 })
 

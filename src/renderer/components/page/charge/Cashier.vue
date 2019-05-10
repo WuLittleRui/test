@@ -10,6 +10,7 @@
         <div class="container">
             <div class="handle-box">
                 <el-input  @keyup.enter.native="doSomething" v-model="listQuery.case_number" class="handle-input mr10" clearable placeholder="请输入病历号" />
+                <el-input  @keyup.enter.native="doSomething" v-model="listQuery.coupon_id" class="handle-input mr10" clearable placeholder="请输入优惠券号" />
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
             </div>
             <CashierEdit ref="CashierEdit" />
@@ -36,6 +37,7 @@ export default {
                 page: 1,
                 limit: 20,
                 case_number: null,
+                coupon_id: null,
                 mobile: ""
             }
         }
@@ -49,7 +51,11 @@ export default {
             this.handleCashier();
         },
         handleCashier() {
-            this.$refs["CashierEdit"].showAdd(this.listQuery.case_number);
+            if(this.listQuery.case_number == null) {
+                this.$message.error("请输入病历号");
+                return;
+            }
+            this.$refs["CashierEdit"].showAdd(this.listQuery.case_number, this.listQuery.coupon_id);
         },
         search() {
             this.listQuery.page = 1;

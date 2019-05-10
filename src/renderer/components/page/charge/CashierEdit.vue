@@ -10,7 +10,7 @@
             <el-container>
                 <el-container>
                     <el-aside>
-                        <el-tabs v-model="activeName" @tab-click="handleClick">
+                        <el-tabs v-model="activeName">
                             <el-tab-pane label="收费明细" name="first" style='min-height: 450px; '>
                             	
                             	<table class="table">
@@ -27,7 +27,7 @@
                                     <tr v-for="(item, index) in tableData4">
                                         <td>
                                         	<div>
-                                        		 <PatientTeethPosition :ref="'PatientTeethPosition' + item.name" :index="item" @open="openChange" @close="closeChange" @value="positionValueChange"/>
+                                        		 <PatientTeethPosition :ref="'PatientTeethPosition' + item.name" :index="item"/>
                                         	</div>
                                         </td>
                                         <td>
@@ -78,7 +78,7 @@
                         </div>
                         <el-container style="margin-top: 20px;" v-show="show">
                           <el-button type="primary" @click="submitForm('form')">收费</el-button>
-                          <!-- <el-button type="success" @click="submitForm('form')">收费并打印</el-button> -->
+                          <el-button size="medium" type="primary" @click="submitFormAndPrint('form')">收费并打印</el-button>
                         </el-container> 
                     </el-footer>
                 </el-container>
@@ -114,11 +114,13 @@
 </template>
 
 <script>
+const {ipcRenderer} = require('electron');
 import PatientTeethPosition from "../case/PatientCommon/PatientTeethPosition";
 import * as HospitalHandleApi from "@/api/HospitalHandleApi";
 import * as PayTypeApi from "@/api/PayTypeApi";
 import * as PatientApi from "@/api/PatientApi";
 import * as OauthApi from "@/api/OauthApi";
+import { accAdd } from "@/utils/calculation"
 import { debug } from 'util';
 export default {
   components: { PatientTeethPosition },
@@ -126,6 +128,7 @@ export default {
     return {
       username: "",
       case_number: "",
+      coupon_id: "",
       tableData4: [],
       centerDialogVisible: false,
       activeName: "first",
@@ -145,6 +148,7 @@ export default {
         mid: null,
         now_price: 0,
         all_cost_per: 0,
+        coupon_id: null,
         remark: "",
         all_price: 0,
         old_sum: 0,
@@ -157,6 +161,48 @@ export default {
     };
   },
   methods: {
+    submitFormAndPrint(formName) {
+       this.$refs[formName].validate(valid => {
+        if (valid) {
+          if(this.form.docter_id == null) {
+            this.$message.error("请选择医生!");
+            return;
+          }
+          var sum = 0;
+          this.payType.forEach(item => {
+              sum = sum + item.amount;
+          })
+          if(sum == 0) {
+              this.$message.error("实收金额不能为0!");
+              return;
+          }
+          HospitalHandleApi.payCashierAndPrint(this.form.case_number, 2, JSON.stringify(this.tableData4), this.form.nurse_id, 4, this.form.remark, JSON.stringify(this.payType), this.form.all_cost_per, this.form.docter_id).then(data => {
+              if(data.error == 'success') {
+                  this.$message({
+                    type: "success",
+                    message: "划价成功!"
+                  });
+                  this.centerDialogVisible = false;
+                  data.data.payType = this.payType;
+                  data.data.pay = sum;
+                  data.data.arrears = accAdd(data.data.all_price, -1 * sum);
+                  ipcRenderer.send('print', data.data);
+                  this.$emit('refresh', true);
+              } else if (
+                data.error === "invaild_token" ||
+                data.error === "not_login"
+            ) {
+                //判断是否认证过期
+                this.$router.push("/login");
+            } else if (data.error_description) {
+                this.$message.error(data.error_description);
+            } else {
+                this.$message.error(data.error);
+            }
+          })
+        }
+      })
+    },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -207,6 +253,7 @@ export default {
       this.form.arrear_amount = 0;
       this.form.odd_change = 0;
       this.form.arrear = 0;
+      this.form.coupon_id = null;
     },
     payTypeValueChange() {
         var sum = 0;
@@ -221,24 +268,14 @@ export default {
            this.form.odd_change = 0;
         }
     },
-    //处置打开事件
-    openChange(item) {
-    },
-		//处置关闭事件
-    closeChange(item, oindex) {
-    },
-    positionValueChange(index, item) {
-	},
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     deleteRow(index, rows) {
       rows.splice(index, 1);
     },
-    showAdd(case_number) {
+    showAdd(case_number, coupon_id) {
         if(case_number != null) {
-          this.case_number = case_number
-          this.getDate(case_number);
+          this.case_number = case_number;
+          this.coupon_id = coupon_id;
+          this.getDate(case_number, coupon_id);
         }
         this.getNurse();
         this.getDocter();
@@ -299,13 +336,14 @@ export default {
             }
         })
     },
-    getDate(case_number) {
-      HospitalHandleApi.cashierDetail(case_number).then(data => {
+    getDate(case_number, coupon_id) {
+      HospitalHandleApi.cashierDetail(case_number, coupon_id).then(data => {
         this.tableData4 = [];
         if (data.error === "success") {
             this.form.case_number = data.data.case_number;
             this.form.username = data.data.username;
             this.form.mid = data.data.mid;
+            
             data.data.handle_list.forEach(item => {
                 item.name = item.prescription_id + item.title;
                 if(item.position != '' && item.position != null && item.position != undefined) {

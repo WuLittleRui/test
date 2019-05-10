@@ -216,6 +216,7 @@ export default {
                     message: "划价成功!"
                   });
                   this.centerDialogVisible = false;
+                  data.data.payType = this.payType;
                   ipcRenderer.send('print', data.data);
                   this.$emit('refresh', true);
               } else if (

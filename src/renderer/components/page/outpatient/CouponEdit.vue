@@ -154,9 +154,9 @@
                 title: "新增", // dialog标题
                 button_loading: false, // 确认按钮加载
                 listLoading: false, // form主体加载
-                discount_label: "折扣", // discount_price标题
+                discount_label: "抵扣", // discount_price标题
                 discountPriceLabelWidth: "50px", // discount_price标题宽度
-                unit: "%", // discount_price单位
+                unit: "元", // discount_price单位
                 typeOptions: [
                     // 优惠券类型
                     {
@@ -284,7 +284,7 @@
                             arr.push({
                                 pid: element.prescription_id,
                                 name: element.title,
-                                unit_price: element.unit_price,
+                                unit_price: element.unit_price, 
                                 unit: element.unit
                             });
                         });

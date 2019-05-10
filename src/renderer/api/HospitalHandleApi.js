@@ -75,10 +75,11 @@ export async function payBillAndPrint(handle_id, detail, remark, employee_id, co
     }
 }
 
-export async function cashierDetail(case_number) {
+export async function cashierDetail(case_number, coupon_id) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/money/pay/detail', {
-            case_number: case_number
+            case_number: case_number,
+            coupon_id: coupon_id
         });
     } catch (error) { 
         console.log(error)

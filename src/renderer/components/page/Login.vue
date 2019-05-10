@@ -13,7 +13,7 @@
               <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
             </el-input>
           </el-form-item>
-          <el-form-item prop="username">
+          <el-form-item prop="username"> 
             <el-input v-model="ruleForm.username" placeholder="用户名">
               <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
             </el-input>
@@ -35,15 +35,14 @@
 
 <script>
 import * as OauthApi from "../../api/OauthApi";
-import storage from '@/utils/storage';
 
 export default {
   data: function() {
     return {
       ruleForm: {
-        hospital_name: process.env.NODE_ENV === "production" ? "" : "乐莎莎口腔",
-        username: process.env.NODE_ENV === "production" ? "" : "leshasha",
-        password: process.env.NODE_ENV === "production" ? "" : "123456"
+        hospital_name: process.env.NODE_ENV === "production" ? "" : "",
+        username: process.env.NODE_ENV === "production" ? "" : "",
+        password: process.env.NODE_ENV === "production" ? "" : ""
       },
       rules: {
         username: [
@@ -55,8 +54,8 @@ export default {
     };
   },
   mounted() {
-    let user = storage.get("username");
-    let hospital_name = storage.get("hospital_name");
+    let user = window.localStorage.getItem("username");
+    let hospital_name = window.localStorage.getItem("hospital_name");
     if (user != null) {
       this.ruleForm.username = user;
     }
@@ -92,8 +91,8 @@ export default {
 
               return;
             }
-            storage.save('username', this.ruleForm.username);
-            storage.save('hospital_name', this.ruleForm.hospital_name);
+            window.localStorage.setItem('username', this.ruleForm.username);
+            window.localStorage.setItem('hospital_name', this.ruleForm.hospital_name);
             this.$router.push("/index");
           });
         } else {
