@@ -122,7 +122,9 @@ export async function getAccessToken() {
                 error: 'not_login'
             };
         }
+        console.log('check');
         if (token.create_time + (token.expires_in - 5) * 1000 < new Date().getTime()) {
+            console.log('refresh-token');
             token = await refreshToken(token.refresh_token);
             if (token.error)
                 return token;
@@ -130,6 +132,7 @@ export async function getAccessToken() {
                 access_token: token.access_token
             }
         } else {
+            console.log('no-token');
             return {
                 access_token: token.access_token
             }

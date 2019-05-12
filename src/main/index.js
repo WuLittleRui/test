@@ -49,7 +49,7 @@ function openPrintWindow(args) {
   printWindow = new BrowserWindow(windowOptions);
   printWindow.loadURL(`file://E:/work/yq-hospital/yq-hospital-admin/hospital-admin/src/renderer/components/print/print.html`);
   printWindow.webContents.on('did-finish-load', () => {
-
+    console.log(args)
     var list = args.date;
     var payType = args.payType;
     var html1 = "";
