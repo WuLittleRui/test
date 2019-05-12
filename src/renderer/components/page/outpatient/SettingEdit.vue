@@ -119,13 +119,14 @@ export default {
               this.$emit("refresh");
               this.editVisible = false;
             } else if (
-        res.error === "invaild_token" ||
-        res.error === "not_login"
-        ) {
-        //判断是否认证过期
-        OauthApi.logOut();
-        this.$router.push("/login");
-        }   else {
+              res.error === "invaild_token" ||
+              res.error === "not_login"
+              ) {
+              //判断是否认证过期
+              OauthApi.logOut();
+              this.$router.push("/login");
+            }  else {
+              console.log(res);
               this.$message({
                 type: "error",
                 message: this.$t(res.error)

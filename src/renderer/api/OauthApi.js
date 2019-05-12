@@ -117,7 +117,7 @@ export async function refreshToken(refresh_token, times) {
 export async function getAccessToken() {
     try {
         let token = await getUserInfoFromStorage();
-        if (!token) {
+        if (!token) { 
             return {
                 error: 'not_login'
             };

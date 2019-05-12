@@ -200,7 +200,6 @@ export default {
         res.data.child.length > 0
       ) {
         let node = this.initMenu(res.data);
-        //console.log(node);
         if (node.subs && node.subs.length > 0) {
           this.activeIndex = node.subs[0].index;
           bus.$emit("submenu", node.subs);

@@ -52,7 +52,6 @@ export default {
         },
         handleCashier() {
             if(this.listQuery.case_number == null) {
-                this.$message.error("请输入病历号");
                 return;
             }
             this.$refs["CashierEdit"].showAdd(this.listQuery.case_number, this.listQuery.coupon_id);

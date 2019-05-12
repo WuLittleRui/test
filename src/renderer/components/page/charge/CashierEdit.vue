@@ -389,10 +389,9 @@ export default {
             if(this.detail_list.length > 0) {
               this.show = true;
             }
-
             this.form.arrear_amount = data.data.arrear_amount; // 上期欠款
             this.form.now_price = data.data.now_pay; //本次费用
-            this.form.old_sum = this.form.arrear_amount + this.form.now_price;
+            this.form.old_sum = accAdd(this.form.now_price, this.form.arrear_amount);
             this.form.all_price = this.form.old_sum;
             this.form.arrear = this.form.all_price;
             this.form.odd_change = 0;

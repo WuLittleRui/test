@@ -91,7 +91,7 @@
         </el-container>
       </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button size="medium" type="primary" @click="submitForm('form')">确 定</el-button>
+            <el-button size="medium" type="primary" :loading="buttonloading" @click="submitForm('form')">确 定</el-button>
             <el-button size="medium" type="primary" @click="submitFormAndPrint('form')">确定并打印</el-button>
         </span>
     </el-dialog>
@@ -114,6 +114,7 @@ export default {
       tableData4: [],
       oldData: [],
       detail_id: 0,
+      buttonloading: false,
       centerDialogVisible: false,
       activeName: "first",
       value: "",
@@ -143,8 +144,10 @@ export default {
             this.$message.error("请选择医生!");
             return;
           }
+          this.buttonloading = true;
           HospitalHandleApi.payBill(this.detail_id, JSON.stringify(this.tableData4), this.form.remark, this.form.docter_id, this.form.all_cost_per).then(data => {
-            if (data.error === "success") {
+            this.buttonloading = false;
+           if (data.error === "success") {
               this.$message({
                   type: "success",
                   message: "划价成功!"
@@ -165,7 +168,9 @@ export default {
             this.$message.error("请选择医生!");
             return;
           }
+          this.buttonloading = true;
           HospitalHandleApi.payBillAndPrint(this.detail_id, JSON.stringify(this.tableData4), this.form.remark, this.form.docter_id, this.form.all_cost_per).then(data => {
+            this.buttonloading = false;
             if (data.error === "success") {
               this.$message({
                 type: "success",
