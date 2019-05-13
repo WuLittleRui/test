@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
+const path = require('path')
 
 // import { autoUpdater } from "electron-updater"
 
@@ -16,6 +17,8 @@ let printWindow;
 const winURL = process.env.NODE_ENV === 'development' ?
   `http://localhost:9080` :
   `file://${__dirname}/index.html`
+
+const prinURL = "https://res.yvqin.cn/printHtml/print.html"
 
 function createWindow() {
   /**
@@ -47,9 +50,8 @@ function openPrintWindow(args) {
     show: false,
   }
   printWindow = new BrowserWindow(windowOptions);
-  printWindow.loadURL(`file://E:/work/yq-hospital/yq-hospital-admin/hospital-admin/src/renderer/components/print/print.html`);
+  printWindow.loadURL(prinURL);
   printWindow.webContents.on('did-finish-load', () => {
-    console.log(args)
     var list = args.date;
     var payType = args.payType;
     var html1 = "";
