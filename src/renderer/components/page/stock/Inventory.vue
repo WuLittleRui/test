@@ -17,7 +17,7 @@
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-button type="primary" icon="el-icon-edit" @click="handleBatch">批量盘点</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" 
                  ref="multipleTable" >
                 <el-table-column prop="title" label="名称" header-align="center"  align="center" sortable min-width="120">
@@ -77,6 +77,7 @@ export default {
   },
   data() {
     return {
+      tableheight: document.body.clientHeight * 0.45 + "px",
       multipleSelection: [],
       typeList: [{ name: "商品", value: 1 }, { name: "物料", value: 2 }],
       /**搜索数据 */

@@ -7,12 +7,13 @@ import * as OauthApi from './OauthApi'
  
  */
 
-export async function list(name, mobile, case_number) {
+export async function list(name, mobile, case_number, key) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/patient/list', {
             name: name,
             mobile: mobile,
-            case_number: case_number
+            case_number: case_number, 
+            key: key
         });
     } catch (error) {
         return error;
@@ -27,10 +28,11 @@ export async function list(name, mobile, case_number) {
  
  */
 
-export async function patients(query_time) {
+export async function patients(query_time, key) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/patient/patient', {
-            query_time: query_time
+            query_time: query_time,
+            key: key
         });
     } catch (error) {
         return error;
@@ -99,7 +101,7 @@ export async function getCaseNumber() {
     } catch (error) {
         return error
     }
-}
+} 
 
 export async function getMemberLevel() {
     try {
@@ -112,7 +114,7 @@ export async function getMemberLevel() {
 /**
  * @author wurui
  * @description 
- * @param {*} aid 
+ * @param {*} aid  
  */
 export async function getEmployee(type) {
     try {
@@ -128,11 +130,11 @@ export async function getEmployee(type) {
  * @param {*} title 
  
  */
-export async function add(case_number, name, mobile, sex, age, birthday, type, employee_id, allergy, history, address, level) {
+export async function add(case_number, name, mobile, sex, age, birthday, type, allergy, history, address, level) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/patient/add', { 
             case_number: case_number, name: name, mobile: mobile, sex: sex, age: age,
-            birthday: birthday, type: type, employee_id: employee_id, allergy: allergy, history: history, address: address, level_id: level
+            birthday: birthday, type: type, allergy: allergy, history: history, address: address, level_id: level
         });
     } catch (error) {
         return error
@@ -146,22 +148,21 @@ export async function add(case_number, name, mobile, sex, age, birthday, type, e
  * @param {*} title 
  
  */
-export async function edit(case_number, name, mobile, sex, age, birthday, type, employee_id, allergy, history, address, level) {
+export async function edit(case_number, name, mobile, sex, age, birthday, type, allergy, history, address, level) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/patient/edit', { 
             case_number: case_number, name: name, mobile: mobile, sex: sex, age: age,
-            birthday: birthday, type: type, employee_id: employee_id, allergy: allergy, history: history, address: address, level_id: level
+            birthday: birthday, type: type, allergy: allergy, history: history, address: address, level_id: level
         });
     } catch (error) {
         return error
     }
 }
 
-export async function addOrder(case_number, employee_id, start_time, end_time, content, order_remark) {
+export async function addOrder(case_number, start_time, end_time, content, order_remark) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/order/add', { 
             case_number: case_number, 
-            employee_id: employee_id,
             start_time: start_time,
             end_time: end_time,
             content: content,

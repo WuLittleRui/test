@@ -15,7 +15,7 @@
                 <el-input v-model="form.remark"></el-input>
             </el-form-item>
             <el-form-item label="商品库存">
-                <el-table ref="multipleTable" :data="productsList" tooltip-effect="dark" border style="width: 100%" @selection-change="changeFun" height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
+                <el-table :height="tableheight" ref="multipleTable" :data="productsList" tooltip-effect="dark" border style="width: 100%" @selection-change="changeFun" height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
                   <el-table-column type="selection" @selection-change="changeFun">
                   </el-table-column>
                   <el-table-column label='名称'>
@@ -60,6 +60,7 @@ export default {
 
       inOutLabel: "入库",
       productsList: [],
+      tableheight: document.body.clientHeight * 0.45 + "px",
       multipleSelection: [],
       inOutTypeLabel: "入库类型",
       typeList: [

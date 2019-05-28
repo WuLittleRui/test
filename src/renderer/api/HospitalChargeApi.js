@@ -12,11 +12,11 @@ import * as OauthApi from './OauthApi'
 /**
  * 初始化支付信息
  */
-export async function list(charge_id) {
+export async function list(charge_id, key) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/hospitalcharge/list', {
-            charge_id: charge_id
-
+            charge_id: charge_id,
+            key: key
         });
     } catch (error) {
         return error

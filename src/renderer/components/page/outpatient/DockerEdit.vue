@@ -1,6 +1,6 @@
 <template>
     <!-- 编辑弹出框 -->
-    <el-dialog :title="title" :visible.sync="editVisible" width="50%">
+    <el-dialog :title="title" :visible.sync="editVisible" width="850px">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item  v-if="this.form.id == 2"  label='员工' prop='employee_id'>
                 <el-select   v-model="form.employee_id" clearable  placeholder="请选择"   style="width:180px">
@@ -23,22 +23,27 @@
             <el-form-item label="手机号:" prop="mobile">
                 <el-input v-model="form.mobile"></el-input>
             </el-form-item>
-            <el-form-item label='头像' prop="face">
-                <el-upload class="avatar-uploader" :action="uploadAction" :http-request="handleUploadImg" :on-preview="handlePictureCardPreview" :show-file-list="false" :on-success="uploadSuccess">
-                    <img v-if="form.face" :src="form.face" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label='资格证' prop="certified">
-                <el-upload class="avatar-uploader" :action="uploadAction" :http-request="handleUploadCertifiedImg" :on-preview="handlePictureCardPreview" :show-file-list="false" :on-success="uploadSuccess">
-                    <img v-if="form.face" :src="form.certified" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label='个人简介' prop='description'>
-                <el-input autosize type="textarea" :rows="2" placeholder="请输入内容" v-model="form.description">
-                </el-input>
-            </el-form-item>
+            <el-row :gutter="20">
+                <el-col :span="10">
+                    <el-form-item label='头像' prop="face">
+                        <el-upload class="avatar-uploader" :action="uploadAction" :http-request="handleUploadImg" :on-preview="handlePictureCardPreview" :show-file-list="false" :on-success="uploadSuccess">
+                            <img v-if="form.face" :src="form.face" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
+                        </el-upload>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label='资格证' prop="certified">
+                        <el-upload class="avatar-uploader" :action="uploadAction" :http-request="handleUploadCertifiedImg" :on-preview="handlePictureCardPreview" :show-file-list="false" :on-success="uploadSuccess">
+                            <img v-if="form.face" :src="form.certified" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
+                        </el-upload>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            
             <el-row :gutter="20">
                 <el-col :span="10">
                     <el-form-item label='是否推荐' prop='recommend'>
@@ -57,6 +62,10 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
+            <el-form-item label='个人简介' prop='description'>
+                <quill-editor ref="myTextEditor" v-model="form.description" :options="editorOption"></quill-editor>
+            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @click="editVisible = false">取 消</el-button>
@@ -66,14 +75,16 @@
 </template>
 
 <script>
-    import * as HospitalEmplyeeApi from "../../../api/HospitalEmplyeeApi";
-    import * as HospitalDockerApi from "../../../api/HospitalDockerApi";
-    import * as OauthApi from "../../../api/OauthApi";
-
-    import {
-        validPhone
-    } from "../../../utils/validate";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+import { quillEditor } from "vue-quill-editor";
+import * as HospitalEmplyeeApi from "../../../api/HospitalEmplyeeApi";
+import * as HospitalDockerApi from "../../../api/HospitalDockerApi";
+import * as OauthApi from "../../../api/OauthApi";
+import { validPhone } from "../../../utils/validate";
     export default {
+        components: { quillEditor },
         props: {
             uploadAction: {
                 // 上传路径
@@ -83,6 +94,9 @@
         },
         data() {
             return {
+                editorOption: {
+                    placeholder: "个人简介"
+                },
                 buttonLoading: false,
                 typelist: [],
                 editVisible: false,

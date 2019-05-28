@@ -12,9 +12,9 @@ body,
     overflow: hidden;
 }
 
-.el-scrollbar__wrap {
+/* .el-scrollbar__wrap {
   overflow-x: hidden;
-}
+} */
 
 body {
     font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;

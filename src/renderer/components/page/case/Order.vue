@@ -134,7 +134,10 @@ export default {
             })
         },
         showAdd(case_number) {
-            this.form.case_number = case_number;
+            if(case_number == '') {
+                this.$message.error('请选择患者');
+                return;
+            }
             this.editVisible = true;
 
             this.resetForm();
@@ -167,6 +170,7 @@ export default {
             PatientApi.getPatientDetail(case_number).then(data => {
                 if (data.error === "success") {
                     this.form.username = data.data.name;
+                    this.form.case_number = case_number;
                 } else if (
                     data.error === "invaild_token" ||
                     data.error === "not_login"

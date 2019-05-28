@@ -26,6 +26,7 @@
           <div class="login-btn">
             <el-button type="primary" @click="submitForm('ruleForm')" :loading="LoginButtonLoading">登录</el-button>
           </div>
+          <el-button @click="forgetClick()" type="text" style="color: white; float: left; font-size: 14px;">忘记密码</el-button>
           <el-button @click="registerClick()" type="text" style="color: white; float: right; font-size: 14px;">立即注册</el-button>
         </el-form>
       </div>
@@ -64,8 +65,13 @@ export default {
     }
   },
   methods: {
+    forgetClick() {
+      var _this = this;
+      _this.$router.push("/reset");
+    },
     registerClick() {
-      this.$router.push("/register");
+      var _this = this;
+      _this.$router.push("/register");
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

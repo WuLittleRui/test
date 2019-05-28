@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 700px;">
+    <div :style="heightStyle">
       <el-form ref="form" :model="form" :rules="rules">
         <el-container>
             <el-header style="width: 100%;">
@@ -9,11 +9,11 @@
             </el-header>
             <el-container>
                 <el-container>
-                    <el-aside>
+                    <el-aside :style="asideHeight">
                         <el-tabs v-model="activeName">
-                            <el-tab-pane label="收费明细" name="first" style='min-height: 450px; '>
+                            <el-tab-pane label="收费明细" name="first">
                             	
-                            	<table class="table">
+                            	<table class="table" :style="widthStyle">
                                     <tr>
                                         <th>牙位</th>
                                         <th>处置名称</th>
@@ -55,26 +55,11 @@
                         </el-tabs>
                     </el-aside>
                     <el-footer>
-                        <div style="margin: 15px 0;">医生：
-                            <el-select v-model="form.docter_id" prop="docter_id" placeholder="请选择" style="width: 20%;">
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.employee_id"
-                                    :label="item.username"
-                                    :value="item.employee_id"
-                                ></el-option>
-                            </el-select>
+                        <div style="margin: 15px 0;">医生： <span>{{form.docter_id }}</span>
                         </div>
-                        <div>护士：
-                            <el-select v-model="form.nurse_id" placeholder="请选择" style="width: 20%;">
-                                <el-option
-                                    v-for="item in optionss"
-                                    :key="item.employee_id"
-                                    :label="item.username"
-                                    :value="item.employee_id"
-                                ></el-option>
-                            </el-select>&nbsp;&nbsp;备注：
-                            <el-input v-model="form.remark" placeholder="请输入内容" style="width: 60%;"></el-input>
+                        <div>护士： <span v-if="form.nurse_id != ''">{{form.nurse_id }}</span><span v-else>无</span>
+                            &nbsp;&nbsp;备注：
+                            <el-input v-model="form.remark" placeholder="请输入内容" style="width: 326px;"></el-input>
                         </div>
                         <el-container style="margin-top: 20px;" v-show="show">
                           <el-button type="primary" @click="submitForm('form')">收费</el-button>
@@ -83,28 +68,30 @@
                     </el-footer>
                 </el-container>
                 
-                <el-main style="width: 250px; margin-top: 40px; margin-left: 30px; height: 100%">
-                    <p style="font-size: 18px; line-height: 60px;">上次欠款
-                        <span>{{form.arrear_amount}}</span>
+                <el-main style="width: 250px; margin-top: 40px; margin-left: 30px; height: 350px">
+                  <el-scrollbar style="height: 100%;"> 
+                    <span :style="'font-size: 16px;'  + lineHeight">上次欠款
+                      <span>{{form.arrear_amount}}</span>
+                    </span>
+                    <span :style="'font-size: 16px;'  + lineHeight">本次费用
+                      <span>{{form.now_price}}</span>
+                    </span>
+                    <p :style="'font-size: 17px;'  + lineHeight">合计应收
+                      <span>{{form.old_sum}}</span>
                     </p>
-                    <p style="font-size: 18px; line-height: 60px;">本次费用
-                        <span>{{form.now_price}}</span>
+                    <p :style="'font-size: 22px;'  + lineHeight">优惠后金额:
+                      <span>{{form.all_price}}</span>
                     </p>
-                    <p style="font-size: 18px; line-height: 60px;">合计应收
-                        <span>{{form.old_sum}}</span>
-                    </p>
-                    <p style="font-size: 22px; line-height: 60px;">优惠后金额:
-                        <el-input-number style="width: 70px;" :controls="false" :precision="2" v-model="form.all_price" controls-position="right" :min="0" :disabled="true"></el-input-number>
-                    </p>
-                    <p style="font-size: 18px; line-height: 60px;">欠款:
-                        <el-input-number style="width: 70px;" :readonly="true" :controls="false" :precision="2" v-model="form.arrear" controls-position="right" :min="0" :disabled="true"></el-input-number>
-                    </p>
-                    <p style="font-size: 18px; line-height: 60px;">找零:
-                        <el-input-number style="width: 70px;" :readonly="true" :controls="false" :precision="2" v-model="form.odd_change" controls-position="right" :min="0" :disabled="true"></el-input-number>
-                    </p>
-                    <p style="font-size: 18px; line-height: 60px;" v-for="item in payType">{{item.pay_type_name}}<span v-if="item.pay_type_amount != null && item.pay_type_amount !=undefined">({{ item.pay_type_amount }}元)</span>
+                    <span :style="'font-size: 18px;'  + lineHeight">欠款:
+                      <span>{{form.arrear}}</span>
+                    </span>
+                    <span :style="'font-size: 18px;'  + lineHeight">找零:
+                      <span>{{form.odd_change}}</span>
+                    </span>
+                    <p :style="'font-size: 18px;'+ lineHeight" v-for="item in payType">{{item.pay_type_name}}<span v-if="item.pay_type_amount != null && item.pay_type_amount !=undefined">({{ item.pay_type_amount }}元)</span>
                         <el-input-number style="width: 70px;" :precision="2" :controls="false" @change="payTypeValueChange" v-model="item.amount" controls-position="right" :min="0"></el-input-number>
                     </p>
+                  </el-scrollbar>
                 </el-main>
             </el-container>
         </el-container>
@@ -120,7 +107,7 @@ import * as HospitalHandleApi from "@/api/HospitalHandleApi";
 import * as PayTypeApi from "@/api/PayTypeApi";
 import * as PatientApi from "@/api/PatientApi";
 import * as OauthApi from "@/api/OauthApi";
-import { accAdd } from "@/utils/calculation"
+import { accAdd, accMultiply, toDecimal2 } from "@/utils/calculation";
 import { debug } from 'util';
 export default {
   components: { PatientTeethPosition },
@@ -130,6 +117,10 @@ export default {
       case_number: "",
       coupon_id: "",
       tableData4: [],
+      heightStyle: "height:" + document.body.clientHeight * 0.59 + "px",
+      asideHeight: "height:" + document.body.clientHeight * 0.35 + "px; width:" + document.body.clientWidth * 0.6 + "px",
+      widthStyle: "width:" + document.body.clientWidth * 0.6 + "px",
+      lineHeight: "line-height: 40px", 
       centerDialogVisible: false,
       activeName: "first",
       payType: [],
@@ -195,8 +186,12 @@ export default {
                 //判断是否认证过期
                 this.$router.push("/login");
             } else if (data.error_description) {
+                this.resetForm();
+                this.show = false;
                 this.$message.error(data.error_description);
             } else {
+                this.resetForm();
+                this.$emit('error', true);
                 this.$message.error(data.error);
             }
           })
@@ -219,6 +214,7 @@ export default {
               return;
           }
           HospitalHandleApi.payCashier(this.form.case_number, 2, JSON.stringify(this.tableData4), this.form.nurse_id, 4, this.form.remark, JSON.stringify(this.payType), this.form.all_cost_per, this.form.docter_id).then(data => {
+              
               if(data.error == 'success') {
                   this.$message({
                     type: "success",
@@ -233,8 +229,12 @@ export default {
                 //判断是否认证过期
                 this.$router.push("/login");
             } else if (data.error_description) {
+                this.resetForm();
+                this.show = false;
                 this.$message.error(data.error_description);
             } else {
+                this.resetForm();
+                this.show = false;
                 this.$message.error(data.error);
             }
           })
@@ -242,6 +242,7 @@ export default {
       })
     },
     resetForm() {
+      this.case_number = "";
       this.form.docter_id = null;
       this.form.nurse_id = null;
       this.form.mid = null;
@@ -254,13 +255,14 @@ export default {
       this.form.odd_change = 0;
       this.form.arrear = 0;
       this.form.coupon_id = null;
+      this.show = false;
     },
     payTypeValueChange() {
         var sum = 0;
         this.payType.forEach(item => {
-            sum = sum + item.amount;
+            sum = accAdd(sum, item.amount);
         })
-        this.form.arrear = this.form.all_price - sum;
+        this.form.arrear = accAdd(this.form.all_price, -1 * sum);
         if(this.form.arrear <= 0) {
             this.form.odd_change = -1 * this.form.arrear;
             this.form.arrear = 0;
@@ -343,6 +345,8 @@ export default {
             this.form.case_number = data.data.case_number;
             this.form.username = data.data.username;
             this.form.mid = data.data.mid;
+            this.form.docter_id = data.data.docter_name;
+            this.form.nurse_id = data.data.nurse_name;
             
             data.data.handle_list.forEach(item => {
                 item.name = item.prescription_id + item.title;
@@ -405,8 +409,12 @@ export default {
             OauthApi.logOut();
             this.$router.push("/login");
         } else if (data.error_description) {
+                this.resetForm();
+                this.show = false;
             this.$message.error(data.error_description);
         } else {
+                this.resetForm();
+                this.show = false;
             this.$message.error(data.error);
         }
       })
@@ -417,14 +425,13 @@ export default {
 
 
 <style scoped>
-
 .block {
   float: right;
   line-height: 60px;
 }
 
 .el-footer {
-  width: 850px;
+  width: 564px;
   color: #333;
   padding: 0;
 }
@@ -440,9 +447,7 @@ export default {
 }
 
 .el-aside {
-  width: 800px !important;
   color: #333;
-  height: 500px;
 }
 
 .el-main {
@@ -464,8 +469,6 @@ body > .el-container {
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
 }
-
-
 
 table {
   width: 800px;
@@ -498,7 +501,6 @@ table tr td > input {
 }
 
 .table {
-  width: 800px;
   border-collapse: collapse;
   color: #686868;
 }

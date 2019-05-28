@@ -173,7 +173,7 @@ export default new Router({
                 },
                 {
                     path: '/financial/user',
-                    component: resolve => require(['../components/page/financial/User.vue'], resolve),
+                    component: resolve => require(['../components/page/charge/Payment.vue'], resolve),
                     meta: { title: '用户预存款' }
                 },
                 {
@@ -277,6 +277,11 @@ export default new Router({
                     meta: { title: '挂号中心' }
                 }
             ]
+        },
+        {
+            path: '/reset',
+            component: resolve => require(['../components/page/Reset.vue'], resolve),
+            meta: { title: '忘记密码' }
         },
         {
             path: '/register',

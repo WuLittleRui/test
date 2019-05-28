@@ -1,6 +1,6 @@
 <template>
     <div v-if="flag">
-        <div :class="edit?'basic_information2': 'basic_information'">
+        <div :style="edit? 'height: 150px': teethHeight">
 				<el-scrollbar style="height: 100%;" >
 					<section class="section" v-for="(item, index) in list" >
 						<header class="header">
@@ -169,6 +169,7 @@ export default {
     components: { PatientCaseEdit, PatientTeethPosition },
     data() {
         return {
+						teethHeight: "height:" + document.body.clientWidth * 0.3 + "px",
             edit: false,
             flag: false,
 						case_number: null,
@@ -273,10 +274,10 @@ export default {
 <style scoped>
 /*表格数据*/
 .center {
-  margin: 2px 10px;
+  /* margin: 2px 10px; */
   float: left;
   position: relative;
-  width: 100px;
+  /* width: 100px; */
   height: 30px;
   cursor: pointer;
 }

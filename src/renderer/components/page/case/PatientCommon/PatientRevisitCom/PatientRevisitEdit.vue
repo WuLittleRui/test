@@ -121,10 +121,21 @@ export default {
   mounted() {
   },
   methods: {
-		getDocter() {
-			PatientApi.getEmployee(1).then(res => {
+		  getDocter() {
+			  PatientApi.getEmployee(1).then(res => {
           if (res.error === "success") {
             this.optionss = res.data;
+          } else {
+            this.$message.error(this.$t(res.error));
+          }
+        })
+      },
+      getNurse() {
+			  PatientApi.getEmployee(2).then(res => {
+          if (res.error === "success") {
+            res.data.forEach(item => {
+              this.optionss.push(item);
+            })
           } else {
             this.$message.error(this.$t(res.error));
           }
@@ -135,6 +146,7 @@ export default {
       this.resetForm();
       this.editVisible = true;
       this.getDocter();
+      this.getNurse();
       this.$nextTick(() => {
         this.form.case_number = case_number;
         this.patientNavSelect("1");

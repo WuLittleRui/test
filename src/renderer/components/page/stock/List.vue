@@ -18,7 +18,7 @@
                 <el-button type="primary" icon="el-icon-download" @click="handleDownload" :loading="downloadLoading">导出表格</el-button>
                 <el-button type="primary" icon="el-icon-edit" @click="handleBatch">批量调整</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column type="expand">
@@ -102,6 +102,7 @@ export default {
   },
   data() {
     return {
+      tableheight: document.body.clientHeight * 0.45 + "px",
       multipleSelection: [],
       typeList: [{ name: "商品", value: 1 }, { name: "物料", value: 2 }],
       /**搜索数据 */

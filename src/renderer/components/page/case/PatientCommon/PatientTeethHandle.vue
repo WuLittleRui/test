@@ -29,7 +29,7 @@
                                 <el-input v-model="name" placeholder="筛选项目名" class="handle-input mr10"></el-input>
                                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                             </div>
-                            <el-table @cell-dblclick="handleAddDB" style="width: 680px" ref="multipleTable" :data="package_list" height="280px" border class="table">
+                            <el-table style="width: 680px" ref="multipleTable" :data="package_list" height="280px" border class="table">
                                 <el-table-column label='项目名' align="center" header-align="center">
                                     <template slot-scope="scope">{{ scope.row.name }}</template>
                                 </el-table-column>
@@ -56,7 +56,7 @@
                     </el-container>
                     <el-container>
                         <el-main>
-                            <el-table @cell-dblclick="handleDeleteDB" style="width: 680px" ref="multipleTable" :data="sel_package_list" height="280px" border class="table">
+                            <el-table style="width: 680px" ref="multipleTable" :data="sel_package_list" height="280px" border class="table">
                                 <el-table-column label='项目名' align="center" header-align="center">
                                     <template slot-scope="scope">{{ scope.row.name }}</template>
                                 </el-table-column>
@@ -126,7 +126,7 @@ export default {
             this.item.lebottom = item.lebottom;
             this.item.bottom = item.bottom;
 		},
-		openChange(index) {
+		openChange(index) { 
             this.item.show = true;
             this.$refs["PatientTeethPosition"].editItem(this.item);
 		},
@@ -175,9 +175,6 @@ export default {
         },
         handleDelete(index, row) {
             this.sel_package_list.splice(index, 1);
-        },
-        handleAddDB(row, column, cell, event) {
-            this.sel_package_list.push(row);
         },
         handleAdd(index, row) {
             this.sel_package_list.push(row);
@@ -254,6 +251,7 @@ export default {
             this.handleType.forEach(i => {
                 i.typeSelect = false;
             })
+            this.type_id = this.handleType[index].type_id;
             this.handleType[index].typeSelect = true;
             this.getCharge(this.handleType[index].type_id);
         }

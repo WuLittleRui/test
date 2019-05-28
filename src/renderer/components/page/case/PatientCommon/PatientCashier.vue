@@ -1,5 +1,5 @@
 <template>
-    <div v-if="flag" :class="edit?'basic_information2': 'basic_information'">
+    <div v-if="flag" :style="edit? 'height: 150px': teethHeight">
         <el-scrollbar style="height: 100%;">
             <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' ref="multipleTable" highlight-current-row @current-change="handleTableChange">
@@ -56,6 +56,7 @@ export default {
             flag: false,
             selectSn: null,
             onlyShow: false,
+			teethHeight: "height:" + document.body.clientWidth * 0.3 + "px",
             listQuery: {
                 page: 1,
                 limit: 20,

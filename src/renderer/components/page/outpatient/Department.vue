@@ -11,7 +11,7 @@
                  
                 <el-button type="primary" icon="el-icon-lx-add" @click="handleCreate()" v-if="auth.SHOP_ADMIN_ADD">新增</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column prop="groupName" label="岗位名称" header-align="center"  align="center" sortable min-width="120">
@@ -53,7 +53,8 @@ export default {
       },
       listLoading: true, //给我点时间
       tableKey: 0,
-       stateList: [{ name: "医生", value: 1 }, { name: "护士", value: 2 },{ name: "前台", value: 3 },{ name: "咨询师", value: 4 }],
+      tableheight: document.body.clientHeight * 0.45 + "px",
+      stateList: [{ name: "医生", value: 1 }, { name: "护士", value: 2 },{ name: "前台", value: 3 },{ name: "咨询师", value: 4 }],
       listQuery: {
         page: 1,
         limit: 20,

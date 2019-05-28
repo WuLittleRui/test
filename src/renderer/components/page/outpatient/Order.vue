@@ -17,7 +17,7 @@
                    <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-button type="primary" icon="el-icon-lx-add" @click="handleCreate()" v-if="auth.SHOP_ADMIN_ADD">新增</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -67,6 +67,7 @@ export default {
       typelist:[],
       listLoading: true, //给我点时间
       tableKey: 0,
+      tableheight: document.body.clientHeight * 0.45 + "px",
       listQuery: {
         page: 1,
         limit: 20,

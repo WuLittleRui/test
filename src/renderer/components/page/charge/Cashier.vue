@@ -13,7 +13,7 @@
                 <el-input  @keyup.enter.native="doSomething" v-model="listQuery.coupon_id" class="handle-input mr10" clearable placeholder="请输入优惠券号" />
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
             </div>
-            <CashierEdit ref="CashierEdit" />
+            <CashierEdit ref="CashierEdit" @error="reset"/>
         </div> 
     </div>
 </template>
@@ -46,6 +46,11 @@ export default {
         this.handleCashier();
     },
     methods: {
+        reset() {
+            this.listQuery.case_number = null;
+            this.listQuery.coupon_id = null;
+            this.listQuery.mobile = null;
+        },
         doSomething(e) {
             this.listQuery.page  = 1;
             this.handleCashier();

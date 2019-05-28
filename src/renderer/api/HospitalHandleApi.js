@@ -43,7 +43,7 @@ export async function payList(handle_id) {
     }
 }
 
-export async function payBill(handle_id, detail, remark, employee_id, cost_price) {
+export async function payBill(handle_id, detail, remark, employee_id, cost_price, nurse) {
     try {
 
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/money/update/pricing', {
@@ -51,7 +51,8 @@ export async function payBill(handle_id, detail, remark, employee_id, cost_price
             detail: detail,
             remark: remark,
             employee_id: employee_id,
-            cost_price: cost_price
+            cost_price: cost_price,
+            nurse_id: nurse
         });
     } catch (error) {
         console.log(error)
@@ -59,7 +60,7 @@ export async function payBill(handle_id, detail, remark, employee_id, cost_price
     }
 }
 
-export async function payBillAndPrint(handle_id, detail, remark, employee_id, cost_price) {
+export async function payBillAndPrint(handle_id, detail, remark, employee_id, cost_price, nurse, all_price) {
     try {
 
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/money/update/pricing/print', {
@@ -67,7 +68,9 @@ export async function payBillAndPrint(handle_id, detail, remark, employee_id, co
             detail: detail,
             remark: remark,
             employee_id: employee_id,
-            cost_price: cost_price
+            cost_price: cost_price,
+            nurse_id: nurse,
+            sum: all_price
         });
     } catch (error) {
         console.log(error)

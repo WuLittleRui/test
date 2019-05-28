@@ -22,9 +22,9 @@ export async function list(pid) {
     }
 }
 
-export async function prescriptionList() {
+export async function prescriptionList(key) {
     try {
-        return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/prescription/all');
+        return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/prescription/all', {title: key});
     } catch (error) {
         return error
     }

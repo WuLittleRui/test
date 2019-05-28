@@ -20,7 +20,7 @@
                 <el-button type="primary" icon="el-icon-lx-search" @click="allSend">全选发送</el-button>
                 <el-button type="success" icon="el-icon-lx-search" @click="selectSend">选择发送</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -56,6 +56,7 @@ export default {
       multipleSelection: [],
       /**搜索数据 */
       list: [],
+      tableheight: document.body.clientHeight * 0.45 + "px",
       options: [],
       total: null,
       listLoading: true,

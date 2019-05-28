@@ -13,9 +13,11 @@
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-button type="success" icon="el-icon-edit" @click="handleAdd()">添加</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
+               <el-table-column prop="name" label="姓名" header-align="center"  align="center" sortable min-width="120">
+                </el-table-column>
                <el-table-column prop="case_number" label="病历号" header-align="center"  align="center" sortable min-width="120">
                 </el-table-column>
                <el-table-column prop="mobile" label="手机" header-align="center"  align="center" sortable min-width="120">
@@ -52,6 +54,7 @@ export default {
         return {
             /**搜索数据 */
             list: [],
+            tableheight: document.body.clientHeight * 0.45 + "px",
             total: null,
             listLoading: false,
             listQuery: {
@@ -62,7 +65,7 @@ export default {
                 mobile: '',
                 case_number: ''
             }
-        }
+        } 
     },
     mounted() {
         this.getData();

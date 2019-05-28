@@ -11,7 +11,7 @@
                  
                 <!-- <el-button type="primary" icon="el-icon-lx-add" @click="handleCreate()" v-if="auth.SHOP_ADMIN_ADD">新增</el-button> -->
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column prop="level_name" label="级别名称" header-align="center"  align="center" sortable min-width="120">
@@ -53,6 +53,7 @@ export default {
         SHOP_ADMIN_DELETE: false,
         SHOP_ADMIN_EDIT: false
       },
+      tableheight: document.body.clientHeight * 0.45 + "px",
       listLoading: true, //给我点时间
       tableKey: 0,
       listQuery: {

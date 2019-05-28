@@ -3,13 +3,6 @@
     <el-dialog :title="title" :visible.sync="editVisible" width="50%">
        <el-form ref="form" :rules="rules" :model="form" label-width="120px" label-position="rigth">
         <el-row>
-          <el-col :span="24"  align="left">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label='医院介绍'>
-                  <el-input type="textarea"  v-model="form.remark"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
            <el-col :span="24"  align="left">
             <div class="grid-content bg-purple-light">
               <el-form-item label='医院地址' prop="address">
@@ -24,6 +17,13 @@
               </el-form-item>
             </div>
           </el-col>
+          <el-col :span="24"  align="left">
+            <div class="grid-content bg-purple-light">
+              <el-form-item label='医院介绍'> 
+                  <quill-editor ref="myTextEditor" v-model="form.remark" :options="editorOption"></quill-editor>
+              </el-form-item>
+            </div>
+          </el-col>
         </el-row>
       </el-form>
         <span slot="footer" class="dialog-footer">
@@ -34,17 +34,27 @@
 </template>
 
 <script>
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+import {
+    quillEditor
+} from "vue-quill-editor";
 import * as ProgramApi from "../../../api/ProgramApi";
 import * as SettingApi from "../../../api/SettingApi";
 import * as OauthApi from "@/api/OauthApi";
 import { validPhone } from "../../../utils/validate";
 export default {
+  components: { quillEditor },
   data() {
     return {
       buttonLoading: false,
       editVisible: false,
       title: "营业设置",
       csTel: "", //电话
+      editorOption: {
+          placeholder: "医院介绍"
+      },
       form: {
         remark: "",
         customer_service: "",

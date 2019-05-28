@@ -39,6 +39,7 @@ export default {
         showEdit(date, employee_id) {
             this.title = "排班 - ";
             this.title += date;
+            this.list = [];
             this.getTime(employee_id, date);
             this.editVisible = true;
         },

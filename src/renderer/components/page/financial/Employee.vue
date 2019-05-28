@@ -20,11 +20,11 @@
                 <el-input v-model="listQuery.mobile" clearable placeholder="手机号" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
-                v-loading='listLoading' ref="multipleTable" highlight-current-row @current-change="handleTableChange">
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+                v-loading='listLoading' ref="multipleTable" highlight-current-row >
                 <el-table-column prop="mobile" label="手机号" align="center" header-align="center" min-width="120">
                 </el-table-column>
-                <el-table-column prop="username" label="名称" align="center" header-align="center" min-width="70">
+                <el-table-column prop="username" label="姓名" align="center" header-align="center" min-width="70">
                 </el-table-column>
                 <el-table-column prop="royalty" label="提成" align="center" header-align="center" min-width="70">
                 </el-table-column>
@@ -51,6 +51,7 @@ export default {
             total: null,
             listLoading: false,
             paylist: [],
+            tableheight: document.body.clientHeight * 0.45 + "px",
             listQuery: {
                 page: 1,
                 limit: 20,

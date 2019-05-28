@@ -5,11 +5,11 @@
                 <el-main>
                     <el-container>
                         <el-main>
-                            <div>
+                            <div> 
                                 <el-input v-model="title" placeholder="筛选处方名" class="handle-input mr10"></el-input>
                                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                             </div>
-                            <el-table @cell-dblclick="handleAddDB" ref="multipleTable" :data="package_list" height="280px" border class="table">
+                            <el-table ref="multipleTable" :data="package_list" height="280px" border class="table">
                                 <el-table-column label='处方名' align="center" header-align="center">
                                     <template slot-scope="scope">{{ scope.row.title }}</template>
                                 </el-table-column>
@@ -36,7 +36,7 @@
                     </el-container>
                     <el-container>
                         <el-main>
-                            <el-table @cell-dblclick="handleDeleteDB" ref="multipleTable" :data="sel_package_list" height="280px" border class="table">
+                            <el-table ref="multipleTable" :data="sel_package_list" height="280px" border class="table">
                                 <el-table-column label='处方名' align="center" header-align="center">
                                     <template slot-scope="scope">{{ scope.row.title }}</template>
                                 </el-table-column>
@@ -98,43 +98,17 @@ export default {
     },
     showAdd(sel_package_list) {
         this.centerDialogVisibles = true;
-        if(sel_package_list.length == 1 && sel_package_list[0].title != "" && sel_package_list[0].unit!=null && sel_package_list[0].unit_price!=null && sel_package_list[0].remark!=null) {
+        this.sel_package_list = [];
+        if(sel_package_list.length >= 1 && sel_package_list[0].title != "" && sel_package_list[0].unit!=null && sel_package_list[0].unit_price!=null && sel_package_list[0].remark!=null) {
             this.sel_package_list = sel_package_list;
         }
         this.getDate();
     },
-    handleAddDB(row, column, cell, event) {
-        var flag = false;
-        this.sel_package_list.forEach(item => {
-            if(item.prescription_id === row.prescription_id) {
-                flag = true;
-            }
-        })
-        if(!flag) {
-            this.sel_package_list.push(row);
-        }
-    },
     handleAdd(index, row) {
-        var flag = false;
-        this.sel_package_list.forEach(item => {
-            if(item.prescription_id === row.prescription_id) {
-                flag = true;
-            }
-        })
-        if(!flag) {
-            this.sel_package_list.push(row);
-        }
-    },
-    handleDeleteDB(row, column, cell, event) {
-        var a = [];
-        this.sel_package_list.forEach(item => {
-            if(item.prescription_id !== row.prescription_id) {
-                a.push(item);
-            }
-        })
-        this.sel_package_list = a;
+        this.sel_package_list.push(row);
     },
     handleDelete(index, row) {
+        debugger
         this.sel_package_list.splice(index, 1);
     },
     getDate() {

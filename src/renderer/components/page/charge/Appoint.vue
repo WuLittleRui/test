@@ -18,12 +18,17 @@
                         :value="item.value">
                     </el-option>
                 </el-select>
+                <el-select v-model="listQuery.docter_id" placeholder="请选择">
+                    <el-option v-for="item in optionss" :key="item.employee_id" :label="item.username" :value="item.employee_id"  style="margin-bottom: 10px;"> </el-option>
+                </el-select>
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-button type="primary" icon="el-icon-lx-add" @click="add">新增</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
+                <el-table-column prop="name" label="姓名" header-align="center"  align="center" sortable min-width="120">
+                </el-table-column>
                <el-table-column prop="case_number" label="病历号" header-align="center"  align="center" sortable min-width="120">
                 </el-table-column>
                <el-table-column prop="mobile" label="手机" header-align="center"  align="center" sortable min-width="120">
@@ -54,18 +59,22 @@
 import AppointEdit from './AppointEdit';
 import * as OrderApi from '@/api/OrderApi';
 import { parseTime } from "@/utils/formater";
+import * as PatientApi from "@/api/PatientApi";
 export default {
     components: { AppointEdit },
     data() {
         return {
             /**搜索数据 */
             list: [],
+            tableheight: document.body.clientHeight * 0.45 + "px",
             options: [{ name: "初诊", value: 0 }, { name: "复诊", value: 1 }],
+            optionss: [],
             total: null,
             listLoading: false,
             listQuery: {
                 page: 1,
                 limit: 20,
+                docter_id: '',
                 sort: null,
                 date: new Date(),
                 order_type: ""
@@ -74,8 +83,22 @@ export default {
     },
     mounted() {
         this.getData();
+        this.getDocter();
     },
     methods: {
+        getDocter() {
+			PatientApi.getEmployee(1).then(res => {
+                if (res.error === "success") {
+                    res.data.push({
+                        employee_id: 0,
+                        username: "全部"
+                    })
+                    this.optionss = res.data;
+                } else {
+                    this.$message.error(this.$t(res.error));
+                }
+            })
+		},
         add() {
             this.$refs["AppointEdit"].showAdd();
         },
@@ -112,7 +135,8 @@ export default {
                 this.listQuery.limit,
                 this.listQuery.sort,
                 year+"-"+month+"-"+day,
-                this.listQuery.order_type
+                this.listQuery.order_type,
+                this.listQuery.docter_id
             ).then(data => {
                 this.listLoading = false;
                 if (data.error === "success") {

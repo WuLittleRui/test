@@ -6,7 +6,7 @@
                 
             </el-form-item>
             <el-form-item label="商品库存日志">
-                <el-table ref="multipleTable" :data="productsList" tooltip-effect="dark" border style="width: 100%"  height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
+                <el-table :height="tableheight" ref="multipleTable" :data="productsList" tooltip-effect="dark" border style="width: 100%"  height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
                 
                   <el-table-column label='项目sn'>
                     <template slot-scope="scope">{{ scope.row.project_sn }}</template>
@@ -53,6 +53,7 @@ export default {
 
       inOutLabel: "入库",
       productsList: [],
+      tableheight: document.body.clientHeight * 0.45 + "px",
       multipleSelection: [],
       inOutTypeLabel: "商品名称:",
       typeList: [

@@ -1,6 +1,8 @@
 <template>
-    <div style="height: 650px;background-color: #F1F3F7;">
-        <el-scrollbar style="height: 100%;">
+    <div :style="'background-color: #F1F3F7;' + divStyle">
+        <el-input v-model="listQuery.key" style="margin-bottom:10px;width: 80%;margin-top:10px;margin-left:10px;" placeholder="病历号/手机号/姓名"></el-input>
+        <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
+        <el-scrollbar style="height: 80%;"> 
             <ul class="clist">
                 <li v-for="(item,index) in dlist" @click="listClick3(index)" >
                     <img style="margin-top: 4px; margin-left: 15px;" v-if="!item.isturn" src="../../../../../../static/image/right.png"/>
@@ -8,11 +10,12 @@
                     <span style="margin-left: 10px;" :class="{selected: item.isturn}" >{{item.title}}</span>
                     <div v-for="(di, oindx) in item.data" v-show="item.isturn" @click.stop="" :class="di.active==true?'active':''" @click="cc(index, oindx)">
                         <div @click="divSelect(di.case_number)" >
-                            <p class="top">
-                            	{{di.name}}
-                            	<img :title="'欠款:' + di.arrears" src="../../../../../../static/image/debt.png" alt="" style="margin-left: 5px;" v-if="di.state == 2">
+                            <p class="top" style="height: 30px;">
+                            	<span class="span_name">{{di.name}}</span>
+                                <span class="span_name" style="margin-left: 10px">{{di.start_time_de}} <span v-if="di.start_time_de != undefined && di.end_time_de != undefined">-</span> {{di.end_time_de}}</span>
+                            	<!-- <img :title="'欠款:' + di.arrears" src="../../../../../../static/image/debt.png" alt="" style="margin-left: 5px;" v-if="di.state == 2"> -->
                             	<!-- <span class="span_img" :title="'欠款:' + di.arrears" >史</span> -->
-                            	<!-- <span class="span_img" :title="'欠款:' + di.arrears" >约</span> -->
+                            	<span class="span_img" v-if="!di.is_order">约</span>
                             	<!-- <span class="bing">就医,就学,就是,久久大手大脚开会山东省计划的 手机号发动机</span> -->
                             	<span class="right">{{di.join_time}}</span>
                             </p>
@@ -34,15 +37,18 @@
 <script>
 import * as PatientApi from "../../../../api/PatientApi";
 export default {
-    data() {
+    data() { 
         return {
         	active:false,
             listQuery: {
                 name: "",
                 mobile: "",
                 case_number: "",
-                query_time: ""
+                query_time: "",
+                key: ''
             },
+            flag: false,
+            divStyle: "height:" + document.body.clientWidth * 0.3 + "px",
             index: 1,
             dlist: [{
                     title: '今日初诊(0)',active:false,data: []
@@ -54,6 +60,9 @@ export default {
         };
     },
     methods: {
+        search() {
+            this.getPatient(this.flag);
+        },
         divSelect(case_number) {
             this.$emit("refresh", case_number);
         },
@@ -66,7 +75,6 @@ export default {
         // 移入移出
         enter(e){
             e.aa = false
-            
         },
         leave(e){
             e.aa = true
@@ -81,11 +89,12 @@ export default {
         },
         getActiveIndex(index, flag) {
             this.index = index;
+            this.flag = flag;
             this.getPatient(flag);
         },
         getPatient(flag) {
             if(this.index == 2) {
-                PatientApi.list(this.listQuery.name, this.listQuery.mobile, this.listQuery.case_number).then(data => {
+                PatientApi.list(this.listQuery.name, this.listQuery.mobile, this.listQuery.case_number, this.listQuery.key).then(data => {
                     if (data.error === "success") {
                         this.dlist = [];
                         data.data.list.forEach(item => {
@@ -104,6 +113,7 @@ export default {
                         if(this.dlist.length > 0 && this.dlist[0].data[0] != null && this.dlist[0].data[0] != undefined) {
                             this.$emit("refresh", this.dlist[0].data[0].case_number, this.index);
                         }
+                        this.$emit("refresh", "", this.index);
                     } else if (
                         data.error === "invaild_token" ||
                         data.error === "not_login"
@@ -118,7 +128,7 @@ export default {
                 })
             }
             if(this.index == 1) {
-                PatientApi.patients(this.listQuery.query_time).then(data => {
+                PatientApi.patients(this.listQuery.query_time, this.listQuery.key).then(data => {
                     if (data.error === "success") {
                         if(data.data.first_list.length == 0 && data.data.revisit_list.length == 0 && flag == true) {
                             this.index = 2;
@@ -201,9 +211,12 @@ export default {
     border: 1px solid #8C8C8C;
 }
 .clist li>div>div{
-    height: 60px;
+    /* height: 60px; */
     border-left: 5px solid #8C8C8C;
     padding: 2px 10px;
+}
+.clist li>div>div p .span_name{
+        float: left;
 }
 .clist li>div>div p .span_img{
     background: #CB1515;
@@ -213,9 +226,9 @@ export default {
     border-radius:2px ;
     margin-top: 4px;
     margin-left: 5px;
-    position: absolute;
     height: 12px;
     line-height: 12px;
+    float: left;
 }
 .clist li>div>div p .span_imgs{
     background: #CB1515;

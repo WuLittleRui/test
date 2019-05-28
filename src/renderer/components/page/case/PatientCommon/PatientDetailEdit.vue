@@ -40,6 +40,7 @@
                 <el-date-picker
                   style="width: 150px;"
                   v-model="form.birthday"
+                  value-format="yyyy-MM-dd"
                   type="date"
                   placeholder="选择日期">
                 </el-date-picker>
@@ -53,18 +54,6 @@
                   <el-radio :label="0" border>初诊</el-radio>
                   <el-radio :label="1" border>复诊</el-radio>
                 </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="主治医生" prop="employee_id">
-                  <el-select v-model="form.employee_id" placeholder="请选择">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.employee_id"
-                      :label="item.username"
-                      :value="item.employee_id">
-                    </el-option>
-                  </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -108,7 +97,6 @@ export default {
         age: "",
         birthday: "",
         type: 0,
-        employee_id: "",
         allergy: "",
         history: "",
         address: "",
@@ -140,9 +128,6 @@ export default {
                 },
                 trigger: "blur"
             }
-        ],
-        employee_id: [
-          { required: true, message: "请选择主治医生", trigger: "blur" }
         ],
       }
     };
@@ -181,7 +166,6 @@ export default {
               this.form.age ,
               this.form.birthday ,
               this.form.type ,
-              this.form.employee_id ,
               this.form.allergy ,
               this.form.history ,
               this.form.address,
@@ -212,7 +196,6 @@ export default {
               this.form.age ,
               this.form.birthday ,
               this.form.type ,
-              this.form.employee_id ,
               this.form.allergy ,
               this.form.history ,
               this.form.address,
@@ -248,7 +231,6 @@ export default {
       this.form.age = "";
       this.form.birthday = "";
       this.form.type = 0;
-      this.form.employee_id = "";
       this.form.allergy = "";
       this.form.history = "";
       this.form.address = "";
@@ -287,7 +269,6 @@ export default {
           this.form.age = res.data.age == 0? "" : res.data.age;
           this.form.birthday = res.data.birthday;
           this.form.type = res.data.type;
-          this.form.employee_id = res.data.employee_id;
           this.form.allergy = res.data.allergy;
           this.form.history = res.data.history;
           this.form.address = res.data.address;

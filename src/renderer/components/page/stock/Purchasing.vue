@@ -13,7 +13,7 @@
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-button type="primary" icon="el-icon-lx-add" @click="add()" v-if="auth.MATERIALS_ADD">新增</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column prop="operate" label="操作人" header-align="center"  align="center" sortable min-width="120">
@@ -55,6 +55,7 @@
     },
     data() {
       return {
+      tableheight: document.body.clientHeight * 0.45 + "px",
         to_type: 0,
         package_list: [], //商品包列表
         selectProductType: [0, 1],

@@ -18,6 +18,7 @@
                 <el-upload class="avatar-uploader" :action="uploadAction" :http-request="handleUploadImg" :show-file-list="false">
                     <img v-if="shop.images" :src="shop.images" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
                 </el-upload>
               </el-tooltip>
             </el-form-item>

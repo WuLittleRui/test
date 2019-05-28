@@ -8,7 +8,7 @@
             <div>{{item.bottom}}</div>
         </div>
         <!--弹框-->
-        <el-dialog :visible.sync="item.show" width="750px" :modal-append-to-body='false'>
+        <el-dialog :visible.sync="item.show" width="750px" :append-to-body="true">
         	
             <input
                 type="checkbox"
@@ -21,10 +21,10 @@
             
             <label
                 for="allId"
-                style="cursor: pointer; color: #999999; position: absolute; bottom: 15px; right: 95px;"
+                style="cursor: pointer; color: #999999; position: absolute; bottom: 9px; right: 95px; z-index:99;"
             >{{allData.text}}</label>
             
-            <div class="quxiao" @click="quxiao(index)" style="cursor: pointer; color: #999999; position: absolute; bottom: 15px; right: 40px;">确定</div>
+            <div class="quxiao" @click="quxiao(index)" style="cursor: pointer; color: #999999; position: absolute; bottom: 9px; right: 40px; ">确定</div>
             
             <div style="width: 100%;">
                 <ul class="tooth">

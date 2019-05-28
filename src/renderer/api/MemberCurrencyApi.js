@@ -29,13 +29,14 @@ export async function get(mid) {
     }
 }
 
-export async function add(mobile, balance, operator, remark) {
+export async function add(mobile, balance, operator, remark, type) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/member/currency/add', {
             mobile: mobile,
             balance: balance,
             operator: operator,
-            remark: remark
+            remark: remark,
+            type: type
         });
     } catch (error) {
         return error;
@@ -44,14 +45,15 @@ export async function add(mobile, balance, operator, remark) {
     }
 }
 
-export async function adjust(mid, balance, operator, remark, seq_flag) {
+export async function adjust(mid, balance, operator, remark, seq_flag, type) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/member/currency/adjust', {
             mid: mid,
             balance: balance,
             operator: operator,
             remark: remark, 
-            seq_flag: seq_flag
+            seq_flag: seq_flag,
+            type: type
         });
     } catch (error) {
         return error;

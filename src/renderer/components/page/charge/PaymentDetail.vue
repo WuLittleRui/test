@@ -19,7 +19,7 @@
                 :value="item.value">
                 </el-option>
             </el-select>
-            <el-select clearable v-model="listQuery.type" placeholder="请选择类型">
+            <el-select clearable v-model="listQuery.type" placeholder="请选择类型"> 
                 <el-option
                 v-for="item in type"
                 :key="item.value"
@@ -34,11 +34,13 @@
                 ref="multipleTable" >
             <el-table-column prop="mobile" label="手机号" header-align="center"  align="center" sortable min-width="120">
             </el-table-column>
-            <el-table-column prop="amount" label="操作金额" header-align="center"  align="center" sortable min-width="120">
+            <el-table-column prop="surplus" label="操作金额" header-align="center"  align="center" sortable min-width="120">
             </el-table-column>
-            <el-table-column prop="surplus" label="结余余额" header-align="center"  align="center" sortable min-width="80">
+            <el-table-column prop="amount" label="结余余额" header-align="center"  align="center" sortable min-width="80">
             </el-table-column>
             <el-table-column prop="operate_type" label="类型" header-align="center"  align="center" sortable min-width="80" :formatter="formatterType">
+            </el-table-column>
+            <el-table-column prop="pay_type_name" label="支付方式" header-align="center"  align="center" sortable min-width="80">
             </el-table-column>
             <el-table-column prop="seq_flag" label="操作类型" header-align="center"  align="center" sortable min-width="80" :formatter="formatterSeqFlag">
             </el-table-column>

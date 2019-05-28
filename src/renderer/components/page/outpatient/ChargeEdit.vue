@@ -74,6 +74,10 @@
                     {
                         name: "瓶",
                         value: 5
+                    },
+                    {
+                        name: "颗",
+                        value: 6
                     }
                 ],
                 editVisible: false,

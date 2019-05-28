@@ -12,7 +12,7 @@
                 <el-button icon="el-icon-arrow-right" size="mini" @click="addTime" circle></el-button>
                 <span>{{week[0].date}} - {{week[6].date}}</span>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading'  @cell-click="cellClick" ref="multipleTable" >
                
                 <el-table-column prop="username" label="医生名称" header-align="center"  align="center" min-width="120"></el-table-column>
@@ -40,6 +40,7 @@ export default {
   components: { TypesettingEdit },
   data() {
     return {
+      tableheight: document.body.clientHeight * 0.45 + "px",
       listLoading: true, //给我点时间
       tableKey: 0,
       listQuery: {

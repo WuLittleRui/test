@@ -1,6 +1,6 @@
 <template>
 	<div v-if="flag">
-		<div :class="edit?'basic_information2': 'basic_information'">
+		<div :style="edit? 'height: 150px': teethHeight">
 			<el-scrollbar style="height: 100%;">
 				<section class="section" v-for="(show, oindex) in list">
 					<header class="header">
@@ -72,7 +72,7 @@
 							<table>
 									<tr>
 											<th>药品名</th>
-											<th>用法用量</th>
+											<th>用法用量</th> 
 											<th>单价</th>
 											<th>数量</th>
 											<th>费用</th>
@@ -81,6 +81,8 @@
 											<td>{{item.title}}</td>
 											<td>{{item.remark}}</td>
 											<td>{{item.unit_price}}</td>
+											<!-- <input class="input" type="number" :disabled="show.state != 0 &&  !onlyShow" v-model="item.quantity" placeholder="数量" min="1" v-on:input = 'quantityChange($event.target.value, index, item, oindex)'> -->
+											<!-- <el-input-number v-model="item.quantity" :min="1" v-if="show.state == 0" @change="preChange($event, index, item, oindex)"></el-input-number> -->
 											<td>{{item.quantity}}</td>
 											<td>{{item.all_price}}</td>
 									</tr>
@@ -112,6 +114,7 @@ import PatientTeethHandle from "./PatientTeethHandle";
 import PatientPrescriptionEdit from "./PatientPrescriptionEdit";
 import { parseTime } from "../../../../utils/formater";
 import { accAdd, accMultiply, toDecimal2 } from "@/utils/calculation";
+import { unlink, unlinkSync } from 'fs';
 
 export default {
   components: { PatientTeethHandle, PatientPrescriptionEdit, PatientPriceEdit, PatientTeethPosition },
@@ -131,9 +134,10 @@ export default {
         }, {
           value: '选项2',
           label: '选项2'
-        }],
+				}],
+			teethHeight: "height:" + document.body.clientWidth * 0.3 + "px",
     	price:0,
-            onlyShow: false,
+      onlyShow: false,
 			currentRow: {},
 			docter_id: "",
 			case_number: null,
@@ -141,7 +145,7 @@ export default {
 			flag: false,
 			oldShow: [],
 			oindex: 0,
-			list: [ { 'data':[{show: false,left: "",right: "",lebottom: "",bottom: "", detail_id: 0}], 'state': 0, 'create_time': new Date(), 'title': '复诊', 'docter_id': '', 'detail_id': 0, 'pre': [{detail_id: 0}]}
+			list: [ { no:true, 'data':[{show: false,left: "",right: "",lebottom: "",bottom: "", detail_id: 0, "delete": true}], 'state': 0, 'create_time': new Date(), 'title': '复诊', 'docter_id': '', 'detail_id': 0, 'pre': [{detail_id: 0}]}
 			],
       show: [
         {
@@ -169,6 +173,7 @@ export default {
 			b.lebottom = "";
 			b.right = "";
 			b.detail_id = 0;
+			b.delete = true;
 			data.push(b);
 			all.data = data;
 
@@ -178,6 +183,7 @@ export default {
 			all.title = "复诊";
 			all.docter_id = this.docter_id;
 			all.detail_id = 0;
+			all.delete = true;
 			b.detail_id = 0;
 			data.push(b);
 			all.pre = data;
@@ -190,7 +196,6 @@ export default {
       this.list[oindex].data[index].right = item.right;
       this.list[oindex].data[index].lebottom = item.lebottom;
 			this.list[oindex].data[index].bottom = item.bottom;
-			
 		},
 		//价格修改
 		priceChange(value, index, item, oindex) {
@@ -235,6 +240,22 @@ export default {
 			})
 			this.list[oindex].all_price = sum;
 		},
+		preChange(value, index, item, oindex) {
+			var sum = 0;
+			this.list[oindex].data.forEach(item => {
+				if(item.unit_price != undefined && item.quantity != undefined) {
+					sum = accAdd(sum, accMultiply(item.quantity, item.unit_price));
+				}
+			})
+			this.list[oindex].pre.forEach(item => {
+				if(item.unit_price != undefined && item.quantity != undefined) {
+					item.all_price = accMultiply(item.quantity, item.unit_price);
+					sum = accAdd(sum, accMultiply(item.quantity, item.unit_price));
+				}
+			})
+			this.list[oindex].all_price = sum;
+			this.postData(this.list[oindex]);
+		},
 		//数量修改
 		quantityChange(value, index, item, oindex) {
 			if(value == '') {
@@ -254,6 +275,12 @@ export default {
 			this.list[oindex].data.forEach(item => {
 				sum = accAdd(sum, item.all_price);
 			})
+			this.list[oindex].pre.forEach(item => {
+				if(item.all_price != undefined) {
+					sum = accAdd(sum, item.all_price);
+				}
+			})
+
 			this.list[oindex].all_price = sum;
 
 			this.list[oindex].data[index].quantity = value;
@@ -269,17 +296,38 @@ export default {
           right: "",
           lebottom: "",
 					bottom: "",
-					state: 0
+					state: 0,
 				})
+				a.delete = true;
 				this.oldShow = a;
 				this.list[this.oindex].data = a;
 			} else {
 				this.oldShow = callback;
-				this.list[this.oindex].data.splice(index, 1); 
-				callback.forEach(item => {
-					item.detail_id = 0;
-					item.all_price = accMultiply(item.quantity, item.unit_price);
-					this.list[this.oindex].data.push(item);
+				this.list[this.oindex].data.forEach(item => {
+						callback.forEach(one => {
+							if(item.charge_id == one.charge_id) {
+								one.have = true;
+							}
+							
+						})
+				})
+				// this.list[this.oindex].data = [];
+				var i = [];
+				this.list[this.oindex].data.forEach(item => {
+						i.push(item);
+				})
+				this.list[this.oindex].data = [];
+				i.forEach(item => {
+					if(item.delete == undefined) {
+						this.list[this.oindex].data.push(item);
+					}
+				})
+				callback.forEach(one => {
+					if(one.have == undefined || !one.have) {
+						one.detail_id = 0;
+						one.all_price = accMultiply(one.quantity, one.unit_price);
+						this.list[this.oindex].data.push(one);
+					}
 				})
 				this.$nextTick(() => {
 					var size = this.list[this.oindex].data.length; 
@@ -302,9 +350,6 @@ export default {
 				}
 			})
 			this.list[this.oindex].all_price = sum;
-
-			//添加
-			// console.log(this.list);
 			this.postData(this.list[this.oindex])
 		},
 		//post请求
@@ -318,7 +363,7 @@ export default {
 					'right': item.right,
 					'lebottom': item.lebottom
 				}
-				var p = {
+				var p =  {
 					'detail_id': item.detail_id,
 					'position': a,
 					'title': item.name,
@@ -344,32 +389,48 @@ export default {
 				}
 				handle_detail.push(item);
 			})
+			if(postData.length == 1 && postData[0] == null) {
+				if(handle_detail.length == 0) {
+					return;
+				}
+			} else if(postData.length == 1 && postData[0].all_price == undefined) {
+				if(handle_detail.length == 0) {
+					return;
+				}
+			}
+			if(one.detail_id == undefined) {
+				one.detail_id = 0;
+			}
 			HospitalHandleApi.edit(one.detail_id, this.case_number, one.title, parseTime(new Date(one.create_time)), one.docter_id, 
 			JSON.stringify(postData), JSON.stringify(handle_detail)).then(data => {
 				if (data.error === "success") {
-					this.list[this.oindex].detail_id = data.data.handle_id;
+					// this.list[this.oindex].detail_id = data.data.handle_id;
 					
-					data.data.handle.forEach(item => {
-						item.name = item.title;
-						item.all_price = accMultiply(item.quantity, item.unit_price);
-						item.remark = item.remark;
-						item.left = item.position.left;
-						item.bottom = item.position.bottom;
-						item.lebottom = item.position.lebottom;
-						item.right = item.position.right;
-					})
-					if(data.data.handle.length == 0) {
-						  var datal = {};
-							datal.shwo = false;
-							datal.detail_id = 0;
-							datal.left = "";
-							datal.right = "";
-							datal.bottom = "";
-							datal.lebottom = "";
+					// data.data.handle.forEach(item => {
+					// 	item.name = item.title;
+					// 	item.all_price = accMultiply(item.quantity, item.unit_price);
+					// 	item.remark = item.remark;
+					// 	item.left = item.position.left;
+					// 	item.bottom = item.position.bottom;
+					// 	item.lebottom = item.position.lebottom;
+					// 	item.right = item.position.right;
+					// })
+					// if(data.data.handle.length == 0) {
+					// 	  var datal = {};
+					// 		datal.shwo = false;
+					// 		datal.detail_id = 0;
+					// 		datal.left = "";
+					// 		datal.right = "";
+					// 		datal.bottom = "";
+					// 		datal.lebottom = "";
+					// 		datal.delete = true;
 
-							data.data.handle.push(datal);
-					}
-					this.list[this.oindex].data = data.data.handle;
+					// 		data.data.handle.push(datal);
+
+					// }
+					// this.list[this.oindex].data = data.data.handle;
+
+					this.getList();
 				} else if (
 						data.error === "invaild_token" ||
 						data.error === "not_login"
@@ -405,8 +466,8 @@ export default {
 		},
 		//划价事件
     PatientPriceEdit(oindex) {
-			if(this.list[oindex].pre.length == 1 && this.list[oindex].pre[0].detail_id == 0 && (this.list[oindex].pre[0].title == undefined || this.list[oindex].pre[0].title == nul)) {
-				if(this.list[oindex].data.length == 1 && this.list[oindex].data[0].detail_id == 0  &&  (this.list[oindex].data[0].title == undefined || this.list[oindex].data[0].title == nul)) {
+			if(this.list[oindex].pre.length == 1 && this.list[oindex].pre[0].detail_id == 0 && (this.list[oindex].pre[0].title == undefined || this.list[oindex].pre[0].title == null)) {
+				if(this.list[oindex].data.length == 1 && this.list[oindex].data[0].detail_id == 0  &&  (this.list[oindex].data[0].title == undefined || this.list[oindex].data[0].title == null)) {
 					this.$message.error("金额为0, 无法划价!");
 					return;
 				}
@@ -440,14 +501,18 @@ export default {
 				this.onlyShow = true;
 				return;
 			}
-			this.getDocter();
+			this.getDocter(); 
 		},
 		getList() {
 			HospitalHandleApi.list(this.case_number).then(data => {
 				if (data.error === "success") {
 					this.list = [];
 					
-					this.docter_id = data.data.docter_id;
+					if(data.data.docter_id != 0) {
+						this.docter_id = data.data.docter_id;
+					} else {
+						this.docter_id = this.optionss[0].employee_id;
+					}
 					if(data.data.list.length > 0) {
 						data.data.list.forEach(item => {
 							var data = [];
@@ -487,8 +552,7 @@ export default {
 								datal.lebottom = "";
 
 								data.push(datal);
-							}
-
+							}	
 							item.prescription_detail.forEach(one => {
 								prel = {};
 								prel.detail_id = one.detail_id;
@@ -496,6 +560,7 @@ export default {
 								prel.remark = one.remark;
 								prel.unit = one.unit;
 								prel.unit_price = one.unit_price;
+								prel.prescription_id = one.prescription_id;
 								prel.title = one.title;
 								prel.all_price = accMultiply(one.quantity, one.unit_price);
 								sum = sum + prel.all_price;
@@ -546,9 +611,10 @@ export default {
           type: "warning"
         }
       ).then(() => {
-				this.list[oindex].data[index].detail_id = accMultiply(-1, this.list[oindex].data[index].detail_id);
+				console.log(this.list[oindex].data[index].detail_id)
+				this.list[oindex].data[index].detail_id = -1 * this.list[oindex].data[index].detail_id;
 				var i = 0;
-				this.postData(this.list[this.oindex]);
+				this.postData(this.list[oindex]);
 				this.list[oindex].data.forEach(item => {
 					if(item.detail_id < 0) {
 						this.list[oindex].data.splice(i, 1);
@@ -684,7 +750,6 @@ h5 {
 .chufang_right{
 	width: 90%;
 }
-
 table {
   width: 100%;
   border-collapse: collapse;
@@ -709,12 +774,6 @@ table tr td {
 table tr td:nth-child(1){
 	width: 40% !important;
 	text-align: left;
-}
-.basic_information {
-    height: 650px;
-}
-.basic_information2{
-    height: 150px;
 }
 </style>
 

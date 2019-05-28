@@ -13,7 +13,7 @@
                 <el-button type="primary" icon="el-icon-lx-add" @click="handleAdd">购买</el-button>
                 <span>剩余数量: {{balance}}</span>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column prop="package_name" label="套餐名" header-align="center"  align="center" min-width="120">
@@ -57,6 +57,7 @@ export default {
       /**搜索数据 */
       list: [],
       balance: 0,
+      tableheight: document.body.clientHeight * 0.45 + "px",
       total: null,
       listLoading: true,
       listQuery: {

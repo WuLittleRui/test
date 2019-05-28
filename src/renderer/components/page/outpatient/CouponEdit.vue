@@ -97,6 +97,8 @@
                 <el-radio v-model="form.TypeProduct" :label="2" border size="medium" @change="TypeList">处方</el-radio>
             </el-form-item>
             <el-form-item v-if="this.form.TypeProduct== 1 " label='项目' label-width='60px'>
+                <el-input v-model="listQuery.key" style="margin-bottom:10px;width: 200px;"></el-input>
+                <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-table ref="multipleTable" :data="ChargeList" tooltip-effect="dark" border style="width: 100%" @selection-change="changeFun" height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
                     <el-table-column type="selection" @selection-change="changeFun">
                     </el-table-column>
@@ -112,6 +114,8 @@
         </el-table>
       </el-form-item>
         <el-form-item v-if="this.form.TypeProduct== 2 "   label='处方' label-width='60px'>
+            <el-input v-model="listQuery.key" style="margin-bottom:10px;width: 200px;"></el-input>
+            <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-table ref="multipleTable" :data="productsList" tooltip-effect="dark" border style="width: 100%" @selection-change="changeFuns" height="200" v-loading='productlistLoading' element-loading-text='给我一点时间'>
                     <el-table-column type="selection" @selection-change="changeFuns">
                     </el-table-column>
@@ -151,6 +155,9 @@
             return {
                 /* form */
                 editVisible: false,
+                listQuery: {
+                    key: ''
+                },
                 title: "新增", // dialog标题
                 button_loading: false, // 确认按钮加载
                 listLoading: false, // form主体加载
@@ -233,10 +240,14 @@
             };
         },
         mounted() {
-            this.getChargeList(0);
-            this.getProductLidt(0);
+            this.getChargeList(0, this.listQuery.key);
+            this.getProductLidt(0, this.listQuery.key);
         },
         methods: {
+            search() {
+                this.getChargeList(0, this.listQuery.key);
+                this.getProductLidt(0, this.listQuery.key);
+            },
             TypeList() {
                 if (this.pids !== '' || this.charge_ids !== '') {
                     if (this.form.TypeProduct == 1) {
@@ -247,9 +258,9 @@
                 }
             },
             //按商品序号获取商品
-            getChargeList(charge_id) {
+            getChargeList(charge_id, key) {
                 this.productlistLoading = true;
-                HospitalChargeApi.list(charge_id).then(response => {
+                HospitalChargeApi.list(charge_id, key).then(response => {
                     if (response.error === "success") {
                         var arr = [];
                         response.data.list.forEach(function(element) {
@@ -275,9 +286,9 @@
                 });
             },
             //按商品序号获取商品
-            getProductLidt() {
+            getProductLidt(id, key) {
                 this.productlistLoading = true;
-                ProductApi.prescriptionList().then(response => {
+                ProductApi.prescriptionList(key).then(response => {
                     if (response.error === "success") {
                         var arr = [];
                         response.data.forEach(function(element) {
@@ -357,8 +368,10 @@
                             "{y}-{m}-{d} {h}:{i}:{s}"
                         );
                         var discount = 0;
-                        if (this.form.type == 1) {
+                        if (this.form.type == 2) {
                             discount = this.form.discount / 100;
+                        } else {
+                            discount = this.form.discount;
                         }
                         if (this.form.TypeProduct == 1) {
                             this.multipleSelections = [];
@@ -378,7 +391,7 @@
                                 this.form.withdraw_everyday,
                                 this.form.number_collections,
                                 this.form.limit_price,
-                                this.form.discount,
+                                discount,
                                 this.form.type,
                                 JSON.stringify(this.multipleSelections),
                                 this.form.TypeProduct,
@@ -417,7 +430,7 @@
                                 this.form.withdraw_everyday,
                                 this.form.number_collections,
                                 this.form.limit_price,
-                                this.form.discount,
+                                discount,
                                 this.form.type,
                                 JSON.stringify(this.multipleSelections),
                                 this.form.TypeProduct,
@@ -477,9 +490,20 @@
                 HospitalCouponApi.byId(coupon_id).then(res => {
                     if (res.error === "success") {
                         if (res.data.detail.length > 0) {
-                            this.form.discount = res.data.detail[0].discount;
+                            
                             this.form.limit_price = res.data.detail[0].limit_price;
                             this.form.type = res.data.detail[0].type;
+                            if(this.form.type == 2) {
+                                this.form.discount = res.data.detail[0].discount * 100;
+                                this.unit = "%";
+                                this.discount_label = "折扣";
+                                this.discountPriceLabelWidth = "50px";
+                            } else {
+                                this.form.discount = res.data.detail[0].discount;
+                                this.unit = "元";
+                                this.discount_label = "抵扣";
+                                this.discountPriceLabelWidth = "50px";
+                            }
                         }
                         this.form.coupon_id = res.data.list.coupon_id;
                         this.form.title = res.data.list.title;

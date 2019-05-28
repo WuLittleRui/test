@@ -52,19 +52,6 @@
                         </el-tabs>
                     </el-aside>
                     <el-footer>
-                        <div style="margin: 15px 0;">医生：
-                            <el-select v-model="form.docter_id" prop="docter_id" placeholder="请选择" style="width: 20%;">
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.employee_id"
-                                    :label="item.username"
-                                    :value="item.employee_id"
-                                ></el-option>
-                            </el-select>
-                            <div style="float: right; width: 40%;">折扣：
-                                <el-input-number :controls="false" v-model="form.all_cost_per" controls-position="right" :min="0" @change="allCostPriceChange"></el-input-number>
-                            </div>
-                        </div>
                         <div>护士：
                             <el-select v-model="form.nurse_id" placeholder="请选择" style="width: 20%;">
                                 <el-option
@@ -140,12 +127,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if(this.form.docter_id == null) {
-            this.$message.error("请选择医生!");
-            return;
-          }
           this.buttonloading = true;
-          HospitalHandleApi.payBill(this.detail_id, JSON.stringify(this.tableData4), this.form.remark, this.form.docter_id, this.form.all_cost_per).then(data => {
+          HospitalHandleApi.payBill(this.detail_id, JSON.stringify(this.tableData4), this.form.remark, this.form.docter_id, this.form.all_cost_per, this.form.nurse_id).then(data => {
             this.buttonloading = false;
            if (data.error === "success") {
               this.$message({
@@ -164,12 +147,8 @@ export default {
     submitFormAndPrint(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if(this.form.docter_id == null) {
-            this.$message.error("请选择医生!");
-            return;
-          }
           this.buttonloading = true;
-          HospitalHandleApi.payBillAndPrint(this.detail_id, JSON.stringify(this.tableData4), this.form.remark, this.form.docter_id, this.form.all_cost_per).then(data => {
+          HospitalHandleApi.payBillAndPrint(this.detail_id, JSON.stringify(this.tableData4), this.form.remark, this.form.docter_id, this.form.all_cost_per, this.form.nurse_id, this.form.all_price).then(data => {
             this.buttonloading = false;
             if (data.error === "success") {
               this.$message({
@@ -388,13 +367,15 @@ export default {
           this.form.username = data.data.username;
           this.form.case_number = data.data.case_number;
           var i = 1;
-          if(this.form.all_cost_per != null && this.form.all_cost_per != undefined && this.form.all_cost_per != "") {
+          debugger
+          if(this.form.all_cost_per != null && this.form.all_cost_per != undefined && this.form.all_cost_per != "" && this.form.all_cost_per != 0) {
             i = this.form.all_cost_per;
           }
 
-          discount = accMultiply(discount, this.form.all_cost_per);
+          discount = accMultiply(discount, i);
           sum = accAdd(discount, no_discount);
           this.form.all_price = sum;
+          this.form.old_sum = sum;
 
           data.data.prescription_detail.forEach(item => {
             this.oldData.push(item);

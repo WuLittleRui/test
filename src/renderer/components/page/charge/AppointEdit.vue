@@ -5,6 +5,9 @@
             <el-form-item label="患者手机号" prop="mobile">
                 <el-input v-model="form.mobile" @change="mobileChange"></el-input>
             </el-form-item>
+            <el-form-item label="患者姓名" prop="name">
+                <el-input v-model="form.name"></el-input>
+            </el-form-item>
             <el-form-item label="病历号" prop="case_number">
                 <el-input v-model="form.case_number" :disabled="readonly"></el-input>
             </el-form-item>
@@ -19,7 +22,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="预约医生" prop="employee_id">
-                <el-select v-model="form.employee_id" placeholder="请选择">
+                <el-select v-model="form.employee_id" placeholder="请选择" @change="docterChange">
                     <el-option
                       v-for="item in options"
                       :key="item.employee_id"
@@ -29,26 +32,28 @@
                 </el-select>
             </el-form-item>
             <el-row :gutter="20">
-                <el-col :span="8">
-                    <el-form-item label="预约时间" prop="date">
+                <el-col :span="12">
+                    <el-form-item label="预约日期" prop="date">
                         <el-date-picker
-                            style="width: 200px;"
+                            @change="docterChange"
                             v-model="form.date"
-                            type="date"
                             value-format="yyyy-MM-dd"
+                            type="date"
                             placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                    <el-form-item label="" prop="time">
-                        <el-time-picker
-                            style="width: 300px;"
-                            v-model="form.time"
-                            is-range
-                            value-format="HH:mm:ss"
-                            placeholder="任意时间点">
-                        </el-time-picker>
+                <el-col :span="12">
+                    <el-form-item label="预约时间" prop="time">
+                        <el-select v-model="form.time" placeholder="请选择">
+                            <el-option
+                            v-for="(item, index) in optionsTime"
+                            :key="index"
+                            :disabled="item.people_number == 0? true: false"
+                            :label="item.start_time + ' - ' + item.end_time + ' 可预约:'  + item.people_number "
+                            :value="index">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -78,6 +83,7 @@ export default {
             title: '预约',
             editVisible: false,
             options: [],
+            optionsTime: [],
             optionType: [{ name: "初诊", value: 0 }, { name: "复诊", value: 1 }],
             readonly: false,
             buttonloading: false,
@@ -86,7 +92,7 @@ export default {
                 username: '',
                 mobile: '',
                 employee_id: null,
-                time: [],
+                time: "",
                 content: '',
                 date: "",
                 order_type: 0,
@@ -113,13 +119,16 @@ export default {
                     { required: true, message: "请选择预约医生", trigger: "blur" }
                 ],
                 date: [
-                    { required: true, message: "请选择预约时间", trigger: "blur" }
+                    { required: true, message: "请选择预约日期", trigger: "blur" }
                 ],
                 time: [
                     { required: true, message: "请选择预约时间", trigger: "blur" }
                 ],
                 content: [
                     { required: true, message: "请输入预约事项", trigger: "blur" }
+                ],
+                name: [
+                    { required: true, message: "请输入患者姓名", trigger: "blur" }
                 ]
             }
         }
@@ -130,11 +139,29 @@ export default {
                 if(data.error == "success") {
                     if(data.data != null && data.data.case_number != undefined) {
                         this.form.case_number = data.data.case_number;
+                        this.form.name = data.data.name;
                         this.readonly = true;
                     } else {
                         this.getCaseNumber();
                         this.readonly = false;
                     }
+                } else {
+                    this.$message.error(this.$t(data.error));
+                }
+            })
+        },
+        docterChange(value) {
+            if(this.form.employee_id == null) {
+                this.$message('请选择医生!');
+                return;
+            }
+            if(this.form.date == '') {
+                this.$message('请选择日期!');
+                return;
+            }
+            OrderApi.getTime(this.form.employee_id, this.form.date).then(data => {
+                if(data.error == "success") {
+                    this.optionsTime = data.data;
                 } else {
                     this.$message.error(this.$t(data.error));
                 }
@@ -149,14 +176,10 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     this.buttonloading = true;
-                    var start_time = "";
-                    var end_time = "";
-                    if(this.form.time.length > 0) {
-                        start_time = this.form.date + " " + this.form.time[0];
-                        end_time = this.form.date + " " + this.form.time[1];
-                    }
+                    var start_time = this.form.date + " " + this.optionsTime[this.form.time].start_time + ":00";
+                    var end_time = this.form.date + " " + this.optionsTime[this.form.time].end_time + ":00";
 
-                    OrderApi.addOrder(this.form.mobile, this.form.case_number, this.form.employee_id, start_time, end_time, this.form.content, this.form.member_remark, this.form.order_type).then(data => {
+                    OrderApi.addOrder(this.form.mobile, this.form.case_number, this.form.employee_id, this.form.date, start_time, end_time, this.form.content, this.form.member_remark, this.form.order_type, this.form.name).then(data => {
                         this.buttonloading = false;
                         if(data.error == "success") {
                             this.$message({
@@ -182,12 +205,10 @@ export default {
         resetForm() {
             this.form.case_number = null;
             this.form.username = '';
+            this.form.name = "";
             this.form.mobile = '';
             this.form.employee_id = null;
-            var start = new Date();
-            var end = new Date();
-            end.setTime(start.getTime() + 3600 * 1000 * 1);
-            this.form.time = [start, end];
+            this.form.time = '';
             this.form.content = '';
             this.form.order_remark = '';
             this.form.date = "";

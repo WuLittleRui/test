@@ -1,14 +1,15 @@
 import * as config from '../utils/config'
 import * as OauthApi from './OauthApi'
 
-export async function listOrder(page, pageSize, sort, date, order_type) {
+export async function listOrder(page, pageSize, sort, date, order_type, docter_id) {
     try {
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/order/list', {
             page: page,
             pageSize: pageSize,
             sort: sort,
             date: date,
-            order_type: order_type
+            order_type: order_type,
+            docter_id: docter_id
         });
     } catch (error) {
         return error;
@@ -16,7 +17,7 @@ export async function listOrder(page, pageSize, sort, date, order_type) {
 }
 
 export async function getCase(mobile) {
-    try {
+    try { 
         return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/order/getCase', {
             mobile: mobile
         });
@@ -25,7 +26,18 @@ export async function getCase(mobile) {
     } 
 }
 
-export async function addOrder(mobile, case_number, employee_id, start_time, end_time, content, member_remark, type) {
+export async function getTime(employee_id, date) {
+    try { 
+        return await OauthApi.getWithToken(config.BASE_URL + '/api/v1/order/getTime', {
+            employee_id: employee_id,
+            date: date
+        });
+    } catch (error) {
+        return error;
+    } 
+}
+
+export async function addOrder(mobile, case_number, employee_id, date, start_time, end_time, content, member_remark, type, name) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/order/add/mobile', { 
             case_number: case_number, 
@@ -35,7 +47,9 @@ export async function addOrder(mobile, case_number, employee_id, start_time, end
             content: content,
             mobile: mobile,
             type: type,
-            member_remark: member_remark
+            date: date,
+            member_remark: member_remark,
+            name: name
         });
     } catch (error) {
         return error

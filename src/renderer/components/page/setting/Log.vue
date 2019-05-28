@@ -14,7 +14,7 @@
                 <el-input v-model="listQuery.searchKey" placeholder="筛选关键词" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>                
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -45,6 +45,7 @@ export default {
   name: "shopadminlog",
   data() {
     return {
+      tableheight: document.body.clientHeight * 0.45 + "px",
       multipleSelection: [],
       /**搜索数据 */
       list: [],

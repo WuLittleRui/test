@@ -1,6 +1,6 @@
 <template> 
     <div v-if="flag">
-        <div :class="edit?'basic_information2': 'basic_information'">
+        <div :style="edit? 'height: 150px': teethHeight">
             <el-collapse v-model="activeName">
                 <el-collapse-item name="1">
                     <template slot="title">
@@ -56,10 +56,9 @@
                             <div class="small-section-title">初诊医生</div>
                             <div>{{patient.first_docter_name}}</div>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="7">
                             <div class="small-section-title">初诊时间</div>
                             <div>{{patient.first_time}}</div>
-                        </el-col>
                         </el-col>
                     </el-row>
 
@@ -68,7 +67,7 @@
                             <div class="small-section-title">复诊医生</div>
                             <div>{{patient.revisit_docter_name}}</div>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="7">
                             <div class="small-section-title">复诊时间</div>
                             <div>{{patient.revisit_time}}</div>
                         </el-col>
@@ -106,6 +105,7 @@ export default {
     components: { PatientDetailEdit },
     data() {
         return { 
+			teethHeight: "height:" + document.body.clientWidth * 0.3 + "px",
             edit: false,
             activeName: "1",
             flag: false,

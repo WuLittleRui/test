@@ -17,7 +17,7 @@
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
                 <el-button type="primary" icon="el-icon-lx-add" @click="add" v-if="auth.COUPON_ADD">新增</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -25,9 +25,9 @@
                 </el-table-column>
                 <el-table-column prop="quantity" label="总数量" header-align="center"  align="center" sortable min-width="120"  >
                 </el-table-column>
-                <el-table-column prop="start_time" label="活动开始时间" header-align="center"  align="center" sortable min-width="160" :formatter="formatterDate">
+                <el-table-column prop="start_time" label="活动开始时间" header-align="center"  align="center" sortable min-width="160">
                 </el-table-column>
-                <el-table-column prop="end_time" label="活动结束时间" header-align="center"  align="center" sortable min-width="160" :formatter="formatterDate">
+                <el-table-column prop="end_time" label="活动结束时间" header-align="center"  align="center" sortable min-width="160">
                 </el-table-column>
                 <el-table-column prop="create_time" label="创建时间" align="center" header-align="center"  sortable  min-width="160" :formatter="formatterDate">
                 </el-table-column>
@@ -61,6 +61,7 @@ export default {
       typeList: [{ name: "折扣券", value: 1 }, { name: "抵用券", value: 2 }],
       /**搜索数据 */
       list: [],
+      tableheight: document.body.clientHeight * 0.45 + "px",
       total: null,
       listLoading: true,
       listQuery: {

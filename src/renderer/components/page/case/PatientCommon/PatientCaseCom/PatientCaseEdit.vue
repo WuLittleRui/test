@@ -26,16 +26,6 @@
         <div style="height: 520px;">
 			<el-scrollbar style="height: 100%;">
               <el-form ref="form" :model="form" :rules="rules" label-width="100px"> 
-                <el-form-item label="主治医生" prop="docter_id">
-                    <el-select v-model="form.docter_id" placeholder="请选择">
-                        <el-option
-                        v-for="item in optionss"
-                        :key="item.employee_id"
-                        :label="item.username"
-                        :value="item.employee_id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="就诊时间" prop="treat_time">
                     <el-date-picker
                         style="width: 200px;"
@@ -63,7 +53,7 @@
                 <el-row :gutter="20" v-for="(item, index) in inspect">
                     <el-col :span="6">
                       <el-form-item label="检查">
-                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositioninspect' + index" :object="item" :oindex="'inspect'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
+                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositioninspect' + index" :object="item.position" :oindex="'inspect'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
                       </el-form-item>
                     </el-col>
                     <el-col :span="16">
@@ -77,7 +67,7 @@
                 <el-row :gutter="20" v-for="(item, index) in sup">
                     <el-col :span="6">
                       <el-form-item label="辅助检查">
-                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositionsup' + index" :object="item" :oindex="'sup'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
+                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositionsup' + index" :object="item.position" :oindex="'sup'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
                       </el-form-item>
                     </el-col>
                     <el-col :span="16">
@@ -91,7 +81,7 @@
                 <el-row :gutter="20" v-for="(item, index) in dia">
                     <el-col :span="6">
                       <el-form-item label="诊断">
-                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositiondia' + index" :object="item" :oindex="'dia'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
+                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositiondia' + index" :object="item.position" :oindex="'dia'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
                       </el-form-item>
                     </el-col>
                     <el-col :span="16">
@@ -105,7 +95,7 @@
                 <el-row :gutter="20" v-for="(item, index) in trea_plan">
                     <el-col :span="6">
                       <el-form-item label="治疗方案">
-                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositiontrea_plan' + index" :object="item" :oindex="'trea_plan'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
+                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositiontrea_plan' + index" :object="item.position" :oindex="'trea_plan'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
                       </el-form-item>
                     </el-col>
                     <el-col :span="16">
@@ -119,7 +109,7 @@
                 <el-row :gutter="20" v-for="(item, index) in trea">
                     <el-col :span="6">
                       <el-form-item label="治疗">
-                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositiontrea' + index" :object="item" :oindex="'trea'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
+                            <PatientTeethPosition style="height: 20px;" :ref="'PatientTeethPositiontrea' + index" :object="item.position" :oindex="'trea'" :index="index"  @open="openChange" @close="closeChange" @value="positionValueChange"/>
                       </el-form-item>
                     </el-col>
                     <el-col :span="16">
@@ -146,7 +136,6 @@
             <el-button size="medium" type="primary" @click="submitForm('form')" >确 定</el-button>
         </span>
         
-        </div>
     </el-dialog>
      
 </template>
@@ -180,7 +169,6 @@ export default {
       trea: [{"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": ""}],
       form: {
         handle_id: null,
-        docter_id: null,
         main_illness: "",
         case_number: null,
         present_illness: "",
@@ -193,9 +181,6 @@ export default {
       rules: {
         main_illness: [
           { required: true, message: "请输入主诉", trigger: "blur" }
-        ],
-        docter_id: [
-          { required: true, message: "请选择主治医生", trigger: "blur" }
         ],
         treat_time: [
           { required: true, message: "请选择就诊时间", trigger: "blur" }
@@ -511,6 +496,21 @@ export default {
     getShopAdminInfo(adminId) {
       ShopAdminApi.queryOnecase(adminId).then(data => {
         if (data.error === "success") {
+                if(data.data.dia.length > 0) {
+                  this.dia = [];
+                }
+                if(data.data.inspect.length > 0) {
+                  this.inspect = [];
+                }
+                if(data.data.trea_plan.length > 0) {
+                  this.trea_plan = [];
+                }
+                if(data.data.supp.length > 0) {
+                  this.sup = [];
+                }
+                if(data.data.trea.length > 0) {
+                  this.trea = [];
+                }
 								data.data.dia.forEach(item => {
                   item.position = JSON.parse(item.position);
                   this.dia.push(item);
@@ -520,7 +520,8 @@ export default {
                   this.inspect.push(item);
 								});
 								data.data.supp.forEach(item => {
-									item.position = JSON.parse(item.position);
+                  item.position = JSON.parse(item.position);
+                  console.log(item.position)
                   this.sup.push(item);
 								});
 								data.data.trea.forEach(item => {

@@ -8,44 +8,44 @@
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="container" style="min-width: 1580px;">
-      <el-row :gutter="20">
-        <el-col style="width: 20%; min-width: 350px;">
-          <div class="grid-content bg-purple1">
-            <el-menu background-color="#d3dce6" :default-active="activeIndex" class="sidebar-el-menu" mode="horizontal" @select="navSelect">
-              <el-menu-item index="1" style="width: 50%; text-align: center;">当天工作</el-menu-item>
-              <el-menu-item index="2" style="width: 50%; text-align: center;">全部患者</el-menu-item>
-            </el-menu>
-            <div class="patient">
-              <PatientList ref="PatientList" @refresh="patientListCallBack"/>
-            </div>
-            <div class="button">
-              <el-button size="medium" type="primary" @click="handleAddPatient">新增患者</el-button>
-              <el-button size="medium" type="success" @click="handleOrder">复诊预约</el-button>
-            </div>
-          </div>
-        </el-col>
-        <el-col style="width: 78%;">
-          <div class="grid-content bg-purple">
-            <el-menu background-color="#d3dce6" :default-active="patientActiveIndex" class="sidebar-el-menu" mode="horizontal" @select="patientNavSelect">
-              <el-menu-item index="1" style="width: 20%; text-align: center;">患者信息</el-menu-item>
-              <el-menu-item index="2" style="width: 20%; text-align: center;">处置记录</el-menu-item>
-              <el-menu-item index="3" style="width: 20%; text-align: center;">收费信息</el-menu-item>
-              <el-menu-item index="4" style="width: 20%; text-align: center;">病历信息</el-menu-item>
-              <el-menu-item index="5" style="width: 20%; text-align: center;">回访信息</el-menu-item>
-            </el-menu>
-            <PatientDetail ref="PatientDetail" />
-            <PatientTeeth ref="PatientTeeth" />
-            <PatientCashier ref="PatientCashier" />
-            <PatientRevisit ref="PatientRevisit" />
-            <PatientCase ref="PatientCase" />
+    <div class="container">
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <div class="grid-content bg-purple1" style="min-width: 210px;">
+                <el-menu background-color="#d3dce6" :default-active="activeIndex" class="sidebar-el-menu" mode="horizontal" @select="navSelect">
+                  <el-menu-item index="1" style="width: 50%; text-align: center;">当天工作</el-menu-item>
+                  <el-menu-item index="2" style="width: 50%; text-align: center;">全部患者</el-menu-item>
+                </el-menu>
+                <div class="patient">
+                  <PatientList ref="PatientList" @refresh="patientListCallBack"/>
+                </div>
+                <div class="button">
+                  <el-button size="medium" type="primary" @click="handleAddPatient">新增患者</el-button>
+                  <el-button size="medium" type="success" @click="handleOrder">复诊预约</el-button>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="18">
+              <div class="grid-content bg-purple">
+                <el-menu background-color="#d3dce6" :default-active="patientActiveIndex" class="sidebar-el-menu" mode="horizontal" @select="patientNavSelect">
+                  <el-menu-item index="1" style="width: 20%; text-align: center;">患者信息</el-menu-item>
+                  <el-menu-item index="2" style="width: 20%; text-align: center;">处置记录</el-menu-item>
+                  <el-menu-item index="3" style="width: 20%; text-align: center;">收费信息</el-menu-item>
+                  <el-menu-item index="4" style="width: 20%; text-align: center;">病历信息</el-menu-item>
+                  <el-menu-item index="5" style="width: 20%; text-align: center;">回访信息</el-menu-item>
+                </el-menu>
+                <PatientDetail ref="PatientDetail" />
+                <PatientTeeth ref="PatientTeeth" />
+                <PatientCashier ref="PatientCashier" />
+                <PatientRevisit ref="PatientRevisit" />
+                <PatientCase ref="PatientCase" />
 
-            <PatientDetailEdit ref="PatientDetailEdit" @refresh="showPatientList" />
+                <PatientDetailEdit ref="PatientDetailEdit" @refresh="showPatientList" />
 
-            <Order ref="Order" />
-          </div>
-        </el-col>
-      </el-row>
+                <Order ref="Order" />
+              </div>
+            </el-col>
+          </el-row>
     </div>
   </div>
 </template>

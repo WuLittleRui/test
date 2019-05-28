@@ -8,6 +8,16 @@
             <el-form-item label="金额" prop="ope_balance">
                 <el-input-number v-model="form.ope_balance" :precision="2" :step="1" :min="1"></el-input-number>
             </el-form-item>
+            <el-form-item label="支付类型" prop="type">
+                <el-select v-model="form.type" placeholder="请选择">
+                    <el-option
+                    v-for="item in options"
+                    :key="item.pay_type_id"
+                    :label="item.pay_type_name"
+                    :value="item.pay_type_id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="操作人" prop="operator">
                 <el-input v-model="form.operator"></el-input>
             </el-form-item>
@@ -25,6 +35,7 @@
 
 <script>
 import * as MemberCurrencyApi from '@/api/MemberCurrencyApi';
+import * as PayTypeApi from "@/api/PayTypeApi";
 import * as OauthApi from "@/api/OauthApi";
 
 export default {
@@ -33,6 +44,7 @@ export default {
             title: '调整',
             editVisible: false,
             add: false,
+            options: [],
             rules: {
                 ope_balance: [
                     { required: true, message: "请输入金额", trigger: "blur" },
@@ -42,8 +54,11 @@ export default {
                 ],
                 mobile: [
                     { required: true, message: "请输入患者手机号", trigger: "blur" },
+                ],
+                type: [
+                    { required: true, message: "请选择支付方式", trigger: "blur" },
                 ]
-            },
+            }, 
             form: {
                 seq_flag: 1,
                 mobile: '',
@@ -51,19 +66,39 @@ export default {
                 ope_balance: "",
                 operator: "",
                 remark: "",
-                mid: null
+                mid: null,
+                type: ""
             }
         }
     },
     methods: {
         showAdd() {
-            this.resetForm();
+            this.resetForm(); 
             this.add = true;
             this.editVisible = true;
+            this.getType();
+        },
+        getType() {
+            PayTypeApi.getAll().then(data => {
+                if(data.error == "success") {
+                    this.options = data.data.list;
+                } else if (
+                    data.error === "invaild_token" ||
+                    data.error === "not_login"
+                ) {
+                    //判断是否认证过期
+                    this.$router.push("/login");
+                } else if (data.error_description) {
+                    this.$message.error(data.error_description);
+                } else {
+                    this.$message.error(data.error);
+                }
+            })
         },
         async showEdit(mid, seq_flag) {
             this.resetForm()
             this.getInfo(mid);
+            this.getType();
             this.add = false;
             this.form.seq_flag = seq_flag;
             if(seq_flag) {
@@ -79,6 +114,7 @@ export default {
             this.form.operator = "";
             this.form.remark = "";
             this.form.seq_flag = true;
+            this.form.type = "";
         },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
@@ -88,7 +124,7 @@ export default {
                         return;
                     }
                     if(this.form.mid) {
-                        MemberCurrencyApi.adjust(this.form.mid, this.form.ope_balance, this.form.operator, this.form.remark, this.form.seq_flag).then(data => {
+                        MemberCurrencyApi.adjust(this.form.mid, this.form.ope_balance, this.form.operator, this.form.remark, this.form.seq_flag, this.form.type).then(data => {
                             if(data.error == "success") {
                                 this.$message({
                                     type: "success",
@@ -108,7 +144,7 @@ export default {
                             }
                         })
                     } else {
-                        MemberCurrencyApi.add(this.form.mobile, this.form.ope_balance, this.form.operator, this.form.remark, this.form.seq_flag).then(data => {
+                        MemberCurrencyApi.add(this.form.mobile, this.form.ope_balance, this.form.operator, this.form.remark, this.form.type).then(data => {
                             if(data.error == "success") {
                                 this.$message({
                                     type: "success",

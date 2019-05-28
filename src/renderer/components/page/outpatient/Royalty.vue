@@ -20,7 +20,7 @@
       <el-tabs v-model="listQuery.groupType" @tab-click="handleTabClick">
         <el-tab-pane :label="item.groupName" v-for="item in groupTypes" :key="item.groupId" :name="item.groupId"></el-tab-pane>
       </el-tabs>
-      <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间' v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange" ref="multipleTable">
+      <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间' v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange" ref="multipleTable">
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="name" label="项目名称" header-align="center" align="center" sortable min-width="120">
         </el-table-column>
@@ -29,8 +29,6 @@
                    {{ scope.row.type_id | formatterState(categoryList,{"name":"name","value":"type_id"})}}
           </template>     
         </el-table-column>
-        
-        
           <el-table-column prop="unit_price" label="单价" align="center" header-align="center" sortable min-width="120" >
            <template slot-scope="scope">
               {{scope.row.unit_price}}\ {{scope.row.unit}}
@@ -76,6 +74,7 @@ import * as HospitalChargeCommmistionApi from "../../../api/HospitalChargeCommmi
     },
     data() {
       return {
+        tableheight: document.body.clientHeight * 0.45 + "px",
         menoy: "￥",
         percentage: "%",
         groupName: "",

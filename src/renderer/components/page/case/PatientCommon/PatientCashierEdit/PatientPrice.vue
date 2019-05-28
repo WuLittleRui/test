@@ -120,6 +120,7 @@ import PatientTeethPosition from "../PatientTeethPosition";
 import * as HospitalHandleApi from "../../../../../api/HospitalHandleApi";
 import * as PayTypeApi from "../../../../../api/PayTypeApi";
 import * as PatientApi from "../../../../../api/PatientApi";
+import { accAdd, accMultiply, toDecimal2 } from "@/utils/calculation";
 import { debug } from 'util';
 export default {
   components: { PatientTeethPosition },
@@ -159,10 +160,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if(this.form.docter_id == null) {
-            this.$message.error("请选择医生!");
-            return;
-          }
           var sum = 0;
           this.payType.forEach(item => {
               sum = sum + item.amount;
@@ -237,11 +234,11 @@ export default {
     payTypeValueChange() {
         var sum = 0;
         this.payType.forEach(item => {
-            sum = sum + item.amount;
+            sum = accAdd(sum, item.amount);
         })
-        this.form.arrear = this.form.all_price - sum;
+        this.form.arrear = accAdd(this.form.all_price, -1 * sum);
         if(this.form.arrear <= 0) {
-            this.form.odd_change = -1 * this.form.arrear;
+            this.form.odd_change = accMultiply(-1, this.form.arrear);
             this.form.arrear = 0;
         }
     },

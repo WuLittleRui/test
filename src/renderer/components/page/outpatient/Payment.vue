@@ -11,7 +11,7 @@
                 <el-button type="primary" icon="el-icon-lx-delete" class="handle-del mr10" v-if="auth.SHOP_ADMIN_DELETE" @click="delAll">批量删除</el-button>
                 <el-button type="primary" icon="el-icon-lx-add" @click="handleCreate()" v-if="auth.SHOP_ADMIN_ADD">新增</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -44,6 +44,7 @@ export default {
   components: { PayTypeEdit },
   data() {
     return {
+      tableheight: document.body.clientHeight * 0.45 + "px",
       auth: {
         SHOP_ADMIN_ADD: false,
         SHOP_ADMIN_DELETE: false,

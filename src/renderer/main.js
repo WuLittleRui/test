@@ -43,6 +43,8 @@ ipcRenderer.send("checkForUpdate");
 router.beforeEach(async (to, from, next) => {
     if(to.path === "/register") {
         next();
+    } else if(to.path === "/reset") {
+        next();
     } else if (to.path !== '/login' && await OauthApi.checkLogin() === false) {
         next('/login');
     }

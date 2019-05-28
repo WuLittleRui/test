@@ -23,7 +23,7 @@
                 <el-input v-model="listQuery.docter_mobile" clearable placeholder="医生手机号" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-lx-search" @click="search">搜索</el-button>
             </div>
-            <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
+            <el-table :height="tableheight" :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' ref="multipleTable" highlight-current-row>
                 <el-table-column prop="sn" label="单据号" header-align="center"  align="center" min-width="170">
                 </el-table-column>
@@ -83,6 +83,7 @@ export default {
             list: [],
             total: null,
             listLoading: false,
+            tableheight: document.body.clientHeight * 0.45 + "px",
             paylist: [],
             listQuery: {
                 page: 1,

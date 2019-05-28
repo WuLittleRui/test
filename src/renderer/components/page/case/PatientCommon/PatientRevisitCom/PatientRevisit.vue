@@ -1,11 +1,11 @@
 <template>
-    <div v-if="flag" :class="edit?'basic_information2': 'basic_information'">
+    <div v-if="flag" :style="edit? 'height: 150px': teethHeight">
         <el-scrollbar style="height: 100%;">
             <el-table :data="list" border class="table" empty-text="没有任何记录" element-loading-text='给我一点时间'
                 v-loading='listLoading' ref="multipleTable" highlight-current-row>
                 <el-table-column prop="state" label="回访状态" header-align="center"  align="center" min-width="70">
                 </el-table-column>
-                <el-table-column prop="return_people_name" label="主治人员" header-align="center"  align="center" min-width="170">
+                <el-table-column prop="return_people_name" label="回访人员" header-align="center"  align="center" min-width="170">
                 </el-table-column>
                 <el-table-column prop="employee_name" label="主治医生" header-align="center"  align="center" min-width="170">
                 </el-table-column>
@@ -51,6 +51,7 @@ export default {
             listLoading: false,
             list: [],
             onlyShow: false,
+			teethHeight: "height:" + document.body.clientWidth * 0.3 + "px",
             total: 0,
             listQuery: {
                 limit: 20,
