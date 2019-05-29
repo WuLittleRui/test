@@ -91,6 +91,7 @@ export default {
                 case_number: null,
                 username: '',
                 mobile: '',
+                name: "",
                 employee_id: null,
                 time: "",
                 content: '',
