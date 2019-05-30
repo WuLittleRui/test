@@ -159,13 +159,14 @@ export async function edit(case_number, name, mobile, sex, age, birthday, type, 
     }
 }
 
-export async function addOrder(case_number, start_time, end_time, content, order_remark) {
+export async function addOrder(case_number, employee_id, start_time, end_time, content, order_remark) {
     try {
         return await OauthApi.postWithToken(config.BASE_URL + '/api/v1/order/add', { 
             case_number: case_number, 
             start_time: start_time,
             end_time: end_time,
             content: content,
+            employee_id: employee_id,
             order_remark: order_remark
         });
     } catch (error) {
