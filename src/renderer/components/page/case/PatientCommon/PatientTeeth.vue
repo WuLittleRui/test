@@ -1,6 +1,7 @@
 <template>
 	<div v-if="flag">
 		<div :style="edit? 'height: 150px': teethHeight">
+
 			<el-scrollbar style="height: 100%;">
 				<section class="section" v-for="(show, oindex) in list">
 					<header class="header">
@@ -97,9 +98,12 @@
 			<PatientPriceEdit ref="PatientPriceEdit" @refresh="getList"/>
 			<PatientTeethHandle ref="PatientTeethHandle" @refresh="PatientTeethHandleCallback"/>
 			<PatientPrescriptionEdit ref="PatientPrescriptionEdit" @refresh="PatientPrescriptionEditCallback"/>
+
+			<Import ref="Import" @refresh="getList"/>
 		</div>
 		<div class="button">
 			<el-button size="medium" type="primary" @click="handleAddPatient" v-if="!onlyShow">新增处置</el-button>
+			<el-button size="medium" type="danger" @click="handleImport" v-if="!onlyShow">处置导入</el-button>
 		</div>
 	</div>
 </template>
@@ -115,9 +119,10 @@ import PatientPrescriptionEdit from "./PatientPrescriptionEdit";
 import { parseTime } from "../../../../utils/formater";
 import { accAdd, accMultiply, toDecimal2 } from "@/utils/calculation";
 import { unlink, unlinkSync } from 'fs';
+import Import from "../FileImport/Import"
 
 export default {
-  components: { PatientTeethHandle, PatientPrescriptionEdit, PatientPriceEdit, PatientTeethPosition },
+  components: { PatientTeethHandle, PatientPrescriptionEdit, PatientPriceEdit, PatientTeethPosition, Import },
   data() {
     return {
         edit: false,
@@ -162,6 +167,9 @@ export default {
     };
   },
   methods: {
+		handleImport() {
+			this.$refs["Import"].show(3);
+		},
 		//添加处置
 		handleAddPatient() {
 			var all = {};

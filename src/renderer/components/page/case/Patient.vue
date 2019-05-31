@@ -22,6 +22,7 @@
                 <div class="button">
                   <el-button size="medium" type="primary" @click="handleAddPatient">新增患者</el-button>
                   <el-button size="medium" type="success" @click="handleOrder">复诊预约</el-button>
+			            <el-button size="medium" type="danger" @click="handleImport">病患导入</el-button>
                 </div>
               </div>
             </el-col>
@@ -47,6 +48,7 @@
             </el-col>
           </el-row>
     </div>
+    <Import ref="Import" @refresh="showPatientList"/>
   </div>
 </template>
 
@@ -59,9 +61,10 @@ import PatientTeeth from "./PatientCommon/PatientTeeth";
 import PatientRevisit from "./PatientCommon/PatientRevisitCom/PatientRevisit";
 import PatientCase from "./PatientCommon/PatientCaseCom/PatientCase";
 import Order from "./Order";
+import Import from "./FileImport/Import"
 export default {
   name: "Patient",
-  components: { PatientList, PatientTeeth, PatientDetail, PatientCashier, PatientDetailEdit, PatientRevisit, PatientCase, Order },
+  components: { Import, PatientList, PatientTeeth, PatientDetail, PatientCashier, PatientDetailEdit, PatientRevisit, PatientCase, Order },
   data() {
     return {
       key: 12,
@@ -74,7 +77,10 @@ export default {
   async mounted() {
     this.showPatientList(null, true);
   },
-  methods: {
+  methods: { 
+		handleImport() {
+			this.$refs["Import"].show(1);
+		},
     handleOrder() {
       this.$refs["Order"].showAdd(this.case_number);
     },

@@ -1,5 +1,5 @@
 <template>
-        <!-- 编辑弹出框 -->
+    <!-- 编辑弹出框 -->
     <el-dialog :title="title" :visible.sync="editVisible" width="50%">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="登录名" prop="username">

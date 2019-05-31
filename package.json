@@ -1,6 +1,6 @@
 {
   "name": "yq-hospital",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "description": "口腔门诊管理系统",
   "author": "yvqin.com",
   "license": null,
@@ -27,7 +27,7 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "dmg": { 
+    "dmg": {
       "contents": [
         {
           "x": 410,
@@ -49,8 +49,8 @@
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "./build/icons/google.ico",
       "uninstallerIcon": "./build/icons/google.ico",
-      "installerHeaderIcon": "./build/icons/google.ico", 
-      "createDesktopShortcut": true, 
+      "installerHeaderIcon": "./build/icons/google.ico",
+      "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "${productName}"
     },
@@ -65,7 +65,7 @@
         {
           "target": "nsis",
           "arch": [
-            "x64", 
+            "x64",
             "ia32"
           ]
         }

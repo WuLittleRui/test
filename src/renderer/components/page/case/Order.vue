@@ -9,7 +9,7 @@
                 <el-input v-model="form.case_number" :readonly="true"></el-input>
             </el-form-item>
             <el-form-item label="预约医生" prop="employee_id">
-                <el-select v-model="form.employee_id" placeholder="请选择">
+                <el-select v-model="form.employee_id" placeholder="请选择" @change="docterChange">
                     <el-option
                       v-for="item in options"
                       :key="item.employee_id"
@@ -19,26 +19,28 @@
                 </el-select>
             </el-form-item>
             <el-row :gutter="20">
-                <el-col :span="8">
-                    <el-form-item label="预约时间" prop="date">
+                <el-col :span="12">
+                    <el-form-item label="预约日期" prop="date">
                         <el-date-picker
-                            style="width: 200px;"
+                            @change="docterChange"
                             v-model="form.date"
-                            type="date"
                             value-format="yyyy-MM-dd"
+                            type="date"
                             placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
-                    <el-form-item label="" prop="time">
-                        <el-time-picker
-                            style="width: 300px;"
-                            v-model="form.time"
-                            is-range
-                            value-format="HH:mm:ss"
-                            placeholder="任意时间点">
-                        </el-time-picker>
+                <el-col :span="12">
+                    <el-form-item label="预约时间" prop="time">
+                        <el-select v-model="form.time" placeholder="请选择">
+                            <el-option
+                            v-for="(item, index) in optionsTime"
+                            :key="index"
+                            :disabled="item.people_number == 0? true: false"
+                            :label="item.start_time + ' - ' + item.end_time + ' 可预约:'  + item.people_number "
+                            :value="index">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -59,6 +61,7 @@
 <script> 
 import * as PatientApi from "@/api/PatientApi";
 import { parseTime } from "@/utils/formater";
+import * as OrderApi from "@/api/OrderApi";
 import * as OauthApi from "@/api/OauthApi";
 export default {
     data() {
@@ -66,6 +69,7 @@ export default {
             title: '预约',
             editVisible: false,
             options: [],
+            optionsTime: [],
             buttonloading: false,
             form: {
                 case_number: null,
@@ -100,22 +104,29 @@ export default {
         }
     },
     methods: {
+        docterChange(value) {
+            if(this.form.employee_id == null) {
+                this.$message('请选择医生!');
+                return;
+            }
+            if(this.form.date == '') {
+                this.$message('请选择日期!');
+                return;
+            }
+            OrderApi.getTime(this.form.employee_id, this.form.date).then(data => {
+                if(data.error == "success") {
+                    this.optionsTime = data.data;
+                } else {
+                    this.$message.error(this.$t(data.error));
+                }
+            })
+        },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
-                var start_time = "";
-                    var end_time = "";
-                    if(this.form.time.length > 0) {
-                        start_time = this.form.date + " " + this.form.time[0];
-                        end_time = this.form.date + " " + this.form.time[1];
-                    }
                 if (valid) {
-                   this.buttonloading = true;
-                    var start_time = "";
-                    var end_time = "";
-                    if(this.form.time.length > 0) {
-                        start_time = this.form.date + " " + this.form.time[0];
-                        end_time = this.form.date + " " + this.form.time[1];
-                    }
+                    this.buttonloading = true;
+                    var start_time = this.form.date + " " + this.optionsTime[this.form.time].start_time + ":00";
+                    var end_time = this.form.date + " " + this.optionsTime[this.form.time].end_time + ":00";
 
                     PatientApi.addOrder(this.form.case_number, this.form.employee_id, start_time, end_time, this.form.content, this.form.order_remark).then(data => {
                         this.buttonloading = false;
@@ -160,8 +171,7 @@ export default {
             this.form.employee_id = null;
             var start = new Date();
             var end = new Date();
-            end.setTime(start.getTime() + 3600 * 1000 * 1);
-            this.form.time = [start, end];
+            this.form.time = "";
             this.form.content = '';
             this.form.order_remark = '';
             this.form.date = "";

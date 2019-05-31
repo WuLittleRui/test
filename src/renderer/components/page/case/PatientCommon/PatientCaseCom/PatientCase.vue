@@ -152,10 +152,12 @@
 				<div class="button">
 					<el-button size="medium" type="primary" @click="handleFirst" v-if=" !onlyShow">初诊</el-button>
 					<el-button size="medium" type="success" @click="handleReturn" v-if=" !onlyShow">复诊</el-button>
+					<el-button size="medium" type="danger" @click="handleImport" v-if="!onlyShow">病历导入</el-button>
 				</div>
 
 			</div>
         <PatientCaseEdit ref="PatientCaseEdit" @refresh="getData" />
+				<Import ref="Import" @refresh="getData"/>
     </div>
 </template>
 
@@ -164,9 +166,11 @@ import PatientTeethPosition from "../PatientTeethPosition";
 import PatientCaseEdit from './PatientCaseEdit';
 import * as HospitalHandleApi from "@/api/HospitalHandleApi";
 import { parseTime } from "@/utils/formater";
+import Import from "../../FileImport/Import"
+
 export default {
 		name: "PatientCase",
-    components: { PatientCaseEdit, PatientTeethPosition },
+    components: { PatientCaseEdit, PatientTeethPosition, Import },
     data() {
         return {
 						teethHeight: "height:" + document.body.clientWidth * 0.3 + "px",
@@ -178,6 +182,9 @@ export default {
         }
     },
     methods: {
+				handleImport() {
+					this.$refs["Import"].show(2);
+				},
         showORnoshow(flag, case_number, onlyShow, edit) {
 					if(edit == true) {
                 this.edit = true;
