@@ -155,6 +155,10 @@ ipcMain.on("checkForUpdate",()=>{
   autoUpdater.quitAndInstall();
 })
 
+autoUpdater.on('download-progress', function (progressObj) {
+  mainWindow.webContents.send('downloadProgress', progressObj)
+})
+
 autoUpdater.on('update-available', function (info) {
   mainWindow.webContents.send('message', "检测到新版本，正在下载...!")
 });

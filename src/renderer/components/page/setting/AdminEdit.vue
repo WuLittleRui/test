@@ -155,11 +155,11 @@ export default {
       this.form.username = "";
       this.form.mobile = "";
       this.form.programs = [];
-         this.$nextTick(() => {
-     if (this.$refs.form !== undefined) {
-     this.$refs.form.resetFields();
-                    }
-                });
+      this.$nextTick(() => {
+        if (this.$refs.form !== undefined) {
+          this.$refs.form.resetFields();
+        }
+      });
 
     },
     getProgramList() {

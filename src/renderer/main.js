@@ -20,12 +20,17 @@ Object.keys(filters).forEach(key => {
 })
 
 ipcRenderer.on("message", (event, text)=> {
-    Vue.prototype.$alert(text, '系统更新', {
+    Vue.prototype.$alert("<el-progress :text-inside='true' :stroke-width='26' :percentage='70'></el-progress>", '系统更新', {
         confirmButtonText: '确定',
+        dangerouslyUseHTMLString: true,
         callback: action => {
             
         }
       });
+});
+
+ipcRenderer.on("downloadProgress", (event, text)=> {
+    console.log("123", Vue.prototype);
 });
 
 ipcRenderer.on("update", (event, text)=> {

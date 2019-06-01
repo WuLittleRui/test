@@ -2662,6 +2662,10 @@ __WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on("checkForUpdate", function 
   __WEBPACK_IMPORTED_MODULE_1_electron_updater__["autoUpdater"].quitAndInstall();
 });
 
+__WEBPACK_IMPORTED_MODULE_1_electron_updater__["autoUpdater"].on('download-progress', function (progressObj) {
+  mainWindow.webContents.send('downloadProgress', progressObj);
+});
+
 __WEBPACK_IMPORTED_MODULE_1_electron_updater__["autoUpdater"].on('update-available', function (info) {
   mainWindow.webContents.send('message', "检测到新版本，正在下载...!");
 });

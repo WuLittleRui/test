@@ -6,12 +6,14 @@
             <el-col :span="13">
               <div class="grid-content bg-purple">
                 <el-menu background-color="#d3dce6" :default-active="patientActiveIndex" class="sidebar-el-menu" mode="horizontal" @select="patientNavSelect">
+                  <el-menu-item index="0" style="width: 20%; text-align: center;">病历模板</el-menu-item>
                   <el-menu-item index="1" style="width: 20%; text-align: center;">患者信息</el-menu-item>
                   <el-menu-item index="2" style="width: 20%; text-align: center;">处置记录</el-menu-item>
                   <el-menu-item index="3" style="width: 20%; text-align: center;">收费信息</el-menu-item>
                   <el-menu-item index="4" style="width: 20%; text-align: center;">病历信息</el-menu-item>
                   <el-menu-item index="5" style="width: 20%; text-align: center;">回访信息</el-menu-item>
                 </el-menu> 
+                <PatientTemplate ref="PatientTemplate" @refresh="patientTemplateCallback"/>
                 <PatientDetail ref="PatientDetail" />
                 <PatientTeeth ref="PatientTeeth" class="patientTeeth"/>
                 <PatientCashier ref="PatientCashier" />
@@ -141,6 +143,7 @@
 </template>
 
 <script>
+import PatientTemplate from "./PatientTemplate";
 import PatientDetailEdit from "../PatientDetailEdit";
 import PatientCashier from "../PatientCashier";
 import PatientDetail from "../PatientDetail";
@@ -154,14 +157,14 @@ import * as ShopAdminApi from "@/api/HospitalHandleApi";
 import * as PatientApi from "@/api/PatientApi";
 import { parseTime } from "@/utils/formater";
 export default {
-  components: { PatientRevisit, PatientTeethPosition, PatientList, PatientTeeth, PatientDetail, PatientCashier, PatientDetailEdit, PatientCase },
+  components: { PatientTemplate, PatientRevisit, PatientTeethPosition, PatientList, PatientTeeth, PatientDetail, PatientCashier, PatientDetailEdit, PatientCase },
   data() {
     return {
       type: 1,
       editVisible: false,
       title: "编辑",
       optionss: [],
-      patientActiveIndex: "1",
+      patientActiveIndex: "0",
       inspect: [{"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": ""}],
       sup: [{"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": ""}],
       dia: [{"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": ""}],
@@ -191,6 +194,33 @@ export default {
   mounted() {
   },
   methods: {
+    patientTemplateCallback(data) {
+      this.form.main_illness = data.main_illness;
+      this.form.present_illness = data.present_illness;
+      this.form.history = data.history;
+
+      this.inspect = [];
+      var a = {"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": data.inspect};
+      this.inspect.push(a);
+
+      this.sup = [];  
+      a = {"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": data.sup};
+      this.sup.push(a);
+
+      this.dia = [];
+      a = {"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": data.dia};
+      this.dia.push(a);
+
+      this.trea_plan = [];
+      a = {"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": data.trea_plan};
+      this.trea_plan.push(a);
+
+      this.trea = [];
+      a = {"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": data.trea};
+      this.trea.push(a);
+
+      this.form.advice = data.advice;
+    },
     handleAdd(title) {
       if("inspect" == title) {
         var a = {"position": {"left": '', 'bottom': "", 'lebottom': "", 'right': "", show: false}, "remark": ""};
@@ -328,7 +358,7 @@ export default {
       this.getDocter();
       this.$nextTick(() => {
         this.form.case_number = case_number;
-        this.patientNavSelect("1");
+        this.patientNavSelect("0");
       })
     },
     async showEdit(case_number, handle_id) {
@@ -345,6 +375,7 @@ export default {
     showPatientList() {
       case_number = this.form.case_number;
       this.$refs["PatientList"].getActiveIndex(1);
+      this.$refs["PatientTemplate"].showORnoshow(false, this.form.case_number, true, true);
       this.$refs["PatientDetail"].showORnoshow(true, case_number, true, true);
       this.$refs["PatientTeeth"].showORnoshow(false, true);
       this.$refs["PatientCashier"].showORnoshow(false, null, true); 
@@ -352,7 +383,16 @@ export default {
     },
     patientNavSelect(key) {
       this.patientActive = key;
+      if(key == "0") {
+        this.$refs["PatientTemplate"].showORnoshow(true, this.form.case_number, true, true);
+        this.$refs["PatientDetail"].showORnoshow(false, this.form.case_number, true, true);
+        this.$refs["PatientTeeth"].showORnoshow(false, this.form.case_number, true, true);
+        this.$refs["PatientCashier"].showORnoshow(false, this.form.case_number, true, true);
+        this.$refs["PatientCase"].showORnoshow(false, this.form.case_number, true, true);
+        this.$refs["PatientRevisit"].showORnoshow(false, this.case_number, true, true);
+      }
       if(key == "1") {
+        this.$refs["PatientTemplate"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientDetail"].showORnoshow(true, this.form.case_number, true, true);
         this.$refs["PatientTeeth"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientCashier"].showORnoshow(false, this.form.case_number, true, true);
@@ -360,6 +400,7 @@ export default {
         this.$refs["PatientRevisit"].showORnoshow(false, this.case_number, true, true);
       }
       if(key == "2") {
+        this.$refs["PatientTemplate"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientDetail"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientTeeth"].showORnoshow(true, this.form.case_number, true, true);
         this.$refs["PatientCashier"].showORnoshow(false, this.form.case_number, true, true);
@@ -367,6 +408,7 @@ export default {
         this.$refs["PatientRevisit"].showORnoshow(false, this.case_number, true, true);
       }
       if(key == "3") {
+        this.$refs["PatientTemplate"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientDetail"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientTeeth"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientCashier"].showORnoshow(true, this.form.case_number, true, true);
@@ -374,6 +416,7 @@ export default {
         this.$refs["PatientRevisit"].showORnoshow(false, this.case_number, true, true);
       }
       if(key == "4") {
+        this.$refs["PatientTemplate"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientDetail"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientTeeth"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientCashier"].showORnoshow(false, this.form.case_number, true, true);
@@ -381,6 +424,7 @@ export default {
         this.$refs["PatientRevisit"].showORnoshow(false, this.case_number, true, true);
       }
       if(key == "5") {
+        this.$refs["PatientTemplate"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientDetail"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientTeeth"].showORnoshow(false, this.form.case_number, true, true);
         this.$refs["PatientCashier"].showORnoshow(false, this.form.case_number, true, true);
