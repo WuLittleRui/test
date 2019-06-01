@@ -23,7 +23,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                    <el-form-item label="疾病名称" prop="illness" v-if="first">
+                    <el-form-item label="疾病名称" prop="illness">
                         <el-input v-model="form.illness" clearable></el-input>
                     </el-form-item>
                 </el-col>
