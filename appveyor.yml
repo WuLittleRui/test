@@ -1,11 +1,6 @@
 image: Visual Studio 2017
 platform: x64
 
-cache:
-  - node_modules
-  - '%LOCALAPPDATA%\electron\Cache'
-  - '%LOCALAPPDATA%\electron-builder\cache'
-
 environment:
   access_token:
     secure: KEHM+BZr+Jp5MFlY6gzPAaLjtJU0Nfu+77DlcAWj526xtWrS5uePFv/UsiYn9eT8
