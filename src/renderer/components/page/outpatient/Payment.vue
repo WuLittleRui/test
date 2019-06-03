@@ -15,7 +15,11 @@
                 v-loading='listLoading' @sort-change="hanldeSort" @selection-change="handleSelectionChange"
                  ref="multipleTable" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="payTypeName" label="支付方式" header-align="center"  align="center" sortable min-width="120"></el-table-column>
+                <el-table-column prop="payTypeName" label="支付方式" header-align="center"  align="center" sortable min-width="120">
+                  <template slot-scope="scope">
+                    {{scope.row.payTypeName}}
+                  </template>
+                </el-table-column>
                 <el-table-column label="操作"  header-align="center" align="center"  min-width="160"  v-if="auth.SHOP_ADMIN_DELETE &&  auth.SHOP_ADMIN_EDIT">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" v-if="auth.SHOP_ADMIN_EDIT" >编辑</el-button>
