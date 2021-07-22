@@ -98,7 +98,7 @@
     "vue-schart": "^1.0.0",
     "vuedraggable": "^2.16.0",
     "weixin-js-sdk": "^1.4.0-test",
-    "xlsx": "^0.14.0"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
